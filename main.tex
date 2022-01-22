@@ -24,8 +24,8 @@
 
 \documentclass[
 11pt, % The default document font size, options: 10pt, 11pt, 12pt
-%oneside, % Two side (alternating margins) for binding by default, uncomment to switch to one side
-english, % ngerman for German
+%oneside, % Two side (alternating margins) by default, uncomment to switch to one side
+english,
 singlespacing, % Single line spacing, alternatives: onehalfspacing or doublespacing
 %draft, % Uncomment to enable draft mode (no pictures, no links, overfull hboxes indicated)
 %nolistspacing, % If the document is onehalfspacing or doublespacing, uncomment this to set spacing in lists to single
@@ -35,7 +35,7 @@ singlespacing, % Single line spacing, alternatives: onehalfspacing or doublespac
 %nohyperref, % Uncomment to not load the hyperref package
 headsepline, % Uncomment to get a line under the header
 %chapterinoneline, % Uncomment to place the chapter title next to the number on one line
-%consistentlayout, % Uncomment to change the layout of the declaration, abstract and acknowledgements pages to match the default layout
+%consistentlayout, % Uncomment to match to default the layout of the declaration, abstract...
 ]{MastersDoctoralThesis} % The class file specifying the document structure
 
 \usepackage[utf8]{inputenc} % Required for inputting international characters
@@ -65,14 +65,13 @@ headsepline, % Uncomment to get a line under the header
 %	THESIS INFORMATION
 %----------------------------------------------------------------------------------------
 
-\thesistitle{Thesis Title} % print it with \ttitle
+\thesistitle{Coupling shallow water models with three-dimensional models for the study of fluid-structure interaction problems using the particle finite element method} % print it with \ttitle
 \supervisor{Dr. Eugenio \textsc{Oñate}} % print it with \supname
 \cosupervisor{Dr. Ignasi \textsc{de-Pouplana}} % print it with \cosupname
 \examiner{} % this is not currently used, print it with \examname
 \degree{Civil Engineering Ph. D.} % print it with \degreename
 \author{Miguel \textsc{Masó}} % print it with \authorname
 \addresses{} % this is not currently used, print it with \addressname
-
 \subject{Civil Engineering} % this is not currently used, print it with \subjectname
 \keywords{} % this is not currently used, print it with \keywordnames
 \university{\href{http://www.upc.edu}{Universitat Politècnica de Catalunya Barcelona Tech}} % print it with \univname
@@ -169,11 +168,11 @@ headsepline, % Uncomment to get a line under the header
 %	QUOTATION PAGE
 %----------------------------------------------------------------------------------------
 
-\vspace*{0.2\textheight}
+% \vspace*{0.2\textheight}
 
-\noindent\enquote{\itshape Thanks to my solid academic training, today I can write hundreds of words on virtually any topic without possessing a shred of information, which is how I got a good job in journalism.}\bigbreak
+% \noindent\enquote{\itshape Thanks to my solid academic training, today I can write hundreds of words on virtually any topic without possessing a shred of information, which is how I got a good job in journalism.}\bigbreak
 
-\hfill Dave Barry
+% \hfill Dave Barry
 
 %----------------------------------------------------------------------------------------
 %	ABSTRACT PAGE
@@ -257,10 +256,9 @@ $\omega$ & angular frequency & \si{\radian} \\
 
 \pagestyle{thesis} % Return the page headers back to the "thesis" style
 
-% Include the chapters of the thesis as separate files from the Chapters folder
-% Uncomment the lines as you write the chapters
+% Include the chapters of the thesis as separate files from the chapters folder
 
-\include{chapters/chapter1}
+\include{chapters/intro}
 %\include{chapters/chapter2} 
 %\include{chapters/chapter3}
 %\include{chapters/chapter4} 
@@ -272,8 +270,7 @@ $\omega$ & angular frequency & \si{\radian} \\
 
 \appendix % Cue to tell LaTeX that the following "chapters" are Appendices
 
-% Include the appendices of the thesis as separate files from the Appendices folder
-% Uncomment the lines as you write the Appendices
+% Include the appendices of the thesis as separate files from the appendices folder
 
 \include{appendices/appendixA}
 %\include{appendices/appendixB}
