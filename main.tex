@@ -18,6 +18,7 @@
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+
 %----------------------------------------------------------------------------------------
 %	PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
 %----------------------------------------------------------------------------------------
@@ -47,6 +48,7 @@ headsepline, % Uncomment to get a line under the header
 
 \usepackage[autostyle=true]{csquotes} % Lnguage-dependent quotes in the bibliography
 
+
 %----------------------------------------------------------------------------------------
 %	MARGIN SETTINGS
 %----------------------------------------------------------------------------------------
@@ -60,6 +62,7 @@ headsepline, % Uncomment to get a line under the header
 	bottom=1.5cm, % Bottom margin
 	%showframe, % Uncomment to show how the type block is set on the page
 }
+
 
 %----------------------------------------------------------------------------------------
 %	THESIS INFORMATION
@@ -94,6 +97,7 @@ headsepline, % Uncomment to get a line under the header
 \frontmatter % Use roman page numbering style (i, ii, iii, iv...) for the pre-content pages
 
 \pagestyle{plain} % Default to the plain heading style until the thesis style is called for the body content
+
 
 %----------------------------------------------------------------------------------------
 %	TITLE PAGE
@@ -138,6 +142,7 @@ headsepline, % Uncomment to get a line under the header
 \end{center}
 \end{titlepage}
 
+
 %----------------------------------------------------------------------------------------
 %	DECLARATION PAGE
 %----------------------------------------------------------------------------------------
@@ -164,33 +169,35 @@ headsepline, % Uncomment to get a line under the header
 
 \cleardoublepage
 
+
 %----------------------------------------------------------------------------------------
 %	QUOTATION PAGE
 %----------------------------------------------------------------------------------------
 
 % \vspace*{0.2\textheight}
-
 % \noindent\enquote{\itshape Thanks to my solid academic training, today I can write hundreds of words on virtually any topic without possessing a shred of information, which is how I got a good job in journalism.}\bigbreak
-
 % \hfill Dave Barry
+
 
 %----------------------------------------------------------------------------------------
 %	ABSTRACT PAGE
 %----------------------------------------------------------------------------------------
 
 \begin{abstract}
-\addchaptertocentry{\abstractname} % Add the abstract to the table of contents
+\addchaptertocentry{\abstractname}
 The Thesis Abstract is written here (and usually kept to just this page). The page is kept centered vertically so can expand into the blank space above the title too\ldots
 \end{abstract}
+
 
 %----------------------------------------------------------------------------------------
 %	ACKNOWLEDGEMENTS
 %----------------------------------------------------------------------------------------
 
 \begin{acknowledgements}
-\addchaptertocentry{\acknowledgementname} % Add the acknowledgements to the table of contents
+\addchaptertocentry{\acknowledgementname}
 The acknowledgments and the people to thank go here, don't forget to include your project advisor\ldots
 \end{acknowledgements}
+
 
 %----------------------------------------------------------------------------------------
 %	LIST OF CONTENTS/FIGURES/TABLES PAGES
@@ -202,40 +209,39 @@ The acknowledgments and the people to thank go here, don't forget to include you
 
 \listoftables % Prints the list of tables
 
+
 %----------------------------------------------------------------------------------------
 %	ABBREVIATIONS
 %----------------------------------------------------------------------------------------
 
-\begin{abbreviations}{ll} % Include a list of abbreviations (a table of two columns)
-
+\begin{abbreviations}{ll}
+% Include a list of abbreviations (a table of two columns)
 \textbf{LAH} & \textbf{L}ist \textbf{A}bbreviations \textbf{H}ere\\
 \textbf{WSF} & \textbf{W}hat (it) \textbf{S}tands \textbf{F}or\\
-
 \end{abbreviations}
+
 
 %----------------------------------------------------------------------------------------
 %	PHYSICAL CONSTANTS/OTHER DEFINITIONS
 %----------------------------------------------------------------------------------------
 
-\begin{constants}{lr@{${}={}$}l} % The list of physical constants is a three column table
-
-% The \SI{}{} command is provided by the siunitx package, see its documentation for
-% instructions on how to use it
-
+\begin{constants}{lr@{${}={}$}l}
+% The \SI{}{} command is provided by the siunitx package
+% The list of physical constants is a three column table
+% Constant Name & $Symbol$ & $Constant Value$ with units\\
 Speed of Light & $c_{0}$ & \SI{2.99792458e8}{\meter\per\second} (exact)\\
-%Constant Name & $Symbol$ & $Constant Value$ with units\\
-
 \end{constants}
+
 
 %----------------------------------------------------------------------------------------
 %	SYMBOLS
 %----------------------------------------------------------------------------------------
 
-\begin{symbols}{lll} % Include a list of Symbols (a three column table)
-
+\begin{symbols}{lll}
+% Include a list of Symbols (a three column table)
+% Symbol & Name & Unit \\
 $a$ & distance & \si{\meter} \\
 $P$ & power & \si{\watt} (\si{\joule\per\second}) \\
-%Symbol & Name & Unit \\
 
 \addlinespace % Gap to separate the Roman symbols from the Greek
 
@@ -247,7 +253,8 @@ $\omega$ & angular frequency & \si{\radian} \\
 %	DEDICATION
 %----------------------------------------------------------------------------------------
 
-\dedicatory{For/Dedicated to/To my\ldots} 
+% \dedicatory{For/Dedicated to/To my\ldots} 
+
 
 %----------------------------------------------------------------------------------------
 %	THESIS CONTENT - CHAPTERS
@@ -257,13 +264,12 @@ $\omega$ & angular frequency & \si{\radian} \\
 
 \pagestyle{thesis} % Return the page headers back to the "thesis" style
 
-% Include the chapters of the thesis as separate files from the chapters folder
-
 \include{chapters/intro}
 \include{chapters/equations}
-%\include{chapters/chapter3}
-%\include{chapters/chapter4}
-%\include{chapters/chapter5}
+\include{chapters/eulerian_sw}
+\include{chapters/lagrangian_sw}
+\include{chapters/coupling}
+
 
 %----------------------------------------------------------------------------------------
 %	THESIS CONTENT - APPENDICES
@@ -271,11 +277,10 @@ $\omega$ & angular frequency & \si{\radian} \\
 
 \appendix % Cue to tell LaTeX that the following "chapters" are Appendices
 
-% Include the appendices of the thesis as separate files from the appendices folder
-
 \include{appendices/appendixA}
 %\include{appendices/appendixB}
 %\include{appendices/appendixC}
+
 
 %----------------------------------------------------------------------------------------
 %	BIBLIOGRAPHY
