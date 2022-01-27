@@ -17,14 +17,19 @@ Among the water related phenomena, natural hazards usually involve free surface 
 \subsection{Navier-Stokes equations}
 
 
-The motion of a fluid is described by the Navier-Stokes equations. The case of a free surface flow is described by that equations and the free surface is located where the densities or the fluid properties are discontinuous. In general, an air-water interface is assumed but some natural phenomena may include a more complex configuration, such as debris flow-air-water interfaces. All this continuous media can be considered isotermal and incompressible, and the standard formulation of the Navier-Stokes equations can be used:
+The motion of a fluid is described by the Navier-Stokes equations. The case of a free surface flow is described by that equations and the free surface is located where the densities or the fluid properties are discontinuous. In general, an air-water interface is assumed but some natural phenomena may include a more complex configuration, such as debris flow-air-water interfaces. All this continuous media can be considered isotermal and incompressible, and the standard formulation of the Navier-Stokes equations can be used.
+
+The problem consists in the incompressible Navier-Stokes equations in a time interval $(0, t_f)$ and in a spatial domain $\Omega \in \mathbb{R}^{n_d}$, being $n_d$ the number of space dimensions, $3$ unless otherwise stated. Let $t$ be a certain time instant in the temporal domain $(0, t_f)$ and $\mathbf{x}$ a given point in the spatial domain $\Omega$. The balance equations for the momentum and mass are written in the following form:
 \begin{subequations}
     \begin{align}
         \pder{u_i}{t} + u_j \pder{u_i}{x_i} + \frac{1}{\rho} \pder{p}{x_i} +
-            \frac{1}{\rho} \pder{}{x_i} \left(\mu \tau_{ij}\right) &= f_i \\
+            \frac{1}{\rho} \pder{}{x_i} \tau_{ij} &= f_i \\
         \pder{u_i}{x_i} &= 0
     \end{align}
 \end{subequations}
+With the appropriate initial and boundary conditions. Let $\Gamma$ be the boundary of the domain $\Omega$ and $\mathbf{n}$ the unit outward normal on $\Gamma$. Dirichlet and Neumman boundary conditions are considered, $\Gamma_D$ and $\Gamma_N$ respectively, such that $\Gamma_D \cup \Gamma_N = \Gamma$.
+The usual summation convention is used if there is index repetition.
+$\rho$ is the fluid density, $p$ is the pressure, $\mathbf{u}$ is the velocity, $\bm{\tau}$ is the viscous stresses tensor and $\mathbf{f}$ is the body forces vector.
 
 
 
