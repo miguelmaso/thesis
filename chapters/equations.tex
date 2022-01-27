@@ -3,9 +3,29 @@
 \label{equations}
 
 
+Before introducing the review of the most commonly methods used to solve free surface flows and, specially, shallow water flows, the governing equations will be presented.
+
+
+
 \section{Free surface flows}
 
+
+Among the water related phenomena, natural hazards usually involve free surface flows. This property allow to assume some simplifications, specially at the large scale. For this reason, before presenting the reduced models for the large scale, some attention will be paid to the general framework, the Navier-Stokes equations.
+
+
+
 \subsection{Navier-Stokes equations}
+
+
+The motion of a fluid is described by the Navier-Stokes equations. The case of a free surface flow is described by that equations and the free surface is located where the densities or the fluid properties are discontinuous. In general, an air-water interface is assumed but some natural phenomena may include a more complex configuration, such as debris flow-air-water interfaces. All this continuous media can be considered isotermal and incompressible, and the standard formulation of the Navier-Stokes equations can be used:
+\begin{subequations}
+    \begin{align}
+        \pder{u_i}{t} + u_j \pder{u_i}{x_i} + \frac{1}{\rho} \pder{p}{x_i} +
+            \frac{1}{\rho} \pder{}{x_i} \left(\mu \tau_{ij}\right) &= f_i \\
+        \pder{u_i}{x_i} &= 0
+    \end{align}
+\end{subequations}
+
 
 
 \subsection{Shallow water equations}

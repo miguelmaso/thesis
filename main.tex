@@ -24,29 +24,51 @@
 %----------------------------------------------------------------------------------------
 
 \documentclass[
-11pt, % The default document font size, options: 10pt, 11pt, 12pt
-%oneside, % Two side (alternating margins) by default, uncomment to switch to one side
-english,
-singlespacing, % Single line spacing, alternatives: onehalfspacing or doublespacing
-%draft, % Uncomment to enable draft mode (no pictures, no links, overfull hboxes indicated)
-%nolistspacing, % If the document is onehalfspacing or doublespacing, uncomment this to set spacing in lists to single
-%liststotoc, % Uncomment to add the list of figures/tables/etc to the table of contents
-%toctotoc, % Uncomment to add the main table of contents to the table of contents
-%parskip, % Uncomment to add space between paragraphs
-%nohyperref, % Uncomment to not load the hyperref package
-headsepline, % Uncomment to get a line under the header
-%chapterinoneline, % Uncomment to place the chapter title next to the number on one line
-%consistentlayout, % Uncomment to match to default the layout of the declaration, abstract...
-]{MastersDoctoralThesis} % The class file specifying the document structure
+11pt,                   % The default document font size, options: 10pt, 11pt, 12pt
+%oneside,               % Two side (alternating margins) by default, uncomment to switch to one side
+english,                % The language option
+singlespacing,          % Single line spacing, alternatives: onehalfspacing or doublespacing
+%draft,                 % Uncomment to enable draft mode (no pictures, no links, overfull hboxes indicated)
+%nolistspacing,         % If the document is onehalfspacing or doublespacing, uncomment this to set spacing in lists to single
+%liststotoc,            % Uncomment to add the list of figures/tables/etc to the table of contents
+%toctotoc,              % Uncomment to add the main table of contents to the table of contents
+%parskip,               % Uncomment to add space between paragraphs
+%nohyperref,            % Uncomment to not load the hyperref package
+headsepline,            % Uncomment to get a line under the header
+%chapterinoneline,      % Uncomment to place the chapter title next to the number on one line
+%consistentlayout,      % Uncomment to match to default the layout of the declaration, abstract...
+]{MastersDoctoralThesis}
 
-\usepackage[utf8]{inputenc} % Required for inputting international characters
-\usepackage[T1]{fontenc} % Output font encoding for international characters
-\usepackage{mathpazo} % Use the Palatino font by default
+\usepackage[utf8]{inputenc}   % Required for inputting international characters
+\usepackage[T1]{fontenc}      % Output font encoding for international characters
+\usepackage{mathpazo}       % Use the Palatino font by default
+\usepackage{mathtools}        % it also loads amsmath
+\usepackage{amssymb}          % it also loads amsfonts
+\usepackage{bm}               % bold Greek letters
+\usepackage{xfrac}            % slanted frac
+\usepackage{subcaption}       % sub-figures
+\usepackage{fix-cm}           % arbitrary font size
+\usepackage{float}            % placing figures
 \usepackage[backend=bibtex,style=authoryear,natbib=true]{biblatex}
 
 \addbibresource{../bibliography/sw.bib}
 
 \usepackage[autostyle=true]{csquotes} % Lnguage-dependent quotes in the bibliography
+
+
+%----------------------------------------------------------------------------------------
+%	CUSTOM DEFINITIONS
+%----------------------------------------------------------------------------------------
+
+\newcommand{\Ignasi}[1]{\textcolor{blue}{#1}}
+\newcommand{\Miguel}[1]{\textcolor{red}{#1}}
+\newcommand{\pder}[2]{\frac{\partial#1}{\partial#2}}
+\newcommand*{\ppder}[2]{\frac{\partial^2#1}{\partial#2^2}}
+\newcommand*{\abs}[1]{\lvert#1\rvert}
+\newcommand*{\norm}[1]{\lVert#1\rVert}
+\newcommand*{\defeq}{\mathrel{\vcenter{\baselineskip0.5ex\lineskiplimit0pt\hbox{\scriptsize.}\hbox{\scriptsize.}}}=}
+\newcommand*{\ldbrace}{\{\mskip-5mu\{} % left double curly braces
+\newcommand*{\rdbrace}{\}\mskip-5mu\}} % right double curly braces
 
 
 %----------------------------------------------------------------------------------------
@@ -117,14 +139,14 @@ headsepline, % Uncomment to get a line under the header
 \begin{minipage}[t]{0.4\textwidth}
 \begin{flushleft} \large
 \emph{Author:}\\
-\href{http://www.johnsmith.com}{\authorname}
+\href{https://directori.upc.edu/directori/dadesPersona.jsp?id=1115243}{\authorname}
 \end{flushleft}
 \end{minipage}
 \begin{minipage}[t]{0.4\textwidth}
 \begin{flushright} \large
 \emph{Supervisors:} \\
-\href{http://www.jamessmith.com}{\supname} \\
-\href{http://www.jamessmith.com}{\cosupname}
+\href{http://www.cimne.com/eo}{\supname} \\
+\href{https://www.cimne.com/1898/2181/people/directory}{\cosupname}
 \end{flushright}
 \end{minipage}\\[.3cm]
  
