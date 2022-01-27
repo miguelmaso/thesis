@@ -2,6 +2,13 @@
 \chapter{Introduction}
 \label{chapter_introduction}
 
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Prologue}
+
+
 Floods are complex natural phenomena with a great assortment of causes and a huge casuistic
 depending on the land characteristics or the climatic conditions. Preventing floods is still a great
 challenge due to uncertainty of climatic conditions and complexity of modeling land, usually
@@ -17,67 +24,61 @@ measures or actuation plans.
 
 
 
-Even thoug this study is about the numercial modelling of water related hazards and special attention has been paid to hydrological problems, the equations can be applied to a huge variety of problems. The configuration is modifyed just specifying the appropriate boundary conditions. Aside from the main scope of the thesis, some other examples are included. One example of application is related to pollutant transport in atmospheric environment. The other example is about tune liquid dampers for high rise buildings.
+Even though this study is about the numerical modelling of water related hazards and special attention has been paid to hydrological problems, the equations can be applied to a huge variety of problems. The configuration is modified just specifying the appropriate boundary conditions. Aside from the main scope of the thesis, some other examples are included. One example of application is related to pollutant transport in atmospheric environment. The other example is about tune liquid dampers for high rise buildings.
 
 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Objectives} 
 
+
 The main objective of this thesis is the coupling of different scales in natural hazards. Usually, the action is originated in a far filed from where the the vulnerability is located. There are three scenarios with different scale. The action may be generated in a local or global scale, depending on the nature of the phenomena. The propagation is usually in the large scale and it introduces the need of using reduced models. Finally, the evaluation of the resilience of singular structures requires to descend to the local scale.
 
-The objectives can be sumarized as
+The objectives can be summarized as
 \begin{itemize}
     \item aaa
 \end{itemize}
 
-Gran escala: simplificaciones 2D a las ecuaciones de Navier-Stokes.
+Large scale: 2D simplifications for the Navier-Stokes equations.
 
-Escala local: fenómenos turbulentos que requieren la solución de las ecuaciones de Navier-Stokes en 3D con alta resolución.
-
-
-\section{State of the art}
-
-
-[DESARROLLAR ESTADO DEL ARTE]
-
-The computation of the dry-wet interface of the shallow water equations is a challenging problem. Due to the hyperbolic character of the equations the water height requires positivity ($h>0$) and oscillations can trigger global failure of the system. Löhner \cite{lohner2008} made a review of possible approximation methods to solve fluid dynamics. Being $u^h = N^i\hat{u}_i$ ($i=1,2,\dots,m$) an approximation of the solution $u$, the weighted residual is defined as
-
-\begin{equation}
-\int_{\Omega} W^ir(u^h)d\Omega = 0
-\end{equation}
-
-\begin{table}
-\centering
-\begin{tabular}{|l|c|c|}
-\hline
- & $N^i$ & $W^i$ \\ \hline
-Finite differences (FD)         & polynomial & $\delta(x_i)$ \\ \hline
-Finite volumes (FV)             & polynomial & $1 \ \text{if} \ x\in\Omega_{el}$ \\ \hline
-Galerkin finite elements (FEM)  & polynomial & $N^i$ \\ \hline
-Discontinuous Galerkin (DG)     & polynomial & ?? \\ \hline
-\end{tabular}
-\caption{Possible choices of trial and test functions $N^i$ and $W^i$}
-\label{possible_trial_functions}
-\end{table}
-
-In table \ref{possible_trial_functions} there are a set of possible trial and test functions and the resulting approximation method. In the recent decades a new family of finite elements have been developed which are known as the discontinuous Galerkin (DG). We are interested on the implementation of \emph{continuous Galerkin finite elements} in KratosMultiphysics.
+Local scale: the turbulent flow require the solution of the Navier-Stokes equations with high fidelity resolution.
 
 
 
-% \subsection{Monotonicity preserving finite elements}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-Following Löhner review, there are three classical approaches: stabilized finite elements \cite{lohner2008}, flux corrected transport (FCT) \cite{lohner2008ch9} and edge based finite elements \cite{lohner2008ch10}.
+\section{Organization of the thesis}
 
-\paragraph*{Stabilized FEM} Stramline-diffusion methods like SUPG are stable but not
-monotonicity-preserving. However, Badia and Hierro presented a monotonicity preserving stabilized finite element for hyperbolic equations \cite{badia2014}.
 
-\paragraph*{FCT} The way to circumvent the Godunov barrier theorem \cite{godunov1959} is to develop a nonlinear scheme. FCT uses a low order (LO) monotonic scheme with a lot of diffusion and a high order (HO) oscillatory scheme. The process of combining the two schemes is called limiting:
+This thesis is structured in \textcolor{red}{\bfseries N} chapters, including the present introduction. Chapter \textcolor{red}{\bfseries N} presents a review of the governing equations and the known methods used in the literature to obtain numerical approximations. The bibliographic revision is specially extensive for the shallow water equations.
 
-\begin{equation}
-\phi^{n+1} = \phi^n + c_e\Delta \phi_H + (1-c_e)\Delta \phi_L
-\end{equation}
+Chapter \textcolor{red}{\bfseries N} is dedicated to the Finite Element Method applied to the shallow water equations. Stabilized formulations and quasi-monotonic formulations are presented.
 
-\paragraph*{Edge based} The edge based structure is an efficient way to assemble the system matrix which resort to a
-finite volume approximation of convective terms. If it is assumed that the fluxes of the variables are constant along the edges, a discontinuity will occur at the edge midpoint. Then, one can replace the Galerkin flux by a Riemann flux and obtain a total variational diminishing scheme (TVD).
+In Chapter \textcolor{red}{\bfseries N} the Particle methods applied to the shallow water equations are presented. This family of methods present some interesting properties, such as the natural approximation of the shoreline. The inconvenient of the Particle methods is the lack of robustness for all the possible flow regimes.
 
+\textcolor{red}{Chapter about mesh adaptivity?}
+
+Chapter \textcolor{red}{\bfseries N} is devoted to the coupling strategies between the shallow water approximations and the fully resolved methods. An example of coupling for landslide long wave generation is provided.
+
+Finally, two appendices are included to show another applications related to the shallow water equations, the particle methods and the large scale simulations.
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Research dissemination}
+
+
+Some of the chapters of this thesis are directly related to a publication. The notation may be slightly different from one article to another, since is is introduced gradually.
+
+\paragraph{Chapter \textcolor{red}{\bfseries N}} \fullcite{maso2022}
+\paragraph{Chapter \textcolor{red}{\bfseries N}} \fullcite{puigferrat2021}
+\paragraph{Chapter \textcolor{red}{\bfseries N}} In preparation
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Conclusions}
 

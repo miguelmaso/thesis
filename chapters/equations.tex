@@ -1,11 +1,66 @@
 
-\chapter{Free surface flows}
+\chapter{State of the art}
 
 
 \section{Navier-Stokes equations}
 
 
 \section{Shallow water equations}
+
+
+
+[DESARROLLAR ESTADO DEL ARTE]
+
+\subsection{Fully resolved models}
+
+
+
+\subsection{Reduced models}
+
+
+The computation of the dry-wet interface of the shallow water equations is a challenging problem. Due to the hyperbolic character of the equations the water height requires positivity ($h>0$) and oscillations can trigger global failure of the system. Löhner \cite{lohner2008} made a review of possible approximation methods to solve fluid dynamics. Being $u^h = N^i\hat{u}_i$ ($i=1,2,\dots,m$) an approximation of the solution $u$, the weighted residual is defined as
+
+\begin{equation}
+\int_{\Omega} W^ir(u^h)d\Omega = 0
+\end{equation}
+
+\begin{table}
+\centering
+\begin{tabular}{|l|c|c|}
+\hline
+ & $N^i$ & $W^i$ \\ \hline
+Finite differences (FD)         & polynomial & $\delta(x_i)$ \\ \hline
+Finite volumes (FV)             & polynomial & $1 \ \text{if} \ x\in\Omega_{el}$ \\ \hline
+Galerkin finite elements (FEM)  & polynomial & $N^i$ \\ \hline
+Discontinuous Galerkin (DG)     & polynomial & ?? \\ \hline
+\end{tabular}
+\caption{Possible choices of trial and test functions $N^i$ and $W^i$}
+\label{possible_trial_functions}
+\end{table}
+
+In table \ref{possible_trial_functions} there are a set of possible trial and test functions and the resulting approximation method. In the recent decades a new family of finite elements have been developed which are known as the discontinuous Galerkin (DG). We are interested on the implementation of \emph{continuous Galerkin finite elements} in KratosMultiphysics.
+
+
+
+\subsubsection{Monotonicity preserving finite elements}
+
+Following Löhner review, there are three classical approaches: stabilized finite elements \cite{lohner2008}, flux corrected transport (FCT) \cite{lohner2008ch9} and edge based finite elements \cite{lohner2008ch10}.
+
+\paragraph*{Stabilized FEM} Streamline-diffusion methods like SUPG are stable but not
+monotonicity preserving. However, Badia and Hierro presented a monotonicity preserving stabilized finite element for hyperbolic equations \cite{badia2014}.
+
+\paragraph*{FCT} The way to circumvent the Godunov barrier theorem \cite{godunov1959} is to develop a nonlinear scheme. FCT uses a low order (LO) monotonic scheme with a lot of diffusion and a high order (HO) oscillatory scheme. The process of combining the two schemes is called limiting:
+
+\begin{equation}
+\phi^{n+1} = \phi^n + c_e\Delta \phi_H + (1-c_e)\Delta \phi_L
+\end{equation}
+
+\paragraph*{Edge based} The edge based structure is an efficient way to assemble the system matrix which resort to a
+finite volume approximation of convective terms. If it is assumed that the fluxes of the variables are constant along the edges, a discontinuity will occur at the edge midpoint. Then, one can replace the Galerkin flux by a Riemann flux and obtain a total variational diminishing scheme (TVD).
+
+
+\subsubsection{Particle methods}
+
 
 
 \section{Boussinesq modified equations}
