@@ -25,6 +25,27 @@
 \section{Examples}
 
 
+\subsection{Patch test}
+
+
+Following Zienkiewicz \cite{zien1}, the patch test has been used as a first verification. The patch test is a basic verification which allows to verify the convergence. These tests have been developed imposing stationary solutions and obtaining the topography from the primary unknowns. The spatial domain $\Omega$ is a single element $e$.
+Since the solution is stationary, the temporal domain is null and the test consist on the verification of zero accelerations.
+Then, if the the solution belongs to the basis functions space, the test will pass analytically.
+Otherwise, the test will pass asymptotically when the element is refined by subdivision of the domain ($h$-refinement). In that case, even if the element is not passing the test, the patch test is also useful since is checking the correctness of the implementation.
+
+Several exact solutions have been applied to an element with size of $1m$. For the stabilized formulations a stabilization factor $\beta=0.01$ is used. The flux corrected solution depends directly on the stabilized formulation. If the solution belongs to the FE space, the obtained accelerations are less than $10^{-16}$, which is the round-off of machine precision.
+
+\paragraph{Water at rest}
+In this case, the free surface gradient and the velocity are zero. Some solutions can be built with that conditions, such as flat and non-flat topography, and bottom friction. In all the cases the accelerations are zero.
+
+\paragraph{Slope in equilibrium}
+This family of solutions verify constant water depth and constant velocity. The gravity terms (coming from the slope) are in equilibrium with the bottom friction terms. Several combinations are obtained with different directions of the slope and different Froude numbers, subcritical and supercritical.
+
+\paragraph{Backwater analysis}
+Finally, that family of analytical solutions, presents a constant flow rate where the gravity terms are in equilibrium with the bottom friction. But in that case, the primary unknowns do not belong to the FE space, since, either the velocity or the water depth are not linear. This test is passing asymptotically.
+
+
+
 
 \section{Concluding remarks}
 
