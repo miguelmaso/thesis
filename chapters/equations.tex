@@ -175,7 +175,8 @@ if the outflow is supercritical, no conditions have to be imposed.
 
 \subsection{Linearization}
 
-Usually, in the numerical study of the conservation equations, those are expressed in a quasi-linear form. The balance equation (\ref{general_sw}) can be linearized as follows
+Usually, in the numerical study of the conservation equations, them are expressed in a quasi-linear form. The balance equation (\ref{general_sw}) can be linearized as follows
+
 
 \begin{equation}
 \pder{\bm{\phi}}{t} + \mathbf{A}_i\pder{\bm{\phi}}{x_i}
@@ -188,29 +189,26 @@ where the matrices $\mathbf{A}_i$ and $\mathbf{K}_{ij}$ are the linearization ma
 \mathbf{A}_i &= \pder{\mathbf{F}_i}{\bm{\phi}}
 \end{align}
 \begin{equation}
-\mathbf{A}_1 = \left[\begin{matrix}
-        2u_1 & 0   & -u_1^2 + c^2 \\
+    \mathbf{A}_1 = \left[\begin{matrix}
+        2u_1 & 0   & -u_1^2 + gh \\
         u_2  & u_1 & -u_1 u_2 \\
         1    & 0   & 0
     \end{matrix} \right]
-\quad , \quad
-\mathbf{A}_2 = \left[\begin{matrix}
+    \quad , \quad
+    \mathbf{A}_2 = \left[\begin{matrix}
         u_2 & u_1  & -u_1 u_2 \\
-        0   & 2u_2 & -u_2^2 + c^2 \\
+        0   & 2u_2 & -u_2^2 + gh \\
         0   & 1    & 0
     \end{matrix} \right]
 \end{equation}
 \end{subequations}
-and $c=\sqrt{gh}$ is the wave speed.
-For the one dimensional case, the eigenvalues of $\mathbf{A}$ are $\lambda_{1,2}=u\pm c$.
+As seen before, the equation (\ref{general_sw}) is characterized by three eigenvalues. Those eigenvalues are defined by the matrices $\mathbf{A}_i$. 
+For the one dimensional case, there is a unique definition of the eigenvalues, $\lambda_{1,2}=u\pm c$.
 In two dimensions, given the unit vector $\mathbf{e}$, the eigenvalues of the matrix $e_i \mathbf{A}_i$ are $\lambda_{1,3} = \mathbf{e}\cdot\mathbf{u} \pm c$ and $\lambda_2 = \mathbf{e}\cdot\mathbf{u}$.
 The eigenvalues are real and always different ($\lambda_1<\lambda_2<\lambda_3$), this property is called strictly hyperbolicity \cite{raviart1996}. The eigenvalues are velocities, namely the ones of surface waves on the fluid. Note that in the dry zones, where ${h=0}$, the eigenvalues coincide and the system is no longer hyperbolic. This introduces difficulties at theoretical and numerical level.
 
 
-The viscous fluxes $\mathbf{G}_i$ are rewritten in a more convenient manner as ${\mathbf{G}_i = \mathbf{K}_{ij} \partial\bm{\phi}/\partial x_j}$. The fourth order tensor $\mathbf{K}_{ij}$ is obtained making use of equation (\ref{stresses}). It is an auxiliary variable to write the linearized tensor in Voigt's notation. \textcolor{red}{EXPLAIN IT MORE. MAYBE TAKE EXPLANATINO FROM THE ARTICLE}
-
-
-The vectors $\mathbf{b}_i$ are the result of the linearization of the topography. They are obtained by the linearization of the fluxes $\mathbf{F}_i$ respect to the topography coordinate $z$. Rearranging terms with the independent vector $\mathbf{Q}$ yields
+The vectors $\mathbf{b}_i$ are the result of the linearization of the topography using the same procedure taken for $\mathbf{A}_i$. They are obtained by the linearization of the fluxes $\mathbf{F}_i$ respect to the topography coordinate $z$. Rearranging terms with the independent vector $\mathbf{Q}$ yields
 \begin{equation}
     \mathbf{b}_i = \left[\begin{matrix}
         \delta_{i1} c^2 \\
@@ -218,6 +216,11 @@ The vectors $\mathbf{b}_i$ are the result of the linearization of the topography
         0
     \end{matrix}\right]
 \end{equation}
+
+
+Analogously, the viscous fluxes $\mathbf{G}_i$ are rewritten in a more convenient manner as ${\mathbf{G}_i = \mathbf{K}_{ij} \partial\bm{\phi}/\partial x_j}$. The fourth order tensor $\mathbf{K}_{ij}$ is obtained making use of equation (\ref{stresses}). It is an auxiliary variable to write the linearized tensor in Voigt's notation. This tensor will be defined latter, in the numerical model section.
+
+
 
 
 The bottom friction term acting on the source term vector is linearized using a reaction matrix $\mathbf{S}$
