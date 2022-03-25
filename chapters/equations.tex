@@ -3,20 +3,21 @@
 \label{equations}
 
 
-In this chapter a bibliographic revision of the methods employed to solve free surface flows problems is presented.
-The analysis of the numerical methods for the shallow water equations is more extensive than the review for the Navier-Stokes equations, since this thesis presents some advances in the numerical simulation of the shallow water equations.
-Before introducing the review of the numerical methods, the governing equations will be presented.
-The following sections are devoted for the numerical methods.
-The last section is about the coupling algorithms.
+
+%Before introducing the review of the numerical methods, the governing equations will be presented.
+%The following sections are devoted for the numerical methods.
+%The last section is about the coupling algorithms.
 
 
 
 %\section{Free surface flows}
 
 
-Among the water related phenomena, natural hazards usually involve free surface flows.
-This property allow to assume some simplifications, specially at the large scale.
-For this reason, the Navier-Stokes equations are briefly presented before introducing the depth integrated models.
+Water related natural hazards usually involve free surface flows.
+This property allows to assume some simplifications, specially at the large scale.
+For this reason, the general case describing the fluid motion is presented first, the Navier-Stokes equations.
+Then, some simplifications for the free surface flows are made, yielding the shallow water equations. Different assumptions for the depth integrated models will provide different sets of equations and its range of applicability as well as physical properties will be explained.
+
 
 
 
@@ -26,10 +27,10 @@ For this reason, the Navier-Stokes equations are briefly presented before introd
 The motion of a fluid is described by the Navier-Stokes equations. The case of a free surface flow is described by that equations and the free surface is located where the densities or the fluid properties are discontinuous. In general, an air-water interface is assumed but some natural phenomena may include a more complex configuration, such as debris flow-air-water interfaces. All this continuous media can be considered isotermal and incompressible, and the standard formulation of the Navier-Stokes equations can be used.
 
 The problem consists in the incompressible Navier-Stokes equations in a time interval $(0, t_f)$ and in a spatial domain $\Omega \in \mathbb{R}^{n_d}$, being $n_d$ the number of space dimensions, $3$ unless otherwise stated. Let $t$ be a certain time instant in the temporal domain $(0, t_f)$ and $\mathbf{x}$ a given point in the spatial domain $\Omega$. The balance equations for the momentum and mass are written in the following form:
-\begin{subequations}
-    \begin{align}
+\begin{subequations} \label{NS}
+    \begin{align} \label{NS1}
         \pder{u_i}{t} + u_j \pder{u_i}{x_i} + \frac{1}{\rho} \pder{p}{x_i} +
-            \frac{1}{\rho} \pder{}{x_i} \tau_{ij} &= f_i \\
+            \frac{1}{\rho} \pder{}{x_i} \tau_{ij} &= f_i \\ \label{NS2}
         \pder{u_i}{x_i} &= 0
     \end{align}
 \end{subequations}
@@ -39,15 +40,33 @@ $\rho$ is the fluid density, $p$ is the pressure, $\mathbf{u}$ is the velocity, 
 
 
 
-\subsection{Shallow water equations}
+\section{Shallow water equations}
 
 
+The flow of water in shallow layers occurs in a wide range of situations, such as coastal dynamics and hydraulics. In these free surface flows in relatively thin layers compared to the characteristic horizontal length, the horizontal velocities are of primary importance. Under that circumstances, the problem can be reasonably approximated the horizontal plane.
 
-The shallow water equations are the result of integrating vertically the Navier-Stokes equations, assuming the vertical velocity and its acceleration negligible \cite{abbot1979,zien3}.
-The equations governing mass and momentum conservation can be written in conservative form with water depth $h$ and specific discharge $\mathbf{q}=(h\mathbf{u})$ as follows,
+The shallow water equations are the result of integrating vertically the Navier-Stokes equations, assuming incompressibility, small vertical velocity and negligible vertical acceleration \cite{abbot1979,zien3}. The assumptions over the vertical velocity and its acceleration are equivalent to hydrostatic pressure, in fact, the vertical component of the momentum equation (\ref{NS1}) is reduced to
+\begin{equation} \label{SW_hydrostatic_pressure}
+    \frac{1}{\rho}\pder{p}{x_3} + g = 0
+\end{equation}
 
+After substitution of the hydrostatic pressure assumption \ref{SW_hydrostatic_pressure} into the mass conservation \ref{NS2}, the governing equations are integrated from the bottom $z$ to the free surface $\eta$. The problem is closed by adding two kinematic boundary conditions at the bottom and the free surface:
+\begin{equation}
+    u_3(\eta) = \frac{D\eta}{Dt} \ , \quad u_3(z) = \frac{Dz}{Dt}
+\end{equation}
+
+
+The governing equations are expressed in terms of a new set of primary variables: the water depth and the horizontal flow rate. The water depth is defined by the integration limits, $h = z + \eta$ and the averaged horizontal flow rate $\mathbf{q}$ is defined by the following integrated value,
+\begin{equation} \label{SW_averaged_momentum}
+    \mathbf{q} = \int_z^\eta \mathbf{u}\,dx_3
+\end{equation}
+To avoid introducing extra notation, in a shallow water context, $\mathbf{u}$ refers to the averaged horizontal velocities. In that case, the expression \ref{SW_averaged_momentum} can be reduced to a compact form as $\mathbf{q} = h\mathbf{u}$.
+
+
+Here we find that the resulting equations are written in the same form as the Euler conservation equations. In spite the equations present some similarities to the compressible flow, the shallow water equations are describing a purely incompressible fluid: the variable water depth is playing the role of the variable pressure in compressible fluids. The equations read
+%The equations governing mass and momentum conservation can be written in conservative form with water depth $h$ and specific discharge $\mathbf{q}=(h\mathbf{u})$ as follows,
 \begin{equation} \label{general_sw}
-\pder{\bm{\phi}}{t} + \pder{\mathbf{F}_i}{x_i} + \pder{\mathbf{G}_i}{x_i} + \mathbf{Q} = \mathbf{0} \quad \text{for} \enspace i=1,2
+\pder{\bm{\phi}}{t} + \pder{\mathbf{F}_i}{x_i} + \pder{\mathbf{G}_i}{x_i} + \mathbf{Q} = \mathbf{0} \qquad \text{for} \enspace i=1,2
 \end{equation}
 with
 
@@ -203,7 +222,7 @@ In the following sections, the rain, the atmospheric pressure and the wind frict
 
 
 
-\subsection{Shallow water equations with primitive variables}
+\section{Shallow water equations with primitive variables}
 
 En esta sección se aplica la misma metodología de estabilización a las ecuaciones de aguas poco profundas expresadas en variables primitivas. Esta expresión de las ecuaciones de gobierno presenta la ventaja de ser más lineales, sin embargo producen resultados precisos a bajos números de Froude. Esto hace que no sean apropiadas para resolver problemas donde se presentan régimenes supercríticos. 
 
@@ -213,7 +232,7 @@ Tras estas consideraciones preliminares, se espera obtener buenos resultados par
 
 
 
-\subsubsection{Ecuaciones}
+\subsection{Ecuaciones}
 
 Las ecuaciones de aguas poco profndas en variables primitivas se obtienen mediante la sustitución del balance de masa en el balance de momentum:
 \begin{subequations} \label{sw_primitive_balance}
@@ -254,14 +273,14 @@ donde se han definido las matrices tangentes $\mathbf{A}_i = \partial\mathbf{F}_
 \end{equation}
 
 
-\subsubsection{Range of applicability}
+\subsection{Range of applicability}
 
 
 
 
 
 
-\subsection{Boussinesq modified equations}
+\section{Boussinesq modified equations}
 
 
 As seen before, the shallow water or Saint-Venant equations are suited to solve convective phenomena.
@@ -296,7 +315,7 @@ Estos dos parámetros permiten relacionar los conceptos de dispersión de amplit
 In practice, this phenomenon does not happen. From linear wave theroy we know that the celerity depends not only on the water depth, but also on the wavenumber $k=2\pi/\lambda$. This is known as frequency dispersion and this mechanism is missing on the Saint-Venant equations. The introduction of some extra tems leads to the Boussinesq equations, which model the frequency dispersion. Once the frequency dispersio is included, classical soliton waves can be obtained. In a soliton wave, breaking never occurs during the propagation, since the non linear terms are in equilibrium with dispersive terms.
 
 
-\subsubsection{Derivation of the modified Boussinesq equations}
+\subsection{Derivation of the modified Boussinesq equations}
 
 There are different ways to derive the Boussinesq equations with slightly different results. Nwogu presented a general framework in \cite{nwogu1993}. A three dimensional wave field with free surface elevation $\eta(x_1, x_2, t)$ and water depth at rest $H(x_1, x_2)$ is considered. The fluid is governed by the Navier-Stokes equations but the shallow water asumptions are modified. The fluid is assumed to be incompressible and the flow is assumed to be irrotational. As in the shallow water equations, the vertical velocity is considered to be small, but the vertical acceleration is not negligible. The nonlinearity and dispersion ratios (\ref{nonlin_disp_ratios}) are assumed to be small. The last difference between the shallow water equations and the Boussinesq consist in considering the horizontal velocity at a specified water depth instead of the mean value.
 
@@ -353,7 +372,7 @@ and the $C_i$ constants depend on the choice of $\beta$
 \end{equation}
 
 
-\subsubsection{Linear dispersion properties and range of applicability}
+\subsection{Linear dispersion properties and range of applicability}
 
 This equations present as a free parameter $\beta$ the relative elevation at which the velocity is evaluated. Its value goes from $-1$ at the seabed, to $0$ at the free surface. Since the equations are an approximation of the fully dispersive and nonlinear problem, the parameter $\beta$ is choosen to minimize the errors introduced by the approximation.
 In fact, the original Boussinesq equations does no present any dispersive term in the mass balance equation (\ref{bsq_eq_mass}) and correspond to a specific choice of $\beta$.
@@ -399,7 +418,7 @@ According to \cite{ursell1953} the nonlinearity and dispersion parameters $\epsi
 
 
 
-\subsubsection{Condiciones de contorno absorbentes}
+\subsection{Condiciones de contorno absorbentes}
 
 Es frecuente que que sea necesario acotar el dominio de estudio, imponiendo condiciones abiertas. Estas condiciones de contorno abiertas o radiantes han de permitir la salida de ondas, al mismo tiempo que garantizan la consistencia matemática del sistema de ecuaciones. Al mismo tiempo que la expresión matemática ha de garantizar la existencia de la solución, tambień ha de ser compatible con la disretización numérica empleada para el interior del dominio. Generalmente, se denomina condiciones de contorno radiantes a la formulación analítica y condiciones de contorno absorbentes al método numerico \cite{navon2004}.
 Se busca un equilibrio entre la precisión con la que se aproxima la condición de radiación (reducción de reflexión) y el coste computacional.

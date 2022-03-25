@@ -3,6 +3,10 @@
 \label{state_art}
 
 
+In this chapter a bibliographic revision of the methods employed to solve free surface flows problems is presented.
+The analysis of the numerical methods for the shallow water equations is more extensive than the review for the Navier-Stokes equations, since this thesis presents some advances in the numerical simulation of the shallow water equations.
+
+
 
 \section{Numerical methods for the Navier-Stokes model}
 
@@ -31,7 +35,7 @@ The computation of the dry-wet interface of the shallow water equations is a cha
 Finite differences (FD)         & polynomial & $\delta(x_i)$ \\ \hline
 Finite volumes (FV)             & polynomial & $1 \ \text{if} \ x\in\Omega_{el}$ \\ \hline
 Galerkin finite elements (FEM)  & polynomial & $N^i$ \\ \hline
-Discontinuous Galerkin (DG)     & polynomial & ?? \\ \hline
+Discontinuous Galerkin (DG)     & polynomial & $N^i \ \text{if} \ x\in\Omega_{el}$ \\ \hline
 \end{tabular}
 \caption{Possible choices of trial and test functions $N^i$ and $W^i$}
 \label{possible_trial_functions}
