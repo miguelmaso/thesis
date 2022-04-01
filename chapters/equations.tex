@@ -304,18 +304,17 @@ Analogously, the same procedure is applied to the topography terms and to the bo
 \section{Boussinesq modified equations}
 
 
-As seen before, the shallow water or Saint-Venant equations are suited to solve convective phenomena.
+The presented SWE are suited to solve convective flows as well as free surface waves. Both phenomena are present in the hyperbolic equations. As the water depth increases, the oscillatory phenomenon or amplitude dispersion increases its relative importance.
+However, a new mechanism not included in the SWE is present in a wave propagation problem, the frequency dispersion \cite{ursell1953}. A need to quantify the relative importance of the new mechanism arises.
 
-Como se ha visto, las ecuaciones de aguas poco profundas o ecuaciones de Saint-Venant son adecuadas para resolver problemas convectivos y también de propagación de ondas de superficie libre. Ambos mecanismos están presentes en las ecuaciones de aguas poco profundas y a medida que el dominio es más profundo, el fenómeno oscilatorio (proporcional a $\sqrt{gh}$) gana importancia. La cuestión es determinar hasta qué profundidad las ecuaciones de aguas poco profundas siguen siendo válidas.
-
-Según la clasificación de Peregrine \cite{peregrine1967}, se definen los números adimensionales de no linealidad y de dispersión, que relacionan la amplitud $\eta$, la profududad $H$ y la longitud de ola característica $\lambda$:
+According to the classification of Peregrine \cite{peregrine1967}, the dimensionless numbers of non-linearity and dispersion relate the wave amplitude $\eta$, the water depth $H$ and the characteristic wavelength $\lambda$:
 
 \begin{equation}
     \epsilon = \frac{\eta}{H} \ ,\quad \mu = \frac{H}{\lambda}
     \label{nonlin_disp_ratios}
 \end{equation}
 
-Estos dos parámetros permiten relacionar los conceptos de dispersión de amplitud y dispersión de frecuencias. EStos conceptos definen cómo la ola se propaga y se dispersa. Es conocido que la una ola se propaga a la velocidad $c=\sqrt{gH}$, pero que debido al término convectivo, esta velocidad depende de la amplitud, introduciendo una no linealidad. Así, considerando la no linealidad, la celeridad de la ola se incrementa como $c=\sqrt{g(H+\eta)}$. Este fenómeno es conocido como dispersión de amplitud y se manifiesta en que cualquier ola acabará rompiendo, ya que la cresta de la ola se propaba más rápido que la base. La importancia de la dispersión de amplitud viene determinada por el parámetro de no linealidad $\epsilon$.
+Both parameters allow to relate the concepts of amplitude and frequency dispersion. These concepts define how the wave propagates. Is well known that a wave propagates at speed $c=\sqrt{gH}$, but due to the convective term, this speed also depends on the wave amplitude, then introducing a non-linearity. Thus, considering the non-linearity, the wave speed increases as $c=\sqrt{g(H+\eta)}$. This phenomenon is known as amplitude dispersion and a first consequence is that every wave will end breaking, since the wave crest propagates faster than the wave bosom. The importance of the amplitude dispersion is related to the non-linearity ratio $\epsilon$.
 
 
 \begin{figure}
@@ -331,6 +330,8 @@ Estos dos parámetros permiten relacionar los conceptos de dispersión de amplit
     \caption{Frequency dispersion}
     \label{freq_dispersion}
 \end{subfigure}
+\caption{Possible propagation mechanisms of a wave.}
+\label{ampl_vs_freq_dispersion}
 \end{figure}
 
 In practice, this phenomenon does not happen. From linear wave theroy we know that the celerity depends not only on the water depth, but also on the wavenumber $k=2\pi/\lambda$. This is known as frequency dispersion and this mechanism is missing on the Saint-Venant equations. The introduction of some extra tems leads to the Boussinesq equations, which model the frequency dispersion. Once the frequency dispersio is included, classical soliton waves can be obtained. In a soliton wave, breaking never occurs during the propagation, since the non linear terms are in equilibrium with dispersive terms.
@@ -349,11 +350,11 @@ There are different ways to derive the Boussinesq equations with slightly differ
 Finally, the fluid at the free surface has to satisfy a dynamic and kynematic bondary conditions. At the bottom, the fluid has to satysfy a kynematic boundary condition.
 
 \begin{equation}\label{dyn_kyn_bc}
-\begin{split}
-p &= 0 \ , \quad \text{at } x_3=\eta \\
-u_3 &= \pder{\eta}{t} + u_1 \pder{\eta}{x_1}  + u_2 \pder{\eta}{x_2} \ , \quad \text{at } x_3=\eta \\
-u_3 &= -u_1 \pder{H}{x_1} -u_2 \pder{H}{x_2} \ , \quad \text{at } x_3=-H
-\end{split}
+\begin{aligned}
+p &= 0 \ , \quad &&\text{at } x_3=\eta \\
+u_3 &= \pder{\eta}{t} + u_1 \pder{\eta}{x_1}  + u_2 \pder{\eta}{x_2} \ , \quad &&\text{at } x_3=\eta \\
+u_3 &= -u_1 \pder{H}{x_1} -u_2 \pder{H}{x_2} \ , \quad &&\text{at } x_3=-H
+\end{aligned}
 \end{equation}
 
 Then, the continuity and momentum equations are integrated from the bottom to the free surface and applying the boundary conditions (\ref{dyn_kyn_bc}). Since the averge horizontal velocity has been substituted by the velocity at a certatin depth, the vertical profile of the velocities must be known. The key of the Boussinesq equations consist in finding an assumption which preserves the the effect of the frequency dispersion. The horizontal velocities $\mathbb{u}=(u_1, u_2)$ are expanded in Taylor series from the seabed ($x_3=-H$),
