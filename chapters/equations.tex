@@ -241,17 +241,24 @@ In the following sections, the rain, the atmospheric pressure and the wind frict
 
 \section{Shallow water equations with primitive variables}
 
-En esta sección se aplica la misma metodología de estabilización a las ecuaciones de aguas poco profundas expresadas en variables primitivas. Esta expresión de las ecuaciones de gobierno presenta la ventaja de ser más lineales, sin embargo producen resultados precisos a bajos números de Froude. Esto hace que no sean apropiadas para resolver problemas donde se presentan régimenes supercríticos. 
 
-Es conocido que la formulación en variables primitivas no es conservativa. Esto sucede debido a que los flujos convectivos no son iguales a los obtenidos mediante las variables conservativas cuando se evalúan las derivadas espaciales. Por ejemplo, en un resalto hidráulico, la evaluación de la derivada del caudal no estará bien definida, ya que se expresa en términos del calado y de la velocidad, es decir, dos gradientes que tienden a $\pm\infty $.
+The presented, conservative, form of the shallow water equations --Saint-Venant equations-- is generally applicable. However, many variations are present in the literature.
+The most common simplification is to express those equations in terms of the reduced or primitive variables --velocity instead of flow rate--.
+Another alternative is to use relative variables, taking the free surface instead of the total water depth.
 
-Tras estas consideraciones preliminares, se espera obtener buenos resultados para soluciones a bajos números de Froude, como es la propagación de olas en un dominio somero. El punto fuerte de esta formulación es la linealidad, y la posibilidad de acoplarla con esquemas que traten explícitamente la convección.
+The primitive variables simplification reduces the non-linearity of the equations, while its range of applicability is reduced. Particularly, the momentum would not be conserved in a change of regime, an hydraulic jump. This fact is related to the evaluation of the convective fluxes, which depend on the flow rate gradient.
+While the evaluation of the flow rate gradient using conservatives variables does not present any problem, this operation will be ill-conditioned when primitive variables are used.
+In other words, in a change of regime there is a discontinuity in both velocity and water depth, and the computation of the flow rate gradient involves the division of two gradient tending to $\pm\infty $.
+
+In spite of this accuracy limitation near shocks, the non linearity reduction makes the primitive variables interesting from the numerical point of view, since less iteration will be needed to achieve convergence.
+Furthermore, good results are obtained for flows at low Froude numbers, such as estuaries, tidal currents or waves propagation.
 
 
 
-\subsection{Ecuaciones}
+\subsection{Equations}
 
-Las ecuaciones de aguas poco profndas en variables primitivas se obtienen mediante la sustitución del balance de masa en el balance de momentum:
+
+The non linearity of the shallow water equations can be reduced if they are expressed in terms of the velocity. The primitive SWE can be obtained by replacing the mass balance equation into the momentum balance and expanding the derivatives:
 \begin{subequations} \label{sw_primitive_balance}
 \begin{equation}
     \pder{\bm{\psi}}{t} + \pder{\mathbf{F}_i}{x_i} + \mathbf{Q} = \mathbf{0}
@@ -271,11 +278,12 @@ Las ecuaciones de aguas poco profndas en variables primitivas se obtienen median
 \end{align}
 \end{subequations}
 
-Si las variables $\psi$ son suficientemente suaves, también verifican la siguiente formulación cuasilineal
+The same linearization procedure can be applied if the variables $\psi$ are smooth enough. The following quasi-linear formulation will be obtained after applying the chain rule,
 \begin{equation}
-    \pder{\bm\psi}{t} + \mathbf{A}_i\pder{\bm\psi}{x_i} + \mathbf{S}\bm{\psi} + \mathbf{T} = 0
+    \pder{\bm\psi}{t} + \mathbf{A}_i\pder{\bm\psi}{x_i} + \mathbf{S}\bm{\psi} + \mathbf{b}_i\pder{z}{x_i} = 0
 \end{equation}
-donde se han definido las matrices tangentes $\mathbf{A}_i = \partial\mathbf{F}_i/\partial\bm{\psi}$. El vetor $\mathbf{T}$ contiene los términos que provienen de linealizar la topografía y es igual a $\mathbf{T} = \mathbf{A}_i\partial\mathbf{Z}/\partial\mathbf{x}_i$, donde $\mathbf{Z}$ es la topografía $z_b$ expresada de forma análoga al vector de incógnitas $\bm\psi$. La matriz $\mathbf{S}$ verifica que $\mathbf{Q} = \mathbf{S}\bm{\psi}$. La expresión de las matrices tangentes es la siguiente:
+where the tangent matrices $\mathbf{A}_i$ have been defined according to the differentiation of the convective fluxes with respect to the unknowns, $\partial\mathbf{F}_i/\partial\bm{\psi}$. 
+Analogously, the same procedure is applied to the topography terms and to the bottom friction. The expression of the tangent matrices is
 \begin{equation}
     \mathbf{A}_1 = \left[\begin{array}{ccc}
         u_1 &  0  &  g  \\
@@ -288,10 +296,6 @@ donde se han definido las matrices tangentes $\mathbf{A}_i = \partial\mathbf{F}_
          0  &  h  & u_2
     \end{array}\right]
 \end{equation}
-
-
-\subsection{Range of applicability}
-
 
 
 
