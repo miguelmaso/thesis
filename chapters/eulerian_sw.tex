@@ -237,6 +237,207 @@ where $\mathbf{I}_4$ is the fourth order identity tensor for the stresses, which
 
 
 
+\subsection{Finite element formulation}
+\label{sec:fem} 
+
+It is conventional to use higher order of interpolation for the momentum or velocity than for the water depth or free surface in order to develop stable finite element formulations \cite{hood1974,heniche2000,bercovier1979}. In this work we restrict ourselves to linear triangles for both $\mathbf{q}$ and $h$ unknowns, since the FIC-FEM procedure is intrinsically stable. For that reason, all terms including spatial derivatives of order higher than two will be neglected. Bilinear quadrilaterals and higher order elements with the same number of degrees of freedom for all the variables will be also stable.
+
+
+\subsubsection{Spatial discretization}
+
+%A finite element discretization $\Omega_h$ is introduced in the domain $\Omega$ and the problem variables can be interpolated with the basis functions of the finite elements space as
+Now the variational problem is expressed by its discrete counterpart to obtain the algebraic formulation. The problem variables are interpolated with the basis functions of the finite elements space as
+
+\begin{equation}
+\phi_i = \sum_a^{n_\Omega} N_a(\mathbf{x})\phi_{ai} \qquad i \in \{1,n_b\}
+\end{equation}
+where $n_\Omega$ represents the total number of nodes in $\Omega_h$ and $\phi_i$ are the problem variables defined in (\ref{variables_and_fluxes}).
+Note that the shape functions are the same for all the variables, $h$ and $q_i$.
+Here we introduce the notation $\bm{\phi}_h$ for the vectors of nodal unknowns -momentum and water height- on the finite element domain. Following the standard Galerkin discretization, the shape functions $N_a$ are used to interpolate the test functions $\omega_k$ and the unknowns. The continuous equation (\ref{variational_balance_fic}) is combined with equation (\ref{fic_shock_capturing}) and can be expressed as the following algebraic system of equations
+\begin{equation} \label{discrete_sw}
+[\mathbf{M} + \mathbf{M}_F] \dot{\bm{\phi}}_h
++ [\mathbf{G} + \mathbf{G}_F + \mathbf{L} + \mathbf{L}_{SC} + \mathbf{R} + \mathbf{R}_F] \bm{\phi}_h
+= \mathbf{T} + \mathbf{T}_F
+\end{equation}
+where the dot ($\dot{\ }$) means temporal derivative. The matrices in Eq. (\ref{discrete_sw}) without subscript are related to the original problem (\ref{residual}); the matrices with subscript F correspond to the terms added by the FIC procedure to ensure stability, and those with the subscript SC are the terms added by the shock capturing technique. Using $a$, $b$ to denote the nodes, $i$, $j$ to denote the space dimension index and $k$, $l$ to denote the balance equation number, the matrices in Eq. (\ref{discrete_sw}) are defined as
+
+\begin{align} \label{discrete_sw_matrices}
+    \displaystyle \mathbf{M}^{ab} &= \int_{\Omega_e}N_a \mathbf{I} N_b d\Omega &
+    \displaystyle \mathbf{G}^{ab} &= \int_{\Omega_e}
+        N_a \mathbf{A}_i \pder{N_b}{x_i} d\Omega \nonumber\\[5pt]
+    \displaystyle \mathbf{L}^{ab} &= \int_{\Omega_e}
+        \mathbf{B}_a \left[\begin{matrix}
+            \mathbf{C} & \mathbf{0} \\ \mathbf{0} & \mathbf{D}
+        \end{matrix}\right] \mathbf{B}_b^T d\Omega &
+    \displaystyle \mathbf{R}^{ab} &= \int_{\Omega_e} N_a \mathbf{S} N_b d\Omega \\[5pt]
+    \displaystyle \mathbf{T}^{ab} &= \int_{\Omega_e} N_a \mathbf{b}_i \pder{z}{x_i} d\Omega +
+        \int_{\Gamma_e} N_a \mathbf{t}_b d\Gamma \nonumber
+\end{align}
+where the diffusive matrix $\mathbf{L}^{ab}$ is defined using the derivatives matrix $\mathbf{B}_a$ and the isotropic tensors $\mathbf{C}$ and $\mathbf{D}$ of viscosity and diffusivity. Note that the diffusivity is zero, but the matrix structure will be reused for the stabilization. The viscosity tensor in Voigt's notation is constructed using the linearization matrices $\mathbf{K}_{ij}$.
+The matrix and the tensors are given by
+
+\begin{subequations}
+\begin{equation}
+\mathbf{B}_a = \left[\begin{matrix}
+    \pder{N_a}{x_1} & 0 & \pder{N_a}{x_2} & 0 & 0 \\
+    0 & \pder{N_a}{x_2} & \pder{N_a}{x_1} & 0 & 0 \\
+    0 & 0 & 0 & \pder{N_a}{x_1} & \pder{N_a}{x_2}
+\end{matrix}\right]
+\end{equation}
+\begin{equation}
+\mathbf{C} = \nu \mathbf{I}_4 \ , \quad
+\mathbf{D} = k \mathbf{I}_2 \ , \quad
+\mathbf{I}_4 = \frac{1}{3} \left[\begin{matrix}
+        2 & -1 & 0 \\
+        -1 & 2 & 0 \\
+        0 & 0 & 3
+    \end{matrix}\right] \ , \quad
+\mathbf{I}_2 = \left[\begin{matrix}
+        1 & 0 \\
+        0 & 1
+    \end{matrix}\right]
+\end{equation}
+\end{subequations}
+
+The stabilization and shock capturing terms from Equation (\ref{discrete_sw}) result in analogous matrices with higher derivatives order, the boundary integral is neglected, i. e.,
+
+\begin{align}
+\displaystyle\mathbf{M}_F^{ab} &= \int_{\Omega_e} \frac{\beta l^e}{2} \pder{N_a}{x_i}\mathbf{A}_i N_b d\Omega &
+\displaystyle\mathbf{G}_F^{ab} &= \int_{\Omega_e} \frac{\beta l^e}{2} \pder{N_a}{x_i}\mathbf{A}_i\mathbf{A}_j \pder{N_b}{x_j} d\Omega \nonumber\\
+\displaystyle\mathbf{L}_{SC}^{ab} &= \int_{\Omega_e} \mathbf{B}_a \left[\begin{matrix}
+        \mathbf{C}_\text{art} & \mathbf{0} \\ \mathbf{0} & \mathbf{D}_\text{art}
+    \end{matrix}\right] \mathbf{B}_b^T d\Omega &
+\displaystyle\mathbf{R}_F^{ab} &= \int_{\Omega_e} \frac{\beta l^e}{2} \pder{N_a}{x_i}\mathbf{A}_i \mathbf{S} N_b d\Omega \\
+\displaystyle\mathbf{T}_F^{ab} &= \int_{\Omega_e} \frac{\beta l^e}{2} \pder{N_a}{x_i}\mathbf{A}_i \mathbf{b}_j \pder{z}{x_j} d\Omega
+\nonumber
+\end{align}
+
+
+\subsection{Temporal integration}
+
+The resulting expression from the spatial discretization (\ref{discrete_sw}) can be written in the following compact form 
+\begin{equation} \label{discrete_compact}
+\tilde{\mathbf{M}}\dot{\bm{\phi}}_h + \tilde{\mathbf{K}}\bm{\phi}_h = \tilde{\mathbf{f}}
+\end{equation}
+where the symbol ($\,\tilde{}\,$) denotes the assembly of the system matrices and vectors for all the elements.
+We have integrated this equation introducing a time discretization using the well known BDF2 implicit scheme \cite{curtiss1952,brayton1972}. The system of equations in a discrete time domain yields
+\begin{equation}
+\begin{split} \label{discrete_bdf2}
+\tilde{\mathbf{M}}\dot{\bm{\phi}}_h^{n+1} + \tilde{\mathbf{K}}^{n+1}\bm{\phi}_h^{n+1} = \tilde{\mathbf{f}}^{n+1} \\
+\dot{\bm{\phi}}_h^{n+1} = \beta_0 \bm{\phi}_h^{n+1} + \beta_1 \bm{\phi}_h^n + \beta_2 \bm{\phi}_h^{n-1}
+\end{split}
+\end{equation}
+We will consider a variable time step to compute the BDF coefficients using the notation $t^{n+1} = t^n + \Delta t^n$:
+\begin{equation}
+\begin{split}
+\beta_0 &= \tau (\rho^2 + 2\rho) \\
+\beta_1 &= -\tau (\rho^2 + 2\rho + 1) \\
+\beta_2 &= \tau
+\end{split}
+\end{equation}
+with
+\begin{equation}
+\begin{split}
+\tau &= \frac{1}{\Delta t^n(\rho^2 + \rho)} \\
+\rho &= \frac{\Delta t^{n-1}}{\Delta t^n}
+\end{split}
+\end{equation}
+
+The solution of this implicit system requires an iterative procedure. We have used the Newton-Raphson method, by which the problem unknowns are computed in an incremental way as
+$\bm{\phi}_h^{n+1,i+1} = \bm{\phi}_h^{n+1,i} + \delta\bm{\phi}_h^i$,
+where the superscript $i$ denotes the non linear iteration.
+This notation allows us to rewrite the system of equations (\ref{discrete_bdf2}) defining a left hand side matrix multiplied by the increment $\delta\bm{\phi}_h^i$ and a right hand side vector which depends on the previous non linear iteration as
+\begin{equation}
+[\beta_0\tilde{\mathbf{M}} + \tilde{\mathbf{K}}^{n+1,i}] \delta\bm{\phi}_h^i
+= \tilde{\mathbf{f}}^{n+1,i} - \tilde{\mathbf{K}}^{n+1,i}\bm{\phi}_h^{n+1,i} - \tilde{\mathbf{M}}\dot{\bm{\phi}}_h^{n+1,i}
+\end{equation}
+The first non linear iteration $\bm{\phi}_h^{n+1,0}$ is initialized using a prediction given from the BDF formula at the last time step:
+\begin{equation}
+\bm{\phi}_h^{n+1,0} = \bm{\phi}_h^n + \Delta t^n \dot{\bm{\phi}}_h^{n}
+\end{equation}
+
+
+\subsection{Dry domain model}
+
+When small or quasi zero water depths are involved in simulations, some instabilities may arise. In addition, the solution of the time integration scheme requires the inverse of a matrix which is singular in the dry regions. In this section we review the challenges associated to such a problem, and the way we have circumvented them.
+
+\paragraph{Recovery of the velocity field}
+The evaluation of the characteristic matrices $\mathbf{A}_i$ involves the velocities, which are recovered given the primary variables $\bm{\phi}$ from the previous iteration.
+Since the computation of the velocity is the result of dividing
+the discharge by the water height, this operation is ill-conditioned in the dry regions. In this research, the velocity field is computed in a two step procedure. First of all, the inverse of the water depth is computed at each element following the next expression, initially proposed in \cite{kurganov2007}:
+
+\begin{equation} \label{h_inv_kurganov}
+\hat{h}^{-1} \defeq \frac{\sqrt{2}\max(h,0)}{\sqrt{h^4 + \max(h^4, \varepsilon^4)}}
+\end{equation}
+where $\varepsilon$ is a threshold which depends on the element size; usually $\varepsilon = 0.1 l_e$ is chosen. Figure \ref{inverse_heihgt} shows a dimensionless representation of equation (\ref{h_inv_kurganov}). The second step in the velocity computation is a diffusive projection on the nodes:
+
+\begin{equation}
+\mathbf{M}_L \mathbf{u} = \hat{h}^{-1}_k \mathbf{M} (\mathbf{q})
+\end{equation}
+where $\mathbf{M}$ is the consistent mass matrix and $\mathbf{M}_L$ is the lumped mass matrix. This projection will introduce some artificial diffusion in the velocity field near the dry-wet interface reducing the possible maxima extrema.
+
+The expression(\ref{h_inv_kurganov}) tends to zero in dry or partially dry regions, while the analytical expression of the height inverse is recovered when $h>\varepsilon$.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=\textwidth]{img/eulerian/inverse_height.pdf}
+    \caption{Dimensionless functions to compute the  inverse height and the wet fraction.}
+    \label{inverse_heihgt}
+\end{figure}
+
+
+% \paragraph{Partially wet elements}
+% At the elements where the shoreline is located, the interpolated water depth will not represent the real water surface.
+% Therefore, those elements need a special consideration in order to prevent unrealistic oscillations. Excluding those elements from the computations is equivalent to introduce an artificial barrier, and the inclusion of those elements will incur in a consideration of an extra volume of water.
+% We chose to include all the elements in the computation and to modify the balance equations in order to satisfy equilibrium at rest (Figure \ref{partially_dry}). This is achieved by introducing a modified topography
+% $z'$ which is obtained imposing the following equilibrium condition:
+% \begin{equation}
+%     \pder{\eta'}{x_i} = \pder{z'}{x_i} + \pder{h}{x_i} = \mathbf{0}
+% \end{equation}
+
+% \begin{figure}
+%     \centering
+%     \includegraphics[width=.5\textwidth]{img/fig/partially_dry.pdf}
+%     \caption{Dry, wet and partially wet elements in 1D. The dashed line shows the modified topography  and the corresponding free surface.}
+%     \label{partially_dry}
+% \end{figure}
+
+% Following the idea of \cite{defina2000}, the identification of partially wet elements is done across the definition of a wet fraction function. In this research, instead of modifying the vertical integration of the Navier-Stokes equations, the wet fraction is  defined making use of the pseudo inverse $\hat{h}^{-1}$. The wet fraction $w$ reads:
+% \begin{equation}
+% w = h\hat{h}^{-1}
+% \end{equation}
+
+% The wet fraction function is defined in all the elements -wet, dry and partially dry- and its value goes from $0$ for dry elements to $1$ for wet elements (see Figure \ref{inverse_heihgt})
+% This function makes possible to construct the source system vector $\mathbf{T}$ (see equations (\ref{discrete_sw}) and (\ref{discrete_sw_matrices})) with a linear combination between the two topographies as $wz + (1-w)z'$.
+
+
+\paragraph{Avoiding the singularity of the system matrix}
+Since all the elements are included in the computational domain, the last issue to overcome with small water depths are the numerical difficulties stated in Section \ref{sec:equations}.
+When there is a null water depth, the theoretical flow rate and velocity are zero. In that point the matrices $\mathbf{A}_i$ are not invertible and the eigenvalues are all equal to zero. In that case, the hyperbolicity property of the system is lost.
+In practice, due to spurious oscillations, the flow rate and the velocity may be different from zero. The idea is to freeze the flow and to allow to invert the system matrix adding a diagonal of non zero terms to the momentum equation, i. e.,
+
+
+\begin{equation}
+\mathbf{G} \defeq \mathbf{G} + \xi\,\text{diag}(1, 1, 0)
+\end{equation}
+
+
+The selection of the areas where there is a dry domain is controlled with the wet fraction function and $\xi$ is defined as
+\begin{equation}
+\xi = k(1-w)
+\end{equation}
+
+In our numerical experiments we have chosen $k=10^3$.
+The addition of a diagonal matrix remembers the artificial Manning friction proposed in \cite{heniche2000}. This term plays the role of freezing the flow in dry areas.
+
+
+\paragraph{Mass conservation properties}
+The stabilized method proposed is not monotonic and the dry domain model is acting to ensure stability, but it does not provide monotonicity. We note that all the modifications have been done at the momentum balance level. This means that mass is conserved globally by the weak formulation, but the mass sign preservation is not guaranteed.
+
+Both unknowns, water depth and flow rate, are continuous at the dry-wet interface, but its derivatives are discontinuous. Even though the shock capturing scheme can not avoid this kind of oscillations, it will mitigate them, and the order of accuracy will be lost due to the introduction of the non-linear artificial diffusion \cite{badia2014}.
+
+
+
 
 
 
