@@ -1,12 +1,56 @@
 
-\chapter{A Finite Element Method for the shallow water equations}
+\chapter{Finite Element Methods for the shallow water equations}
 \label{eulerian_sw}
 
 
-\section{Weak formulation}
+Due to the complexity of the geometry and the source terms is not possible to find an analytical solution for the SW equations, this explains the need to design strategies to find numerical solutions. In this chapter some numerical strategies with the FEM in an eulerian framework are explored.
+The Eulerian frameworks are robust and very efficient for continuous problems. However, discontinuities and front tracking may require especial attention. Since in those physical phenomena flooding or moving shoreline may occur, the identification of the dry domain is a challenging problem for the Eulerian FEM.
+Moreover, monotonic properties are especially interesting when partially wet domains are considered, since the water depth is a positive magnitude but, in general, numerical methods does not verify this property.
+
+The SW equations have traditionally been modelled using finite volumes (FV) because of its advantages of stability and monotonicity. Given its geometric flexibility and its natural way to introduce high order schemes, the FEM has been applied too \cite{zien3,navon1979,navon1988}.
+Halfway between FV and FEM, there is the discontinuous Galerkin (DG) technique \cite{ambati2007,khan2014,lee2019}. DG method has the advantages of the geometrical flexibility of the FEM and the stability of FV, but the introduction of high order DG schemes is not straightforward.
+Since the FEM can exhibit spurious oscillations, different strategies such as stabilization, monotonic schemes or different order of polynomial interpolation can be explored \cite{hood1974,zien3,ortiz2012}.
+
+
+
+
+%This research is focused in classical stabilized finite elements with an equal order interpolation for all the variables. We will explore the capabilities of the finite increment calculus (FIC) technique to develop stable formulations for the SW equations.
+
+In this chapter, the general procedure for FEM is presented. Then, some stabilization techniques are explored: the FIC-based stabilization, the flux corrected technique and the gradient jump viscosity method. Finally, the stabilized formulation is applied to the Boussinesq modified equations. Several examples are provided to show the capabilities and limitations of each method.
+
+
+
+
+\section{Galerkin weak formulation}
+
+
+Given a residual
 
 
 \section{Stabilized formulations for the shallow water equations}
+
+
+Several families of stabilization methods can be found in the literature, usually applied to the convection-diffusion equations and the Navier-Stokes equations. The most relevant are SUPG \cite{brooks1982},
+ASGS\cite{codina1998}, GLS \cite{hughes1989} and FIC\cite{onate1996,onate1998}.
+Due to the hyperbolic character of the SW equations, a particular stabilization method for compressible flow or the Euler equations need to be developed.
+The FIC approach is based on the incremental solution of a modified system of non-local governing equations accounting for higher order terms obtained by applying the balance laws in domains of finite size.
+The FIC-based stabilization has been applied in conjunction with the FEM to convection-diffusion, incompressible flows, among other applications \cite{onate1998,onate2001}.
+In those cases, where the convective term has an important role, a first order FIC term is enough to provide stability to the system.
+However, the SW equations are governed by the convective term and the wave equation in a mixed formulation \cite{codina2008}. In consequence, the common derivation of the FIC-based stabilization is not enough to provide stability in all the range of applicability of the SW equations. 
+A generalization of this method is proposed in order to provide a global stability for the SW equations.
+
+Once global stability is achieved, local instabilities may appear near discontinuities, which are inherent to the supercritical flows.
+A local shock capturing technique was initially proposed by Hughes \cite{hughes1986} and a review of shock capturing techniques can be found in Codina \cite{codina2011}.
+Other possibilities of the FIC-based formulations are explored to provide a shock capturing stabilization \cite{cotela2016}.
+
+Additionally, the dry domain requires an accurate modeling because the hyperbolic equations require positive water depth in all the domain.
+Several authors have proposed different methods to solve the shallow water equations with moving shoreline. Leclerc et al. \cite{leclerc1990} proposed an Eulerian method. Later, Heniche et al. \cite{heniche2000} modified the method allowing the free surface to plunge under the topography.
+Other authors developed a rough-porous layer \cite{candy2017,barros2011} or a modified depth integration \cite{defina2000}. These approaches introduce new physical parameters in the balance equations.
+An Eulerian approach based on the work of \cite{leclerc1990} and \cite{heniche2000} is presented.
+
+
+
+
 
 
 \subsection{Patch test}
