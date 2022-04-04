@@ -1,0 +1,11 @@
+\documentclass[crop,tikz]{standalone}
+
+\begin{document}
+\begin{tikzpicture}
+    \draw (0,0) rectangle (100,5);
+    % \draw[fill=gray!20!white] (65,2) rectangle (68,3);
+    \draw[draw=gray, line width=2mm] (66.66,0) -- (66.66,5);
+    \node[right, scale=5] at (0,2.5) {Inlet};
+    \node[left, scale=5] at (100,2.5) {Outlet};
+\end{tikzpicture}
+\end{document}
