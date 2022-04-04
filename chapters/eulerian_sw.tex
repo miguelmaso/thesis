@@ -69,6 +69,175 @@ An Eulerian approach based on the work of \cite{leclerc1990} and \cite{heniche20
 
 
 
+\subsection{FIC stabilization}
+\label{sec:stabilization}
+
+We will consider the quasi-linear balance equations written in residual form as a vector
+
+\begin{equation} \label{residual}
+\mathbf{r} \defeq 
+  \pder{\bm{\phi}}{t} + \mathbf{A}_i\pder{\bm{\phi}}{x_i}
+  -\pder{}{x_i}\left(\mathbf{K}_{ij}\pder{\bm{\phi}}{x_j}\right) + \mathbf{S}\bm{\phi} + \mathbf{b}_i\pder{z}{x_i} \qquad i,k\in\{1,n_d\}
+\end{equation}
+where $n_d=2$ is the number of dimensions. The size of the vector $\mathbf{r}$ is equal to the number of balance equations, $n_b=3$.
+
+In the one dimensional case ($n_d=1$) and scalar balance ($n_b=1$), the FIC-based stabilization is based on a modified non local version of the governing equations as \cite{onate1998}
+
+\begin{equation}
+r - \frac{1}{2}l^e\pder{r}{x} = 0
+\end{equation}
+
+The stabilization parameter $l^e$ is usually taken the element length. However, in 2D and 3D, or when the number of balance equations $n_b$ is different than $n_d$, the choice of the $l^e$ parameter is non trivial.
+Several approaches can be found in the literature. In \cite{onate1998} $l^e$ is chosen as a vector, but in later publications such as \cite{onate2001} a generalized formulation for different values of $n_d$ and $n_b$ was presented.
+For the stabilization of the Navier-Stokes equations different projections of the element size over the velocity and over the velocity gradient have been proposed \cite{cotela2016}. Here we will use index notation for the residual vector $\mathbf{r}$ in order to distinguish the indices that goes to $n_d$ or to $n_b$. To sum up, the different forms of the FIC stabilization procedure can be written as
+
+\begin{subequations}
+\begin{align}
+r_{k} - \frac{1}{2}l^e_i\pder{r_k}{x_i} &= 0
+    \qquad i\in\{1,n_d\} \ ,\ k\in\{1,n_b\}\\[5pt]
+r_{k} - \frac{1}{2}l^e_u\frac{u_i}{\norm{\mathbf{u}}}\pder{r_k}{x_i} &= 0
+    \qquad i,k\in\{1,n_d\}\\[5pt]
+r_{k} - \frac{1}{2}l^e_{g_i}\frac{\sfrac{\partial\mathbf{u}}{\partial x_i}}{\norm{\nabla u_i}}\pder{r_k}{x_i} &= 0
+    \qquad i,k\in\{1,n_d\}
+\end{align}
+\end{subequations}
+
+We propose a stabilization term which is oriented along the characteristics of the hyperbolic equations, as
+
+\begin{equation} \label{fic_sw}
+r_{k} - \frac{1}{2}l^e\frac{\mathbf{A}_i}{\lambda}\pder{r_k}{x_i} = 0
+    \qquad i\in\{1,n_d\} \ ,\ k\in\{1,n_b\}
+\end{equation}
+For consistency the linearization matrix $\mathbf{A}_i$ is normalized with the maximum eigenvalue $\lambda=\abs{\mathbf{u}} + c$. This stabilization is analogue to the virtual multi-scale stabilization proposed in \cite{codina2008b}. The linearization matrix $\mathbf{A}_i$ provides a weighting procedure between the stabilization of the convective and the mixed wave equation terms. In practice the element size is multiplied by an algorithmic constant in order to control the amount of diffusion added by the stabilization and it will be studied in the examples of Section \ref{sec:examples}. Recovering the vector notation for the residual, the FIC-balance reads
+\begin{equation} \label{fic_sw_beta}
+\mathbf{r} - \beta l^e\frac{\mathbf{A}_i}{\lambda}\pder{\mathbf{r}}{x_i}
+    \qquad i\in\{1,n_d\}
+\end{equation}
+
+The FIC formulation is the result of introducing the residual of the shallow water equations (\ref{residual}) into the expression in Eq (\ref{fic_sw_beta}). The variational expression of the equation is obtained by multiplying the equation by a test function $\omega_k$ and integrating over the domain $\Omega$. This gives
+
+\begin{equation} \label{variational_fic}
+\int_\Omega \left(
+    \omega_k \mathbf{r} - \omega_k \beta l^e\frac{\mathbf{A}_i}{\lambda}\pder{\mathbf{r}}{x_i}
+\right) d\Omega = 0
+\end{equation}
+The second term of Equation (\ref{variational_fic}) is integrated by parts. Note that the element length $l^e$, the linearization matrix $\mathbf{A}_i$ and its eigenvalue $\lambda$ are defined constant inside the element. Hence, the boundary integral which appears after integration by parts should be understood as the boundary of all the elements
+
+\begin{equation} \label{variational_fic_parts}
+\int_\Omega \omega_k \mathbf{r} d\Omega
++ \int_\Omega \beta l^e\frac{\mathbf{A}_i}{\lambda}\pder{\omega_k}{x_i} \mathbf{r} d\Omega
+- \sum_e \int_{\Gamma_e} \beta l^e\frac{\mathbf{A}_i}{\lambda}\omega_kn_k \mathbf{r} d\Gamma = 0
+\end{equation}
+In this work we neglect the boundary integrals assuming that the residual $\mathbf{r}$ is null at the boundary of the elements. At this point we introduce the balance Equation (\ref{residual}) and integrate by parts the diffusive term.
+Derivatives of order higher tan two will be neglected since we are using linear triangles.
+The result is
+
+\begin{multline} \label{variational_balance_fic}
+\int_\Omega \left(
+    \omega_k \pder{\bm{\phi}}{t} + \omega_k \mathbf{A}_i\pder{\bm{\phi}}{x_i}
+    + \pder{\omega_k}{x_i} \mathbf{K}_{ij} \pder{\bm{\phi}}{x_j} + \omega_k \mathbf{S}\bm{\phi} + \omega_k \mathbf{b}_i\pder{z}{x_i}
+\right) d\Omega\\ +
+\int_\Omega \frac{\beta l^e}{\lambda} \left(
+    \pder{\omega_k}{x_j} \mathbf{A}_j \pder{\bm{\phi}}{t}
+    + \pder{\omega_k}{x_j} \mathbf{A}_j\mathbf{A}_i\pder{\bm{\phi}}{x_i}
+    + \ppder{\omega_k}{x_j} \mathbf{A}_j\mathbf{K}_{ij} \pder{\bm{\phi}}{x_i} \right. \\
+    \left.
+    + \pder{\omega_k}{x_j} \mathbf{A}_j \left( \mathbf{S}\bm{\phi} + \mathbf{b}_i\pder{z}{x_i} \right)
+\right) d\Omega
+=0
+\end{multline}
+Equation (\ref{variational_balance_fic}) is the stabilized variational form for the shallow water equations, similar to the expression obtained by SUPG. Note that the parameter $\beta l^e/\lambda$ is analogous to the characteristic time $\tau$ of the classical SUPG or GLS techniques \cite{cotela2016}.
+
+
+
+
+\subsubsection{Shock capturing stabilization}
+
+In this section we explore other possibilities of the characteristic length definition in order to obtain a shock capturing stabilization. Here, the mass balance and the momentum balance are considered separately and the characteristic length is projected onto the gradient of the unknown
+
+\begin{subequations} \label{eq:shock_capt}
+\begin{align}
+\text{Momentum balance:} &&
+    r_i^q - \frac{l^e}{2\norm{\nabla q_i}}\pder{q_i}{x_j}\pder{r_i^q}{x_j} &= 0 \label{eq:shock_capt_a} && \\ 
+\text{Mass balance:} &&
+    r^h - \frac{l^e}{2\norm{\nabla h}} \pder{h}{x_j} \pder{r^h}{x_j} &=0 \label{eq:shock_capt_b}
+\end{align}
+\end{subequations}
+
+Multiplying the momentum balance Equation (\ref{eq:shock_capt_a}) by a proper test function $\omega_k$, integrating over the domain in the same way as in Equation (\ref{variational_fic}),
+one obtains the following variational form:
+\begin{equation}
+    \int_\Omega \omega_k r_i^q d\Omega
+     - \int_\Omega \omega_k \frac{l^e}{2\norm{\nabla q_i}}\pder{q_i}{x_j}\pder{r_i^q}{x_j}
+     d\Omega = 0
+    \label{partial_variational_shock_capt}
+\end{equation}
+
+After integration of Equation (\ref{partial_variational_shock_capt}) by parts and rearranging terms we obtain
+\begin{multline}
+    \int_\Omega \omega_k r_i^q d\Omega 
+    + \int_\Omega \pder{\omega_k}{x_j}
+        \frac{l^e r_i^q}{2\norm{\nabla q_i}}\pder{q_i}{x_j} d\Omega \\
+    + \int_\Omega \omega_k \pder{}{x_j}\left(
+         \frac{l^e}{2\norm{\nabla q_i}}\pder{q_i}{x_j}
+        \right)r_i^q d\Omega 
+    - \int_\Omega \pder{}{x_j}\left(
+        \omega_k \frac{l^e}{2\norm{\nabla q_i}}\pder{q_i}{x_j}r_i^q \right) d\Omega
+        = 0
+        \label{variational_shock_capturing}
+\end{multline}
+Since we will use linear triangles,
+the last two terms of Equation (\ref{variational_shock_capturing}) are dropped because they involve derivatives of the characteristic length and can be transformed into a boundary integral.
+
+The same procedure is applied to the mass balance equation (\ref{eq:shock_capt_b}). As a result we obtain the following system of equations for both unknowns
+\begin{subequations} \label{fic_shock_capturing}
+\begin{align}
+\text{Momentum balance:} &&
+\int_\Omega \omega_k r_i^q d\Omega 
++ \int_\Omega \pder{\omega_k}{x_j}
+\frac{l^e r_i^q}{2\norm{\nabla q_i}}\pder{q_i}{x_j} d\Omega &=0 && \\
+\text{Mass balance:} &&
+\int_\Omega \omega_k r^h d\Omega 
++ \int_\Omega \pder{\omega_k}{x_j}
+    \frac{l^e r^h}{2\norm{\nabla h_i}}\pder{q_i}{x_j} d\Omega &=0
+\end{align}
+\end{subequations}
+
+The above expressions (\ref{fic_shock_capturing}) are equivalent to a classical shock capturing method, in which the artificial diffusivity $k_{art}$ and artificial viscosity $\nu_{art}$ can be identified as
+\begin{subequations} \label{k_art}
+\begin{equation}
+\nu_{art} = \frac{1}{2}\alpha l_e \frac{\abs{r_i^q}}{\norm{\nabla u_i}}
+\end{equation}
+\begin{equation}
+k_{art} = \frac{1}{2}\alpha l_e \frac{\abs{r^h}}{\norm{\nabla h}}
+\end{equation}
+\end{subequations}
+where $\alpha$ is an algorithmic constant.
+
+Such approach can be refined by introducing the stabilization along the streamlines. This way, $k_{art}$ and $\nu_{art}$ need to be added only in the crosswind direction. The diffusive term is added to the mass balance with the following orthogonal tensor
+
+\begin{equation}
+\mathbf{D}_{art} = k_{art}
+\left( \mathbf{I} - \frac{1}{\abs{\mathbf{u}}^2} \mathbf{u} \otimes \mathbf{u} \right)
+\end{equation}
+The viscosity is introduced into the momentum balance with a fourth order tensor in the crosswind direction. Using Voigt's notation,
+\begin{equation}
+\mathbf{C}_{art} = \nu_{art} \mathbf{I}_4 \mathbf{J}
+\end{equation}
+with
+\begin{equation}
+\mathbf{J} = \left[\begin{matrix}
+    1-\frac{q_1q_1}{\mathbf{q}\mathbf{q}} & -\frac{q_1q_2}{\mathbf{q}\mathbf{q}} & 0 \\
+    -\frac{q_1q_2}{\mathbf{q}\mathbf{q}} & 1-\frac{q_2q_2}{\mathbf{q}\mathbf{q}} & 0 \\
+    0 & 0 & 1-\frac{q_1q_2}{\mathbf{q}\mathbf{q}}
+\end{matrix}\right]
+\end{equation}
+where $\mathbf{I}_4$ is the fourth order identity tensor for the stresses, which is derived from Equation (\ref{stresses}) and will be defined in Section \ref{sec:fem}.
+
+
+
+
+
 
 
 \subsection{Patch test}
