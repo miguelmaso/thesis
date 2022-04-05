@@ -46,6 +46,7 @@ Unfortunately, this problem is not straightforward to solve using finite element
 
 
 \section{Stabilized formulations for the shallow water equations}
+\label{sec:fic_fem_stabilization}
 
 
 Several families of stabilization methods can be found in the literature, usually applied to the convection-diffusion equations and the Navier-Stokes equations. The most relevant are SUPG \cite{brooks1982},
@@ -232,13 +233,13 @@ with
     0 & 0 & 1-\frac{q_1q_2}{\mathbf{q}\mathbf{q}}
 \end{matrix}\right]
 \end{equation}
-where $\mathbf{I}_4$ is the fourth order identity tensor for the stresses, which is derived from Equation (\ref{stresses}) and will be defined in Section \ref{sec:fem}.
+where $\mathbf{I}_4$ is the fourth order identity tensor for the stresses, which is derived from Equation (\ref{stresses}) and will be defined in Section \ref{sec:fic_fem}.
 
 
 
 
 \subsection{Finite element formulation}
-\label{sec:fem} 
+\label{sec:fic_fem} 
 
 It is conventional to use higher order of interpolation for the momentum or velocity than for the water depth or free surface in order to develop stable finite element formulations \cite{hood1974,heniche2000,bercovier1979}. In this work we restrict ourselves to linear triangles for both $\mathbf{q}$ and $h$ unknowns, since the FIC-FEM procedure is intrinsically stable. For that reason, all terms including spatial derivatives of order higher than two will be neglected. Bilinear quadrilaterals and higher order elements with the same number of degrees of freedom for all the variables will be also stable.
 
@@ -412,7 +413,7 @@ The expression(\ref{h_inv_kurganov}) tends to zero in dry or partially dry regio
 
 
 \paragraph{Avoiding the singularity of the system matrix}
-Since all the elements are included in the computational domain, the last issue to overcome with small water depths are the numerical difficulties stated in Section \ref{sec:equations}.
+Since all the elements are included in the computational domain, the last issue to overcome with small water depths are the numerical difficulties stated in Section \textcolor{red}{AAAAA}.
 When there is a null water depth, the theoretical flow rate and velocity are zero. In that point the matrices $\mathbf{A}_i$ are not invertible and the eigenvalues are all equal to zero. In that case, the hyperbolicity property of the system is lost.
 In practice, due to spurious oscillations, the flow rate and the velocity may be different from zero. The idea is to freeze the flow and to allow to invert the system matrix adding a diagonal of non zero terms to the momentum equation, i. e.,
 
@@ -880,6 +881,209 @@ Regarding the performance of the FIC-FEM formulation, it captures the main aspec
 
 
 \section{The flux corrected transport for the shallow water equations}
+\label{sec:fc}
+
+
+
+As seen before, the numerical approximation of hyperbolic systems -convection dominant- exhibits instabilities. Those instabilities are inherent to schemes of order greater than 1 (Godunov barrier theorem \cite{godunov1959}). With the aim of suppressing the spurious oscillations and to extend to stable schemes to higher orders, the flux corrected algorithms were proposed.
+This new family of methods seeks for non oscillatory solutions and also for monotonicity of the numerical solution. At first, the flux corrected algorithms were proposed for structured meshes and explicit time integration schemes \cite{boris1973, book1975}. Generally, they were based for FD algorithms, but rapidly were extended also to Galerkin discretizations and implicit schemes \cite{kuzmin2001, lohner2008ch9}. Even though, the flux corrected transport has not been extended to many applications in the FEM community.
+
+
+In this section the concept of flux correction is extended to the SW equations. The linearized equations presented in Chapter \ref{equations} can be understood as a generalization of the scalar transport equations, where the convection operator is extended with a matrix and the scalar unknown is replaced by a vector. This extension is proposed as an alternative to Lagrangian methods (Chapter \ref{lagrangian_sw}), where the shoreline discontinuity is naturally captured. At the same time, looks for a better accuracy than the stabilized Eulerian methods (Section \ref{sec:fic_fem_stabilization}):
+the introduction of the \emph{shock capturing} leads to a lower convergence order, making them first order. The main purpose to explore the flux corrected algorithm is to make the numerical solution inherit the monotonicity of the physical solution. The water column is a positive property, whereas null water depth means the dry sub-domain.
+Tracking the zero isoline properly is of crucial importance to accurately model the wetting and drying processes -floods-. Unfortunately, the zero isoline presents a discontinuity in the unknowns and the hyperbolic property is lost, leading to numerical oscillations and consequently, losing the monotonic property.
+
+
+The flux corrected algorithm is based on the modification of the resulting matrices from the discrete weak variational. The formulation presented in Section \ref{sec:fic_fem} will be modified in order to enforce it to verify monotonic properties at the discrete level. The subjacent correction acts such way that all the modifications are conservatives, namely, there is not gain or loss of fluid mass. The original scheme is recovered where the solution is smooth and does no require modifications.
+
+
+In order to achieve that properties, the low order scheme is constructed through a lumping procedure of the mass matrix and the addition of enough diffusion in order to eliminate the negative entries of the off-diagonal terms. In that way, the construction of the low and high order schemes is performed elementally. On the other hand, the computation of the fluxes and its limiters is computed nodally. Finally, the global assembly is element-wise, as far as the nodes belong to the elements. The fact of recovering the high order scheme ith consistent mass matrix is specially interesting to accurately simulate transient problems.
+
+
+
+
+\subsection{Equivalence with pure convection problems}
+
+In a first instance, the flux corrected algorithms where developed for the transport equations as a two stage predictor-corrector algorithm. The correction of the fluxes had a direct relation with the physical fluxes and were evaluated at the edges of the mesh, acting directly to the entries of the global matrix.
+
+Since the pure convection problem is a particular hyperbolic system of conservation law, this algorithm was extended to more complex systems, like the Euler equations. Here we will show the equivalence of the inviscid SW equations with pure convection problems.
+The starting point are the linearized SW equations in conservative form (\ref{general_sw_lin}), which are analogue to the hyperbolic euler equations:
+
+\begin{equation}
+\pder{\bm\phi}{t} + \bm A_i \pder{\bm\phi}{x_i} = 0
+\end{equation}
+
+The matrix $\bm A_i$ is diagonalizable and can be decomposed as $\bm A_i = \bm T_i \bm\Lambda_i \bm T_i^{-1}$. Kuzmin \cite{kuzmin2005b} proposes a transformation for the one dimensional case. In high order dimensions, we can define a vector of transformed unknowns $\bm\Phi_i = \bm T_i^{-1}\bm\phi$ which yields
+
+
+\begin{equation}
+\pder{\bm\Phi_j}{t} + \bm\Lambda_i \pder{\bm\Phi_j}{x_i} = 0
+\end{equation}
+Since $\bm\Lambda$ is a diagonal matrix, the above expression consists on a set of decoupled convection equations.
+
+\begin{equation}
+\pder{\Phi_{jk}}{t} + \Lambda_{ikk} \pder{\Phi_{jk}}{x_i} = 0 , \quad
+k = 1,\text{dim}+1 , \quad
+i,j = 1,\text{dim}
+\end{equation}
+
+In practice, instead of applying the flux correction concept to the diagonal system, the algorithm will be extended to the original system os equations. The main difficulty which appears when the system is decomposed is that there isn't a unique direction of propagation for each uncoupled unknowns. This is known as the dispersive behavior of the shallow water equations.
+
+
+
+\subsection{FCT algorithm}
+
+The FCT algorithm inherits the concept of limiting introduced by Boris and Book \cite{boris1973} and was developed by Löhner \cite{lohner2008ch9} and Kuzmin \cite{kuzmin2001}. They also extended the concept of flux correction for transport schemes to the euler equations \cite{lohner2008ch9, kuzmin2005b}. In more recent developments, the flux correction techniques are applied to the shallow water equations, see Ortiz \cite{ortiz2012}. However, Ortiz presents an algorithm with fully decoupled high and low order solutions. In this section, the flux corrected scheme is applied to the shallow water equations preserving the same discretization for both high and low order solutions. 
+
+
+
+\subsubsection{High and low order schemes}
+
+The high order solution uses the spatial discretization presented in [FIC-based shallow water eq.] and the backward differentiation formula for the time integration.
+
+\begin{equation} \label{ho}
+\mathbf{M}_C\dot{\phi}^{n+1} + \mathbf{K}\phi^{n+1} = \mathbf{q}
+\end{equation}
+\begin{equation} \label{bdf}
+\dot{\phi}^{n+1} = \beta_1\phi^{n+1} + \beta_2\phi^{n} + \beta_3\phi^{n-1}\dots
+\end{equation}
+
+where $\phi$ is the vector of the nodal unknowns and $\dot{(\ )}$ denotes the time derivative, $\mathbf{M}_C$ is the consistent mass matrix, $\mathbf{K}$ is the system matrix and $\mathbf{q}$ is the source term. This scheme will be taken as reference for the high order scheme but, as any stabilized and not monotonicity preserving formulation, is not oscillation-free, specially near the wet-dry interface.
+%In \cite{ortiz2012} the high order solution is obtained with the CBS algorithm, which was initially proposed by Zienkiewicz and Taylor \cite{zien3}.
+
+The low order solution is obtained from the high order scheme with a mass lumping procedure and adding scalar diffusion to the high order scheme:
+
+\begin{equation} \label{lo}
+\mathbf{M}_L\dot{\phi}^{n+1} + \left(\mathbf{K+D}\right)\phi^{n+1} = \mathbf{q}
+\end{equation}
+\begin{equation} \label{scalar_diffusion}
+\mathbf{D} = c_\tau\left(\mathbf{M}_L - \mathbf{M}_C\right)
+\end{equation}
+
+The difference between the two systems of equations is the amount of artificial diffusion which ensures monotonicity and can be formally written as
+
+\begin{equation}
+\mathbf{P}(\phi^{n+1}, \phi^n) = (\mathbf{M}_L - \mathbf{M}_C)\dot{\phi}^{n+1} - \mathbf{D} \phi^{n+1}
+\end{equation}
+
+Following Kuzmin \cite{kuzmin2005a}, one can observe that the anti-diffusion $\mathbf{P}$ can be decomposed into a sum of internodal fluxes $f_{ij}$ where the contribution to node $i$ from the node $j$ is the opposite from $i$ to $j$, that is $f_{ij}=-f_{ji}$. This edge-based approach shows that the quantity added to a node, is subtracted from another node, and the anti-diffusion is conservative. For convenience we will keep the finite element structure. The high order scheme is recovered if the unlimited correction $\mathbf{P}$ is added to the low order scheme.
+
+
+
+\subsubsection{Flux correction}
+
+The essentials of the flux corrected method is to switch between the low and high order solutions in an adaptive fashion to satisfy the positivity constraint. The Zalesak's limiter is employed to define the amount of anti-diffusion added to the low order solution which at the same time guarantee the positivity constraint for a given variable.
+
+The antidiffusive fluxes are decomposed in those that increase the value and those that decrease it, the increment $\mathbf{P}_i$ is decomposed in a sum of positive and negative contributions
+
+\begin{equation}
+P_i = P_i^+ + P_i^- \ , \qquad
+P_i^{\pm} = \sum_{j\neq i} \,
+_{\min}^{\max} \{0, j_{ij}\}
+\end{equation}
+
+While the maximum/minimum admissible increments depends on the solution values at the neighboring nodes that share an element with node $i$
+
+\begin{equation} \label{admissible_increment}
+Q_i^\pm =\, _{\min}^{\max}\Delta \phi_{ij}^\pm \ , \qquad
+\text{where} \quad \Delta \phi_{ij}^\pm =\, _{\min}^{\max}
+\{0, \tilde{\phi}_j - \tilde{\phi}_i\}
+\end{equation}
+
+where the $\tilde{(\ )}$ symbol denotes a predictor for the solution at time $t^{n+1}$. In order to prevent the formation of spurious oscillations, the positive/negative anti-diffusive flux should be limited by the following ratio
+
+\begin{equation}
+R_i^\pm = \begin{cases}
+    \min\{1, Q_i^\pm / P_i^\pm\} & \text{if} P_i^\pm \neq 0 \\
+    1 & \text{if} P_i^\pm = 0
+\end{cases}
+\end{equation}
+
+Note that in order to preserve mass conservation property the same limiter should be applied to all the element contributions, the most restrictive ratio is chosen:
+
+\begin{equation}
+c_e = \min\{R_i^\pm\}\ , \quad \forall \text{node}_i \in \text{element}_e
+\end{equation}
+
+% \begin{equation}
+% c_e = \begin{cases}
+%     \min\{R_i^+\} & \quad \text{if} \quad \sum_i f_i>0 \\
+%     \min\{R_i^-\} & \quad \text{if} \quad \sum_i f_i<0
+% \end{cases}
+% \end{equation}
+
+
+
+\subsubsection{Iterative solution}
+
+Since the linearization matrix $A$ depends on the solution at time $t^{n+1}$, the system matrix $K$ needs to be updated at the end of each iteration and the low order algebraic system of equations (\ref{lo}) is rewritten in residual based form
+
+\begin{equation} \label{residual_based}
+\left(\beta_0 \mathbf{M}_L + \mathbf{K}^{(m)} + c_\tau\mathbf{D}\right) \Delta\phi^{(m+1)} =
+\mathbf{q} - \left(\mathbf{K}^{(m)} + c_\tau\mathbf{D}\right)\phi^{(m)}
+-\mathbf{M}_L\dot{\phi}^{(m)}
+\end{equation}
+
+where $\phi^{(0)} = \phi^n$. After adding the limited flux correction and substitutions, the system (\ref{residual_based}) yields
+
+\begin{multline}
+\left(\beta_0 (c\mathbf{M}_c + (1-c)\mathbf{M}_L)
+    + \mathbf{K}^{(m)} + c_\tau(1-c)\mathbf{D}\right) \Delta\phi^{(m+1)} = \\
+\mathbf{q} -\left( \mathbf{K}^{(m)} + c_\tau(1-c)\mathbf{D} \right) \phi^{(m)}
+    - \left(c\mathbf{M}_c + (1-c)\mathbf{M}_L \right) \dot{\phi}^{(m)}
+\end{multline}
+
+
+
+
+NOTE: the displacement or residual criteria does not converge if the $c_i$ limiter vary along the iterations $(m)$. There are some alternatives to overcome this issue:
+\begin{itemize}
+    \item to use a constant $c_i$, obtained from the first iteration. This solution may not be optimal and possibly does not preserve monotonicity;
+    \item to use a semi-implicit time integration scheme which defines the predictor $\tilde{\phi}$ see equation (\ref{admissible_increment});
+    \item to define an incremental limiting, this seems to be the most accurate scheme, even though it is more diffusive than the presented one.
+\end{itemize}
+
+
+
+\subsubsection{Limiting a set of equations and variable transformation}
+
+The presented limiting is based on the monotonicity requirements for scalar convection, however, the coupling of the shallow water equations require a synchronized limiting for the correction factors. It is commonly accepted that for coupled systems of equations the flux limiter taken the most restrictive among the set of variables $c_i^+ = \min\{c_{ik}^+\}$ and $c_i^- = \min\{c_{ik}^-\}$. There are the following strategies to compute the set of limiters $c_{ik}^\pm$:
+
+\begin{itemize}
+    \item flux limiting in terms of the independent variables $h, \mathbf{q}$;
+    \item flux limiting based on several indicators as the total energy, water pressure or maximum eigenvalue;
+    \item transformation of the variables into characteristic variables in order to obtain a set of decoupled system of equations where the principles of the flux correction for pure convection can be applied.
+\end{itemize}
+
+In omission of source terms, equation (\textcolor{red}{EQ RESIDUAL}) can be multiplied by the $\mathbf{T}_i$ base of eigenvectors and transformed into a set of decoupled pure convection problems
+
+\begin{equation}
+\pder{\Phi_{jk}}{t} + \Lambda_{ikk} \pder{\Phi_{jk}}{x_i} = 0 , \quad
+k = 1:\text{dim}+1 , \quad
+i,j = 1:\text{dim}
+\end{equation}
+
+This transformation can be computed locally at each node and depends on the current solution at time $t^{n+1}$. However, for the two dimensional case, the set of variables $\phi$ is transformed in a two dimensional vector of variables $\Phi_i$, hence the scalar transport correction techniques should be extended to vectorial transport.
+
+
+
+NOTE: This transformation requires more study, specially for the convection of vectors and the corresponding flux correction technique.
+
+
+\subsection{Examples}
+
+Incorporar los resultados...
+
+
+\subsection{Concluding remarks}
+
+Importancia de que la solución de bajo orden esté estabilizada. En caso contrario, aparecen fenómenos de "terraza" o un exceso de difución y dependencia de la malla.
+
+Dificultad de definir el criterio de convergencia. Incluso cuando se comparan los incrementos diferenciales (desplazamientos) de la solución, no se alcanza una convergencia razonable. Probablemente, este estancamiento de la solución se debe a una oscilación en las correcciones añadidas.
+
+Coste computacional. Aunque el algoritmo tiene que resolver un sistema con el mismo número de grados de libertad que un esquma con estabilización lineal (\ref{sec:fic_fem_stabilization}), la introducción de las correcciones es no lineal. Esta no linealidad supone un coste copmutacional adicional, ya que requiere un número muy superior de iteraciones. Una posibilidad sería limitar el número de iteraciones a un número fijo, por ejemplo, 4. Sin embargo, no se tendría un control de la precisión obtenida ante problemas transitorios, donde la presencia de obstáculos en el fluido y fenómenos altamente dinámicos, pueden requerir de más iteraciones para obtener un resultado satisfactorio.
+
+Buenos resultados observando la solución, sin embargo, el orden de convergencia no es el deseado.
 
 
 
