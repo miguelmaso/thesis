@@ -314,7 +314,9 @@ The stabilization and shock capturing terms from Equation (\ref{discrete_sw}) re
 \end{align}
 
 
+
 \subsection{Temporal integration}
+\label{sec:time_integration_bdf}
 
 The resulting expression from the spatial discretization (\ref{discrete_sw}) can be written in the following compact form 
 \begin{equation} \label{discrete_compact}
@@ -885,7 +887,7 @@ Regarding the performance of the FIC-FEM formulation, it captures the main aspec
 
 
 
-As seen before, the numerical approximation of hyperbolic systems -convection dominant- exhibits instabilities. Those instabilities are inherent to schemes of order greater than 1 (Godunov barrier theorem \cite{godunov1959}). With the aim of suppressing the spurious oscillations and to extend to stable schemes to higher orders, the flux corrected algorithms were proposed.
+As seen in Section \ref{sec:fic_fem_stabilization}, the numerical approximation of hyperbolic systems -convection dominant- exhibit instabilities. Those instabilities are inherent to schemes of order greater than 1 (Godunov barrier theorem \cite{godunov1959}). With the aim of suppressing the spurious oscillations and to extend to stable schemes to higher orders, the flux corrected algorithms were proposed.
 This new family of methods seeks for non oscillatory solutions and also for monotonicity of the numerical solution. At first, the flux corrected algorithms were proposed for structured meshes and explicit time integration schemes \cite{boris1973, book1975}. Generally, they were based for FD algorithms, but rapidly were extended also to Galerkin discretizations and implicit schemes \cite{kuzmin2001, lohner2008ch9}. Even though, the flux corrected transport has not been extended to many applications in the FEM community.
 
 
@@ -913,7 +915,7 @@ The starting point are the linearized SW equations in conservative form (\ref{ge
 \pder{\bm\phi}{t} + \bm A_i \pder{\bm\phi}{x_i} = 0
 \end{equation}
 
-The matrix $\bm A_i$ is diagonalizable and can be decomposed as $\bm A_i = \bm T_i \bm\Lambda_i \bm T_i^{-1}$. Kuzmin \cite{kuzmin2005b} proposes a transformation for the one dimensional case. In high order dimensions, we can define a vector of transformed unknowns $\bm\Phi_i = \bm T_i^{-1}\bm\phi$ which yields
+The matrix $\bm A_i$ is diagonalizable and can be decomposed as $\bm A_i = \bm T_i \bm\Lambda_i \bm T_i^{-1}$. Kuzmin \cite{kuzmin2005b} proposes this transformation for the one dimensional case. In high order dimensions, we can define a vector of transformed unknowns $\bm\Phi_i = \bm T_i^{-1}\bm\phi$ which yields
 
 
 \begin{equation}
@@ -923,29 +925,30 @@ Since $\bm\Lambda$ is a diagonal matrix, the above expression consists on a set 
 
 \begin{equation}
 \pder{\Phi_{jk}}{t} + \Lambda_{ikk} \pder{\Phi_{jk}}{x_i} = 0 , \quad
-k = 1,\text{dim}+1 , \quad
-i,j = 1,\text{dim}
+k = 1:n_b , \quad
+i,j = 1:n_d
 \end{equation}
 
 In practice, instead of applying the flux correction concept to the diagonal system, the algorithm will be extended to the original system os equations. The main difficulty which appears when the system is decomposed is that there isn't a unique direction of propagation for each uncoupled unknowns. This is known as the dispersive behavior of the shallow water equations.
 
 
 
-\subsection{FCT algorithm}
+\subsection{Flux-corrected algorithm}
 
-The FCT algorithm inherits the concept of limiting introduced by Boris and Book \cite{boris1973} and was developed by Löhner \cite{lohner2008ch9} and Kuzmin \cite{kuzmin2001}. They also extended the concept of flux correction for transport schemes to the euler equations \cite{lohner2008ch9, kuzmin2005b}. In more recent developments, the flux correction techniques are applied to the shallow water equations, see Ortiz \cite{ortiz2012}. However, Ortiz presents an algorithm with fully decoupled high and low order solutions. In this section, the flux corrected scheme is applied to the shallow water equations preserving the same discretization for both high and low order solutions. 
+The FC algorithm inherits the concept of \emph{limiting} introduced by Boris and Book \cite{boris1973} and was developed by Löhner \cite{lohner2008ch9} and Kuzmin \cite{kuzmin2001}. They also extended the concept of flux correction to the euler equations \cite{lohner2008ch9, kuzmin2005b}. In more recent developments, the flux correction technique was applied to the shallow water equations by Ortiz \cite{ortiz2012}. However, Ortiz presents an algorithm with a fully decoupled high and low order schemes. In this section, the flux corrected scheme is applied to the shallow water equations preserving the same discretization for both high and low order schemes. 
 
 
 
 \subsubsection{High and low order schemes}
 
-The high order solution uses the spatial discretization presented in [FIC-based shallow water eq.] and the backward differentiation formula for the time integration.
+Usually, the high order scheme is a FEM solution, such as a Taylor-Galerkin \cite{lohner2008ch6} or Characteristic Based Split (CBS) \cite{ortiz2012}.
+In this work, the high order solution uses the spatial discretization presented in Section \ref{sec:fic_fem} and the backward differentiation formula for the time integration from Section \ref{sec:time_integration_bdf}.
 
 \begin{equation} \label{ho}
 \mathbf{M}_C\dot{\phi}^{n+1} + \mathbf{K}\phi^{n+1} = \mathbf{q}
 \end{equation}
 \begin{equation} \label{bdf}
-\dot{\phi}^{n+1} = \beta_1\phi^{n+1} + \beta_2\phi^{n} + \beta_3\phi^{n-1}\dots
+\dot{\phi}^{n+1} = \beta_1\phi^{n+1} + \beta_2\phi^{n} + \beta_3\phi^{n-1}
 \end{equation}
 
 where $\phi$ is the vector of the nodal unknowns and $\dot{(\ )}$ denotes the time derivative, $\mathbf{M}_C$ is the consistent mass matrix, $\mathbf{K}$ is the system matrix and $\mathbf{q}$ is the source term. This scheme will be taken as reference for the high order scheme but, as any stabilized and not monotonicity preserving formulation, is not oscillation-free, specially near the wet-dry interface.
@@ -970,7 +973,7 @@ Following Kuzmin \cite{kuzmin2005a}, one can observe that the anti-diffusion $\m
 
 
 
-\subsubsection{Flux correction}
+\subsubsection{Flux correction limiter}
 
 The essentials of the flux corrected method is to switch between the low and high order solutions in an adaptive fashion to satisfy the positivity constraint. The Zalesak's limiter is employed to define the amount of anti-diffusion added to the low order solution which at the same time guarantee the positivity constraint for a given variable.
 
@@ -999,7 +1002,7 @@ R_i^\pm = \begin{cases}
 \end{cases}
 \end{equation}
 
-Note that in order to preserve mass conservation property the same limiter should be applied to all the element contributions, the most restrictive ratio is chosen:
+It is important to note that, in order to preserve mass conservation property, the same limiter should be applied to all the element contributions. So, the most restrictive ratio is chosen:
 
 \begin{equation}
 c_e = \min\{R_i^\pm\}\ , \quad \forall \text{node}_i \in \text{element}_e
@@ -1084,6 +1087,8 @@ Dificultad de definir el criterio de convergencia. Incluso cuando se comparan lo
 Coste computacional. Aunque el algoritmo tiene que resolver un sistema con el mismo número de grados de libertad que un esquma con estabilización lineal (\ref{sec:fic_fem_stabilization}), la introducción de las correcciones es no lineal. Esta no linealidad supone un coste copmutacional adicional, ya que requiere un número muy superior de iteraciones. Una posibilidad sería limitar el número de iteraciones a un número fijo, por ejemplo, 4. Sin embargo, no se tendría un control de la precisión obtenida ante problemas transitorios, donde la presencia de obstáculos en el fluido y fenómenos altamente dinámicos, pueden requerir de más iteraciones para obtener un resultado satisfactorio.
 
 Buenos resultados observando la solución, sin embargo, el orden de convergencia no es el deseado.
+
+
 
 
 
