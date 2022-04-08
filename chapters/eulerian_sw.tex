@@ -608,11 +608,15 @@ The domain $\Omega$ is discretized using several meshes in order to perform a co
 Figure \ref{parabola_graphic} shows a cut along the mesh at different times. The most challenging problem is to capture the discontinuity of the velocity. Even though the velocity presents a discontinuity, it isn't the origin of the oscillatory behavior since the velocity is not a degree of freedom. It can be appreciated how the discontinuity of the velocity is not an issue.
 
 \begin{figure}
-\begin{subfigure}{0.4\textwidth}
-    \includegraphics[width=\textwidth]{img/eulerian/par/conv_1.pdf}    
-\end{subfigure}
+\begin{minipage}{0.4\textwidth}
+    \includegraphics[width=\textwidth]{img/eulerian/par/conv_1.pdf}
+    \captionsetup{margin={0cm, 0cm}}
+    \caption{Parabolic basin. Convergence graph.}
+    \label{parabola_convergence}   
+\end{minipage}
 \hfill
-\begin{subfigure}{0.58\textwidth}
+\begin{minipage}{0.58\textwidth}
+    \centering
     \begin{tabular}{>{\small}rcccc} \hline
     $n_{nodes}$ & $\Delta x$ & $\Delta t$ & CFL & $L_2(e_{rel})$ \\ \hline
 205 & 0.25 & 0.008 & 0.5 & 0.24 \\
@@ -622,9 +626,10 @@ Figure \ref{parabola_graphic} shows a cut along the mesh at different times. The
 101,101 & 0.01 & 0.0003 & 0.5 & 0.0049 \\
     \hline
     \end{tabular}
-\end{subfigure}
-\caption{Parabolic basin. Convergence analysis for the water height.}
-\label{parabola_convergence}
+    \captionsetup{margin={0cm, 0cm}}
+    \captionof{table}{Parabolic basin. Convergence error for the water height.}
+    \label{parabola_convergence_tab}
+\end{minipage}
 \end{figure}
 
 \begin{figure}[H]
@@ -676,7 +681,7 @@ Figure \ref{parabola_results} shows the results using the finest mesh. The discr
     \begin{minipage}[c]{.94\textwidth}
         \includegraphics[width=\textwidth]{img/eulerian/par/velocity_1.0.png}
     \end{minipage}
-\caption{Parabolic basin. Results with the fine mesh of size $0.01m$ at time $t=1s$. (a) Water height, (b) x-discharge and (c) x-velocity. There is no legend for simplicity, the red colour is positive and blue means a null or negative magnitude.}
+\caption{Parabolic basin. Results with the fine mesh of size $0.01m$ at time $t=1s$. (a) Water height, (b) x-discharge and (c) x-velocity. There is no legend for simplicity, the red color is positive and blue means a null or negative magnitude.}
 \label{parabola_results}
 \end{figure}
 
@@ -739,11 +744,15 @@ Results from different meshes are compared in Figures \ref{mac_donald_shock_grap
 
 
 \begin{figure}
-\begin{subfigure}{0.4\textwidth}
-    \includegraphics[width=\textwidth]{img/eulerian/jump/momentum_convergence.pdf}    
-\end{subfigure}
+\begin{minipage}{0.4\textwidth}
+    \includegraphics[width=\textwidth]{img/eulerian/jump/momentum_convergence.pdf}
+    \captionsetup{margin={0cm,0cm}}
+    \caption{Short channel. Convergence graph for the $x$-discharge.}
+    \label{hydraulic_jump_convergence}
+\end{minipage}
 \hfill
-\begin{subfigure}{0.58\textwidth}
+\begin{minipage}{0.58\textwidth}
+    \centering
     \begin{tabular}{>{\small}rcccc} \hline
     $n_{nodes}$ & $\Delta x$ & $\Delta t$ & CFL   & $L_2(e_{rel})$ \\ \hline
     204         &        2.0 &      0.005 & 0.016 & 0.177 \\
@@ -751,9 +760,9 @@ Results from different meshes are compared in Figures \ref{mac_donald_shock_grap
     2211        &        0.5 &      0.005 & 0.062 & 0.088 \\
     13026       &        0.2 &      0.005 & 0.15  & 0.041 \\ \hline
     \end{tabular}
-\end{subfigure}
-\caption{Short channel. Convergence analysis for the $x$-discharge.}
-\label{hydraulic_jump_convergence}
+    \captionof{table}{Short channel. Error for the $x$-discharge.}
+    \label{hydraulic_jump_convergence_tab}
+\end{minipage}
 \end{figure}
 
 
@@ -975,9 +984,9 @@ Following Kuzmin \cite{kuzmin2005a}, one can observe that the anti-diffusion $\m
 
 \subsubsection{Flux correction limiter}
 
-The essentials of the flux corrected method is to switch between the low and high order solutions in an adaptive fashion to satisfy the positivity constraint. The Zalesak's limiter is employed to define the amount of anti-diffusion added to the low order solution which at the same time guarantee the positivity constraint for a given variable.
+The essentials of the flux corrected method is to switch between the low and high order solutions in an adaptive fashion to satisfy the positivity constraint. The Zalesak limiter is employed to define the amount of anti-diffusion added to the low order solution which at the same time guarantee the positivity constraint for a given variable.
 
-The antidiffusive fluxes are decomposed in those that increase the value and those that decrease it, the increment $\mathbf{P}_i$ is decomposed in a sum of positive and negative contributions
+The anti-diffusive fluxes are decomposed in those that increase the value and those that decrease it, the increment $\mathbf{P}_i$ is decomposed in a sum of positive and negative contributions
 
 \begin{equation}
 P_i = P_i^+ + P_i^- \ , \qquad
@@ -1075,18 +1084,21 @@ NOTE: This transformation requires more study, specially for the convection of v
 
 \subsection{Examples}
 
-Incorporar los resultados...
+\textcolor{red}{TODO: INCORPORATE RESULTS...}
 
 
 \subsection{Concluding remarks}
 
-Importancia de que la solución de bajo orden esté estabilizada. En caso contrario, aparecen fenómenos de "terraza" o un exceso de difución y dependencia de la malla.
+\textcolor{red}{DRAFT}
 
-Dificultad de definir el criterio de convergencia. Incluso cuando se comparan los incrementos diferenciales (desplazamientos) de la solución, no se alcanza una convergencia razonable. Probablemente, este estancamiento de la solución se debe a una oscilación en las correcciones añadidas.
+Importance of stabilizing the high order solution. Otherwise, phenomena such as terracing or excessive diffusivity ,ay appear.
 
-Coste computacional. Aunque el algoritmo tiene que resolver un sistema con el mismo número de grados de libertad que un esquma con estabilización lineal (\ref{sec:fic_fem_stabilization}), la introducción de las correcciones es no lineal. Esta no linealidad supone un coste copmutacional adicional, ya que requiere un número muy superior de iteraciones. Una posibilidad sería limitar el número de iteraciones a un número fijo, por ejemplo, 4. Sin embargo, no se tendría un control de la precisión obtenida ante problemas transitorios, donde la presencia de obstáculos en el fluido y fenómenos altamente dinámicos, pueden requerir de más iteraciones para obtener un resultado satisfactorio.
+Difficulty in the definition of the convergence criterion. Even if the incremental displacements of the iterative solution procedure, the desired convergence is not achieved. Probably, this stagnant point of the solution is related to smalls oscillations of the corrections.
 
-Buenos resultados observando la solución, sin embargo, el orden de convergencia no es el deseado.
+The computational cost is high. Though the algorithm has to solve a system with the same number of degrees of freedom than a linear stabilized problem (\ref{sec:fic_fem_stabilization}), the introduction of the corrections is non linear. The required number of iterations is higher than those required for a RV-based shock capturing. A practical option is to limit the iterations up to a fixed number. However, this approach will lack an accurate control of the obtained precision for transient problems. For example, the flow in front an obstacle is highly dynamic and it may require more iterations than a prefixed number.
+
+Regarding the global solution and its robustness, good results are obtained. However, a better order of convergence is expected.
+
 
 
 
@@ -1098,16 +1110,16 @@ Buenos resultados observando la solución, sin embargo, el orden de convergencia
 
 
 The scope of this section is to recover the stabilized formulation from Section \ref{sec:fic_fem_stabilization} and apply some of the monotonic properties from Section \ref{sec:sw_fc}. Authors as Burman and Badia demonstrated that, under certain situations, there can be obtained stabilized monotonic solutions. See (\cite{burman2007, burman2010, badia2014} for example).
-Following these authors, stabilizations can be classified into residual and projections-based. In the first category, we can find some stabilization methods, such as SUPG, GLS, VMS or FIC, based on the proposals of Hughes et al \cite{brooks1982,hughes1989,hughes1995}. This is the option followed in Section (\ref{sec:fic_fem_stabilization}). 
-In the second group, Codina proposed the Orthogonal Sub Scales (OSS) method \cite{codina2000}. The inconvenient of this method is the introduction of a global projection to solve the subscales. As an alternative, methods with local projection stabilization (LPS) appeared, see (\cite{braak2006,badia2012,badia2014,burman2015,matthies2007})). The main difference among this methods and the residualbased is tha theyintroduce only the terms which guarantee stability.
+Following these authors, the stabilizations can be classified into residual and projections-based. In the first category, we can find some stabilization methods, such as SUPG, GLS, VMS or FIC, based on the proposals of Hughes et al \cite{brooks1982,hughes1989,hughes1995}. This is the option followed in Section (\ref{sec:fic_fem_stabilization}). 
+In the second group, Codina proposed the Orthogonal Sub Scales (OSS) method \cite{codina2000}. The inconvenient of this method is the introduction of a global projection to solve the sub-scales. As an alternative, methods with local projection stabilization (LPS) appeared, see (\cite{braak2006,badia2012,badia2014,burman2015,matthies2007})). The main difference among this methods and the residual-based is tha they introduce only the terms which guarantee stability.
 
-Even though, the stabilizations are not a sufficent condition to ensure oscillation-free solutions near discontinuities, they are not monotonicity preserving. The monotonicity can be verified across the well-known shock-capturing methods.
-Those familiy of methods present a good global convergence and introduce non-linear viscosity around discontinuities \cite{Johnson1990}.
-Once again, there are two families for the design of non-linear viscosity: the residualbased methods and the gradient jump methods.
+Even though, the stabilizations are not a sufficient condition to ensure oscillation-free solutions near discontinuities, they are not monotonicity preserving. The monotonicity can be verified across the well-known shock-capturing methods.
+Those family of methods present a good global convergence and introduce non-linear viscosity around discontinuities \cite{Johnson1990}.
+Once again, there are two families for the design of non-linear viscosity: the residual-based methods and the gradient jump methods.
 
-Given the accuracy and convergence, the wining options seems to be the combination of linear stabilization and resuldualbased shock capturing. It presents a good global convergence and, only where it is needed, the order of convergence is sacrified with the introduction of artificial viscosity. Nevertheless, this choice of stabilization resorts on a scheme which does not guarantee the monotonic properties of the system.
+Given the accuracy and convergence, the wining options seems to be the combination of linear stabilization and residual-based shock capturing. It presents a good global convergence and, only where it is needed, the order of convergence is sacrificed with the introduction of artificial viscosity. Nevertheless, this choice of stabilization resorts on a scheme which does not guarantee the monotonic properties of the system.
 
-Burman proved that, under certain conditions, monotonicity can be achieved using a nonlinear viscosity bsed on the variation of the gradient \cite{burman2007}. However, it is important to consider that an arbitrary combination of methods can lead to the loss of the monotonic properties offered by one of the two methods \cite{badia2014}.
+Burman proved that, under certain conditions, monotonicity can be achieved using a nonlinear viscosity based on the variation of the gradient \cite{burman2007}. However, it is important to consider that an arbitrary combination of methods can lead to the loss of the monotonic properties offered by one of the two methods \cite{badia2014}.
 
 
 
@@ -1115,7 +1127,7 @@ Burman proved that, under certain conditions, monotonicity can be achieved using
 \subsection{Shock capturing}
 
 
-Traditionally, the most used method to eliminate the spurious oscillations near discontinuities is the local artifficial viscosity. Considering a discretization of finite elements $\langle\bm{\omega}, \mathbf{r}\rangle$ where $\langle \cdot,\cdot \rangle$ is the dicrete counterpart of the variational principle, a non linear stabilization can be expressed as
+Traditionally, the most used method to eliminate the spurious oscillations near discontinuities is the local artificial viscosity. Considering a discretization of finite elements $\langle\bm{\omega}, \mathbf{r}\rangle$ where $\langle \cdot,\cdot \rangle$ is the discrete counterpart of the variational principle, a non linear stabilization can be expressed as
 \begin{equation}
     \langle\bm{\omega}, \mathbf{r}\rangle + s(\bm{\omega}, \bm{\phi}) = 0
 \end{equation}
@@ -1124,8 +1136,8 @@ where
     s(\bm{\omega}, \bm{\phi}) = \langle \epsilon(\bm\phi) \nabla\bm\omega , \nabla\bm\phi \rangle
 \end{equation}
 and the non linear viscosity $\epsilon(\bm\phi)$ is sufficiently large near the discontinuities in order to mitigate oscillations.
-In the framework of the FEM, the design of $\epsilon(\bm\phi)$ can be residualbased (RV), gradient jump based (GJV) or entropy based (EV) \cite{guermond2011}.
-Usually, RV have been combined with linear stabilization and EV have been applied alone. The argument that justify the choice of using EV without stabilization is that linear stabilization acts as an hyperviscosity term elliminating DMP property.
+In the framework of the FEM, the design of $\epsilon(\bm\phi)$ can be residual-based (RV), gradient jump based (GJV) or entropy based (EV) \cite{guermond2011}.
+Usually, RV have been combined with linear stabilization and EV have been applied alone. The argument that justify the choice of using EV without stabilization is that linear stabilization acts as an hyper-viscosity term eliminating DMP property.
 
 GJV methods introduce the concept of jump $[[v]]_a$ and average $\ldbrace v \rdbrace_a$ of a property $v$ in a point $a$ belonging to the boundary of an element. Being $\mathbf{n}$ the normal vector to the boundary, there are the following definitions
 \begin{subequations}
@@ -1141,8 +1153,8 @@ GJV methods introduce the concept of jump $[[v]]_a$ and average $\ldbrace v \rdb
 \end{equation}
 \end{subequations}
 
-Burmano proposed in \cite{burman2007} a shocl capturing with monotonic properties for the Burgers equation in 1D. Badia extended that method to multiple dimensions for the scalar transport in \cite{badia2014}. Here, the proposed formulation for scalar transport is applied to the SW equations, using the water depth as the transported property.
-The fomrulation proposed in \cite{badia2014} is defined by the following artificial viscosity for each element $e$:
+Burman proposed in \cite{burman2007} a shock capturing with monotonic properties for the Burgers equation in 1D. Badia extended that method to multiple dimensions for the scalar transport in \cite{badia2014}. Here, the proposed formulation for scalar transport is applied to the SW equations, using the water depth as the transported property.
+The formulation proposed in \cite{badia2014} is defined by the following artificial viscosity for each element $e$:
 \begin{equation}
     \epsilon(h)_e = c_{gjv} l_e \Vert \mathbf{A}\Vert_{L^{\inf}_e}\max_{b\in e} \left[
         \frac{
@@ -1160,7 +1172,7 @@ The fomrulation proposed in \cite{badia2014} is defined by the following artific
     \right] 
 \end{equation}
 
-The parameter $c_{gjv}$ is an algorithmic constant. The original expression depens on some mesh shape parameters and the angles of the element. In practice $c_{gjv}=\frac{1}{2}$ is choosen, this expression conicides with the minimum value to guarantee monotnoicity in 1D. Nevertheless, the monotonicity is lost in 2D. It is not surprising to lose monotonicity, since that property is even lost for the pure diffusion equation. Even though, it exhibits an optimal behavior.
+The parameter $c_{gjv}$ is an algorithmic constant. The original expression depends on some mesh shape parameters and the angles of the element. In practice $c_{gjv}=\frac{1}{2}$ is chosen, this expression coincides with the minimum value to guarantee monotonicity in 1D. Nevertheless, the monotonicity is lost in 2D. It is not surprising to lose monotonicity, since that property is even lost for the pure diffusion equation. Even though, it exhibits an optimal behavior.
 
 
 
@@ -1168,14 +1180,21 @@ The parameter $c_{gjv}$ is an algorithmic constant. The original expression depe
 
 
 The main problem of linear stabilizations is the loss of the monotonic properties which may be provided by nonlinear stabilizations. For that reason, in \cite{guermond2011} is proposed to use a nonlinear stabilization alone. This is the case of EV.
-However, the use of nonlinear stabilization alone, may lead to unwnated results. The most common undesired reults are such as terracing near the boundaries \cite{lohner2008ch9,kuzmin2005b} and mesh-dependent diffusivity \cite{badia2014}.
+However, the use of nonlinear stabilization alone, may lead to unwanted results. The most common undesired results are such as terracing near the boundaries \cite{lohner2008ch9,kuzmin2005b} and mesh-dependent diffusivity \cite{badia2014}.
 
 It is known that the combination of GJV with SUPG or FIC is not monotonicity preserving. However, the monotonic properties can be improved if it is compared against a standard RV method.
 
 
 
 
-
+\textcolor{red}{COMPARE THE OSCILLATIONS AND THE L2 ERROR FOR:
+\begin{itemize}
+\item FIC+RV
+\item FIC+GJV
+\item NONE+RV
+\item NONE+GJV
+\end{itemize}
+}
 
 
 \begin{figure}
@@ -1202,9 +1221,88 @@ It is known that the combination of GJV with SUPG or FIC is not monotonicity pre
 \section{Stabilized formulation for the Boussinesq modified equations}
 
 
+The Boussinesq modified equations need to be stabilized. In this section the linear stabilization presented in \ref{sec:fic_fem_stabilization} will be applied. Since the Boussinesq equations are intended to solve oscillatory problems, the shock capturing is not relevant. However, an additional technique must be introduced in order to deal with the higher order derivatives.
+
+In this section, the boundary conditions considered by the numerical model will be introduced. Then, the numerical procedure is explained. Here, the introduction of a gradient recovery is presented. After presenting the formulation for solving the equations, a numerical procedure for the absorbing boundary conditions will be proposed. Finally, some examples are added.
+
+
+
+\subsection{Boundary conditions}
+
+
+There are three types of boundary conditions considered for the Boussinesq problems, inflow $\Gamma_I$, reflecting $\Gamma_R$ and absorbing $\Gamma_A$ boundaries. Those subdomains are such that $\Gamma_I \cup \Gamma_R \cup \Gamma_A = \partial \Omega$, being $\partial\Omega$ the boundary of the domain.
+
+\paragraph{Inflow boundary $\Gamma_I$} Both free surface and velocity are known at the boundary. Typically it is used to impose a wave generator. Since the wave amplitude is known, the horizontal velocity can be obtained using linear wave theory.
+
+\paragraph{Reflecting boundary $\Gamma_R$} No fluid should pass through an impermeable wall. This implies imposing the normal component of the velocity to be zero.
+\begin{equation*}
+    \bar{\mathbf{u}} \cdot \mathbf{n} = 0 \quad \text{on} \ \Gamma_R
+\end{equation*}
+Following Woo and Liu \cite{woo2004a}, the above relation must be rewritten in terms of $\mathbf{u}_\beta$ and the velocities are related as
+\begin{equation*}
+    \bar{\mathbf{u}} = \mathbf{u}_\beta + H^{-1} \mathbf{J}_\eta
+\end{equation*}
+Hence, the complete formulation of a reflective boundary is
+\begin{equation}
+    \bar{\mathbf{u}}_\beta \cdot \mathbf{n} = 0 \quad
+    \mathbf{J}_\eta \cdot \mathbf{n} = 0 \quad
+    \text{on} \ \Gamma_R
+\end{equation}
+
+\paragraph{Absorbing boundary $\Gamma_A$} An outgoing wave should not return to the computational domain. A practical implementation of the absorbing boundaries are the sponge layers \cite{israeli1981, wei1995}, where som extra diffusion and a newtonian damper are added near the boundary. Those artificial coefficients varies exponentially, from zero to a given value near the boundary.
+
+
+
+\subsection{Finite Element formulation}
+
+\subsubsection{Spatial discretization}
+
+The Boussinesq equations are solved using the FEM. The space domain is interpolated with a Galerkin discretization of linear triangles and a finite difference scheme with constant time step is used to integrate the equations in time.
+Some numerical difficulties such as the third order differential operator and the time integration accuracy are addressed in \cite{walkley2002,woo2004a,wei1995}.
+As stated by Codina in \cite{codina2008,codina2008b} the problem (\ref{bsq_eq}) is an hyperbolic wave in mixed form and there is an incompatibility condition (see \cite{BrezziFortin}) because the same interpolation is used for both variables, the velocity $\mathbf{u}_\beta$ and the wave amplitude $\eta$.
+Here the equations are stabilized using FIC extending the work done in \cite{maso2022}.
+
+
+\subsubsection{Derivatives recovery}
+
+Following \cite{walkley2002}, the third order spatial derivatives are modelled using $\mathbf{J}_\eta$ as an intermediate variable. Since it can be solved in a staggered way, the number of degrees of freedom is not increased and thus the performance of the scheme is unaltered. The auxiliary field $\mathbf{J}_\eta$ is computed using the Zhang \cite{zhang2005} super-convergent gradient recovery.
+Finally, the problem (\ref{bsq_eq}) is expressed in matrix form as
+\begin{equation} \label{sw_system_matrix}
+    (M + K) \dot{x} = F(x,y)
+\end{equation} 
+where $x$ is the vector of nodal unknowns, $y$ is the vector of nodal values corresponding to $\mathbf{J}_\eta$, $M$ is a mass matrix, $K$ correspond to the second derivatives associated to $\mathbf{J}_{\mathbf{u}}$, and $F$ is a non-linear vector which is a function of $\mathbf{u}_\beta$ and its spatial derivatives.
+
+
+\subsubsection{Time discretization}
+
+The commonly used fourth order Adams-Moulton scheme is employed for the time integration of (\ref{sw_system_matrix}), see \cite{wei1995,woo2004a,codina2008b} as an example.
+To obtain a solution at the time step $t^{n+1}$, the fixed point iterative method is employed to deal with the non-linearity of the system. Given a guess $x^{n+1,i-1}$ for $x^{n+1,i}$ at iteration $i$, the increment $\delta x^i$ is computed from
+\begin{multline}
+    24 (M + K) \delta x^i = 
+    24 (M + K) (x^n - x^{n+1,i-1}) \\
+     + \delta t (9F^{n+1} + 19F^n - 5F^{n-1} + F^{n-2}) + O(\delta t^4)
+    \label{adams-moulton}
+\end{multline}
+The time integration is closed using the explicit third order Adams-Bashforth scheme to predict the initial guess $x^{n+1,0}$ for the non-linear iterations
+\begin{multline}
+    12 (M + K) x^{n+1,0} = 
+    12 (M + K) x^n \\
+     + \delta t (23F^n - 16F^{n-1} + 5F^{n-2}) + O(\delta t^3)
+    \label{adams-bashforth}
+\end{multline}
+
+The system of (\ref{adams-moulton}) and (\ref{adams-bashforth}) is solved using a direct solver. Given the problem is small, this is not expensive.
+Convergence is achieved when $\delta x^i$ is sufficiently small. Then, the solution $x^{n+1}$ is set as $x^{n+1,i}$.
+
+
+
 
 
 \subsection{Absorbing boundary conditions}
+
+Frequently, the need to shorten the numerical domain arises. This can be achieved by the imposition of open boundaries, also known as radiant boundaries. The open boundaries allow the exit of the waves as well as the consistency of the system of equations in order to ensure the existence and uniqueness of the solution. Additionally, the numerical tool for the boundary has to be compatible with the numerical approach for the inner domain.
+
+Generally, the radiant boundary condition denotes the analytical formulation
 
 Es frecuente que que sea necesario acotar el dominio de estudio, imponiendo condiciones abiertas. Estas condiciones de contorno abiertas o radiantes han de permitir la salida de ondas, al mismo tiempo que garantizan la consistencia matemática del sistema de ecuaciones. Al mismo tiempo que la expresión matemática ha de garantizar la existencia de la solución, tambień ha de ser compatible con la disretización numérica empleada para el interior del dominio. Generalmente, se denomina condiciones de contorno radiantes a la formulación analítica y condiciones de contorno absorbentes al método numerico \cite{navon2004}.
 Se busca un equilibrio entre la precisión con la que se aproxima la condición de radiación (reducción de reflexión) y el coste computacional.
