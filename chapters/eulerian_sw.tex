@@ -1302,62 +1302,59 @@ Convergence is achieved when $\delta x^i$ is sufficiently small. Then, the solut
 
 Frequently, the need to shorten the numerical domain arises. This can be achieved by the imposition of open boundaries, also known as radiant boundaries. The open boundaries allow the exit of the waves as well as the consistency of the system of equations in order to ensure the existence and uniqueness of the solution. Additionally, the numerical tool for the boundary has to be compatible with the numerical approach for the inner domain.
 
-Generally, the radiant boundary condition denotes the analytical formulation
+Generally, the radiant boundary condition denotes the analytical formulation for open boundaries and the term absorbing boundary is related to the numerical approximation of the radiation condition \cite{navon2004}. An equilibrium between the precision offered by the radiant boundary and the numerical cost required by the absorbing boundary is seek.
+From one side, the boundary conditions must define a well posed problem and the spurious oscillations in the open boundary shall be as small as possible. From the other side, the computational cost of the boundary conditions should be small compared to the computational cost of the inner domain.
 
-Es frecuente que que sea necesario acotar el dominio de estudio, imponiendo condiciones abiertas. Estas condiciones de contorno abiertas o radiantes han de permitir la salida de ondas, al mismo tiempo que garantizan la consistencia matemática del sistema de ecuaciones. Al mismo tiempo que la expresión matemática ha de garantizar la existencia de la solución, tambień ha de ser compatible con la disretización numérica empleada para el interior del dominio. Generalmente, se denomina condiciones de contorno radiantes a la formulación analítica y condiciones de contorno absorbentes al método numerico \cite{navon2004}.
-Se busca un equilibrio entre la precisión con la que se aproxima la condición de radiación (reducción de reflexión) y el coste computacional.
-
-En este sentido, es de gran importancia que el método numérico junto con las condiciones escogidas, resulten en un esquema estable, al mismo tiempo que las oscilaciones espúreas generadas por la reflexión sean pequeñas.
-Por otro lado, hay que asegurar que el cálculo de las condiciones de contorno no concluyan en un coste computacional excesivo comparado con el del dominio interior.
-
-La primera consideración es que, tomando $\eta$ como la superficie libre y en un caso unidireccional, una función de onda presentará una condición radiante donde verifique que
+Considering the unidirectional wave propagation and being $\eta$ the free surface elevation, a wave function will verify a radiant boundary condition where
 \begin{equation} \label{radiation_condition}
     \pder{\eta}{t} + c \cos(\theta)\pder{\eta}{x} = 0
 \end{equation}
-donde $\eta$ es la variación de la superficie libre, expresada en términos del calado $h$ y la topografía $z_b$, $c$ es la velocidad de propagación de las ondas y $\theta$ es el ángulo con la frontera.
+where $\theta$ is tha incidence angle of the wave with respect to the boundary.
 
-Algunos autores como Engquist propusieron aproximaciones locales altamente disipativas \cite{engquist1977}, más adelante Bayliss \cite{bayliss1982} exploró las condiciones radiantes para las ecuaciones de Helmholtz. De modo similar, Collino \cite{collino1993} extendió la formulación empleando derivadas de mayor orden. Sin embargo, la generalización para las ecuaciones de Euler o, análogamente, a las ecuaciones de aguas poco profundas en 2D no es trivial. Por un lado, el ángulo de incidencia $\theta$ no es conocido \emph{a priori}, dando lugar a la reflexión de la componente no alineada. Por otro lado, las ecuaciones de aguas poco profundas son disperivas y no hay una sola celeridad que caracterice el sistema \cite{wei1995}. Es decir, hay tres ondas superpuestas que se propagan con velocidades diferentes. Por ejemplo, se pueden reescribir las ecuaciones \ref{general_sw} en variables características, mediante la diagonalización de la matrices tangentes $\mathbf{A}_i$ de la forma
+Some authors proposed local approximations highly diffusives \cite{engquist1977}. Latter, Bayliss explored the radiation boundary conditions for the Helmholtz equations in \cite{bayliss1982}.
+Similarly, Collino \cite{collino1993} extended the formulation using higher order of derivatives than \ref{radiation_condition}. However, the generalization for the Euler equations -analogously the SW equations- in 2 or 3D is not trivial, since the incidence angle $\theta$ is not known \emph{a priori} and because of the dispersive behavior of the equations \cite{wei1995}.
+
+The dispersive behavior is associated to the fact that there is not an unique celerity characterizing the system: in the case of the SW or the Boussinesq equations there are three waves superposed propagating at different speeds. For example, in section \ref{sec:sw_fc} a decomposition in characteristics was presented through diagonalization of the tangent matrices $\mathbf{A}_i$.
 \begin{equation}
     \pder{\bm\Phi_j}{t} + \bm\Lambda_i \pder{\bm\Phi_j}{x_i} = 0
 \end{equation}
-donde $\bm\Lambda$ es una matriz diagonal tal que $\bm A_i = \bm T_i \bm\Lambda_i \bm T_i^{-1}$. El problema resultante es la conveción de tres ondas, cada una asociada a las velocidades $\lambda_i$, que corresponden a $u-c$, $u$ y $u+c$. Los distintos valores de $\lambda_i$ determinan si cada condición de contorno se trata de una entrada o salida, y si es sub-crítica o super-crítica.
+in that minimal wave equation $\bm\Lambda$ is a diagonal matrix such that $\bm A_i = \bm T_i \bm\Lambda_i \bm T_i^{-1}$.
+This problem can be understood a the superposition of three waves, each one of them propagating at speed $u-c$, $u$ y $u+c$, namely the eigenvalues $\lambda_i$. The sign of $\lambda_i$ determines if the wave is incoming or outgoing and the regime of the problem: subcritical or supercritical.
 
-A parte de tener que imponer la condición radiante para las tres ondas, la validez de este método es limitada, ya que en más de 1D no existe una formulación genuina basada en caracterísitcas. Puede encontrarse un desarrollo completo en \cite{lie2001}.
+Besides having to impose the radiant boundary condition for the three waves, this approximation is limited, since in 2 or 3D does not exist a genuine characteristic-based formulation. A more detailed development can be found in \cite{lie2001}.
 
-Muchas de las aproximaciones propuestas \cite{israeli1981,navon2004,carmigniani2018} consisten en relajar la condición (\ref{radiation_condition}) añadiendo un término disipador $K$
+Most of the proposals to approximate the open boundaries consist on relaxing the condition \ref{radiation_condition}  adding a dissipation term $K$ and extending the domain a distance $d$, losing the local definition. See \cite{israeli1981,navon2004,carmigniani2018} as an example. Then, the radiation condition is rewritten as
 \begin{equation} \label{radiation_absorbing_condition}
     \pder{\eta}{t} + c \cos(\theta)\pder{\eta}{x} = -K\eta
 \end{equation}
-y extendiendo el dominio en una distancia $d$. Esta aproximación se suele emplear en combinación con condiciones absorbentes locales \cite{wei1995}.
+This approximation can be used in combination with local absorbing boundary conditions \cite{wei1995}.
 
-Otra de las vías exploradas es la Perfectly Matched Layer (PML) \cite{berenger1994}, que ha sido ampliamente utilizada en la literatura. Presenta el inconveniente de tener que imponer tratamietos especiales en las esquinas.
+Another of the explored possibilities is the Perfectly Matched Layer (PML) \cite{berenger1994}, widely used in the literature. It presents the inconvenient of special treatment of corners.
+Later, this methodology wa used in combination with the high order absorbing boundaries, leading to the Double Absorbing Boundary (DAB), proposed by Hagstrom and Rabinovich in \cite{hagstrom2014,rabinovich2015}. This technology places two parallel boundaries separated by a short distance. Its advantage is that they do not need to incorporate the derivatives in the normal direction neither to apply any special treatment to the corners.
 
-Posteriormente, esta metodología fue empleada en combinación con las fronteras absorbentes de alto orden, dando lugar a la Double Absorbing Boundary (DAB), propuestas por Hagstrom y Rabinovich \cite{hagstrom2014,rabinovich2015}. Esta úlima metodología ubica dos fronteras paralelas, separadas por una pequeña distancia. Presenta la ventaja de no tener que incorporar derivadas en la dirección normal ni tener que aplicar tratamientos especiales a las esquinas.
-
-Dada la simplicidad de la formulación, se ha optado por introducir solamente una capa de esponja, sigiendo las formulaciones de \cite{israeli1981} y \cite{carmigniani2018}. Se ha introducido un factor disipador Newtoniano de la siguiente forma análogo a la fricción de fondo $S_f$ de la siguiente forma:
+Finally, and given to the simplicity of the formulation, there is the possibility of including only a sponge layer. It can be found in the formulations of Israeli and Carmigniani in \cite{israeli1981,carmigniani2018}. A Newtonian dissipative term analogous to the bottom friction $S_f$ is added as
 \begin{equation}
     S_a = -\gamma(\mathbf{x}) \mathbf{u}
 \end{equation}
-
-
-El término disipador $\mathbf{\gamma}$ varía desde cero hasta al valor máximo $\gamma_{\max}$ junto a la frontera. Sigue un ley exponencial \cite{peric2018} que depende del exponente $n$. Los parámetros del grosor de la esponja $d_0$ y valor máximo deben determinarse para casa caso, según la longitud de onda de las olas.
-
+The dissipative term $\gamma$ varies from 0 at a given distance to the discrete boundary to the maximum value $\gamma_{max}$ at the discrete boundary. This variation follows an exponential law \cite{peric2018} of order $n$. The parameters of the sponge layer $d_0$ and the maximum value $\gamma_{max}$ need to be specified for each case, in terms of the wavelength.
+A possible expression for $\gamma$ is
 \begin{equation} \label{exponential_sponge_layer}
     \gamma(\mathbf{x}) = \gamma_{\max} \mathcal{H}(d_0 - d(\mathbf{x})) \frac{e^{\left(\frac{d_0 - d(\mathbf{x})}{d_0}\right)^n} - 1}{e - 1}
 \end{equation}
 where $\mathcal{H}$ is the Heaviside function, $d$ is the distance from a point to the computational boundary.
 
-En la figura \ref{absorbing_boundary} se muestra la propagación de un tren de olas mono-cromáticas. En un extremo del dominio se generan las olas, en el extremo opuesto hay una frontera absorbente. Estudios como el realizado por \cite{carmigniani2018} muestran que diversos valores de absorción, grosor de la esponja, o de la función exponencial (\ref{exponential_sponge_layer}) pueden provocar reflexiones no deseadas. Por ejemplo, una excesiva absorción provocaría una reflexión al inicio de la capa de esponja.
+In Fig. \ref{absorbing_boundary} the propagation of a train of regular waves is shown. Ate the left end of the domain, waves are generated. At the right end of the domain there is a sponge layer. Studies carried out by Carmigniani in \cite{carmigniani2018} show that some combinations of the maximum absorption, layer width and exponential degree can produce undesired reflections. For example, an excessive absorption can generate reflections at the beginning of the sponge layer.
 
-Se ha elegido $n=3$ para la expresión (\ref{exponential_sponge_layer}), por ser un valor que minimiza considerablemente la reflexión (ver \cite{carmigniani2018}). Queda hacer un análisis de sensibilidad de los parámetros $d_0$ y $\gamma_{\max}$.
+An exponent $n=3$ for expression \ref{exponential_sponge_layer} is chosen, it considerably minimizes the reflection \cite{carmigniani2018}. A sensibility analysis of the parameters $d_0$ y $\gamma_{\max}$ should be done.
+It is useful to express the maximum distance and absorption in terms of the wavelength and frequency. In practice, the width of the sponge layer is used to be $d_0 \approx 2\lambda$ and the absorption coefficient $\gamma \approx 0.5\omega$.
 
-Resulta práctico expresarlos en términos relativos a la longitud de onda $\lambda$ y a la frecuencia $\omega$. En la práctica, el grosor de la capa esponja suele ser $d_0 \approx 2\lambda$ y el coefficiente de absorción $\gamma \approx 0.5\omega$. Mientras que el coeficiente de reflexión es monótono decreciente con grosor de la capa, presenta un mínimo local respecto a la frecuencia. Esto hace que para un tren de olas sea recomendable ajustar los parámetros de acuerdo con la máxima longitud de onda.
+The reflected amplitude is monotonically decreasing as the sponge width increases. Nevertheless, the reflection exhibits a local minimum with respect to the absorption coefficient. This makes highly recommended to adjust the parameters of the sponge layer according to the  maximum wavelength.
 
 
 \begin{figure}
     \centering
     \includegraphics[width=.8\textwidth]{img/absorbing_boundary.png}
-    \caption{Propagación y absorción de un tren de olas. La región sombreada de gris muestra el grosor de la capa esponja.}
+    \caption{Propagation and absorption of a train of waves. The shadow region shows the width of the sponge layer.}
     \label{absorbing_boundary}
 \end{figure}
 
