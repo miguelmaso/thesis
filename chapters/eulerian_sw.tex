@@ -883,7 +883,7 @@ Regarding the performance of the FIC-FEM formulation, it captures the main aspec
 
 
 \section{The flux corrected transport for the shallow water equations}
-\label{sec:fc}
+\label{sec:sw_fc}
 
 
 
@@ -942,7 +942,7 @@ The FC algorithm inherits the concept of \emph{limiting} introduced by Boris and
 \subsubsection{High and low order schemes}
 
 Usually, the high order scheme is a FEM solution, such as a Taylor-Galerkin \cite{lohner2008ch6} or Characteristic Based Split (CBS) \cite{ortiz2012}.
-In this work, the high order solution uses the spatial discretization presented in Section \ref{sec:fic_fem} and the backward differentiation formula for the time integration from Section \ref{sec:time_integration_bdf}.
+In this work, the high order solution uses the spatial discretization presented in Section \ref{sec:fic_fem} with linear stabilization and without shock capturing. The time integration scheme is the backward differentiation formula from Section \ref{sec:time_integration_bdf}.
 
 \begin{equation} \label{ho}
 \mathbf{M}_C\dot{\phi}^{n+1} + \mathbf{K}\phi^{n+1} = \mathbf{q}
@@ -1093,6 +1093,109 @@ Buenos resultados observando la solución, sin embargo, el orden de convergencia
 
 
 \section{Quasi monotonicity preserving formulations}
+\label{sec:monotonic}
+
+
+
+The scope of this section is to recover the stabilized formulation from Section \ref{sec:fic_fem_stabilization} and apply some of the monotonic properties from Section \ref{sec:sw_fc}. Authors as Burman and Badia demonstrated that, under certain situations, there can be obtained stabilized monotonic solutions. See (\cite{burman2007, burman2010, badia2014} for example).
+Following these authors, stabilizations can be classified into residual and projections-based. In the first category, we can find some stabilization methods, such as SUPG, GLS, VMS or FIC, based on the proposals of Hughes et al \cite{brooks1982,hughes1989,hughes1995}. This is the option followed in Section (\ref{sec:fic_fem_stabilization}). 
+In the second group, Codina proposed the Orthogonal Sub Scales (OSS) method \cite{codina2000}. The inconvenient of this method is the introduction of a global projection to solve the subscales. As an alternative, methods with local projection stabilization (LPS) appeared, see (\cite{braak2006,badia2012,badia2014,burman2015,matthies2007})). The main difference among this methods and the residualbased is tha theyintroduce only the terms which guarantee stability.
+
+Even though, the stabilizations are not a sufficent condition to ensure oscillation-free solutions near discontinuities, they are not monotonicity preserving. The monotonicity can be verified across the well-known shock-capturing methods.
+Those familiy of methods present a good global convergence and introduce non-linear viscosity around discontinuities \cite{Johnson1990}.
+Once again, there are two families for the design of non-linear viscosity: the residualbased methods and the gradient jump methods.
+
+Given the accuracy and convergence, the wining options seems to be the combination of linear stabilization and resuldualbased shock capturing. It presents a good global convergence and, only where it is needed, the order of convergence is sacrified with the introduction of artificial viscosity. Nevertheless, this choice of stabilization resorts on a scheme which does not guarantee the monotonic properties of the system.
+
+Burman proved that, under certain conditions, monotonicity can be achieved using a nonlinear viscosity bsed on the variation of the gradient \cite{burman2007}. However, it is important to consider that an arbitrary combination of methods can lead to the loss of the monotonic properties offered by one of the two methods \cite{badia2014}.
+
+
+
+
+\subsection{Shock capturing}
+
+
+Traditionally, the most used method to eliminate the spurious oscillations near discontinuities is the local artifficial viscosity. Considering a discretization of finite elements $\langle\bm{\omega}, \mathbf{r}\rangle$ where $\langle \cdot,\cdot \rangle$ is the dicrete counterpart of the variational principle, a non linear stabilization can be expressed as
+\begin{equation}
+    \langle\bm{\omega}, \mathbf{r}\rangle + s(\bm{\omega}, \bm{\phi}) = 0
+\end{equation}
+where
+\begin{equation}
+    s(\bm{\omega}, \bm{\phi}) = \langle \epsilon(\bm\phi) \nabla\bm\omega , \nabla\bm\phi \rangle
+\end{equation}
+and the non linear viscosity $\epsilon(\bm\phi)$ is sufficiently large near the discontinuities in order to mitigate oscillations.
+In the framework of the FEM, the design of $\epsilon(\bm\phi)$ can be residualbased (RV), gradient jump based (GJV) or entropy based (EV) \cite{guermond2011}.
+Usually, RV have been combined with linear stabilization and EV have been applied alone. The argument that justify the choice of using EV without stabilization is that linear stabilization acts as an hyperviscosity term elliminating DMP property.
+
+GJV methods introduce the concept of jump $[[v]]_a$ and average $\ldbrace v \rdbrace_a$ of a property $v$ in a point $a$ belonging to the boundary of an element. Being $\mathbf{n}$ the normal vector to the boundary, there are the following definitions
+\begin{subequations}
+\begin{equation}
+    [[v]]_a =   \lim_{\epsilon\rightarrow 0} (
+        v(\mathbf{a}+\epsilon \mathbf{n})\cdot\mathbf{n}
+        - v(\mathbf{a}+\epsilon \mathbf{n})\cdot\mathbf{n})
+\end{equation}
+\begin{equation}
+    \ldbrace v \rdbrace_a = \frac{1}{2}  \lim_{\epsilon\rightarrow 0} (
+        v(\mathbf{a}+\epsilon \mathbf{n})\cdot\mathbf{n}
+        + v(\mathbf{a}+\epsilon \mathbf{n})\cdot\mathbf{n})
+\end{equation}
+\end{subequations}
+
+Burmano proposed in \cite{burman2007} a shocl capturing with monotonic properties for the Burgers equation in 1D. Badia extended that method to multiple dimensions for the scalar transport in \cite{badia2014}. Here, the proposed formulation for scalar transport is applied to the SW equations, using the water depth as the transported property.
+The fomrulation proposed in \cite{badia2014} is defined by the following artificial viscosity for each element $e$:
+\begin{equation}
+    \epsilon(h)_e = c_{gjv} l_e \Vert \mathbf{A}\Vert_{L^{\inf}_e}\max_{b\in e} \left[
+        \frac{
+            \int_b|\nabla h\cdot\mathbf{n}|d\sigma
+        }{
+            \int_b\Vert\nabla h\Vert d\sigma
+        }
+        \left(
+            \frac{
+                \int_b|[[\nabla h]]|d\sigma
+            }{
+                \int_b\ldbrace|\nabla h\cdot\mathbf{n}|\rdbrace d\sigma
+            }
+        \right)^q
+    \right] 
+\end{equation}
+
+The parameter $c_{gjv}$ is an algorithmic constant. The original expression depens on some mesh shape parameters and the angles of the element. In practice $c_{gjv}=\frac{1}{2}$ is choosen, this expression conicides with the minimum value to guarantee monotnoicity in 1D. Nevertheless, the monotonicity is lost in 2D. It is not surprising to lose monotonicity, since that property is even lost for the pure diffusion equation. Even though, it exhibits an optimal behavior.
+
+
+
+\subsection{Example: Combination with stabilization}
+
+
+The main problem of linear stabilizations is the loss of the monotonic properties which may be provided by nonlinear stabilizations. For that reason, in \cite{guermond2011} is proposed to use a nonlinear stabilization alone. This is the case of EV.
+However, the use of nonlinear stabilization alone, may lead to unwnated results. The most common undesired reults are such as terracing near the boundaries \cite{lohner2008ch9,kuzmin2005b} and mesh-dependent diffusivity \cite{badia2014}.
+
+It is known that the combination of GJV with SUPG or FIC is not monotonicity preserving. However, the monotonic properties can be improved if it is compared against a standard RV method.
+
+
+
+
+
+
+
+\begin{figure}
+    \centering
+    \includegraphics[width=.7\textwidth]{img/eulerian/gjv/gjv_rv_parabola_convergence.pdf}
+    \caption{Planar surface in parabolic basin. Convergence analysis of non-linear stabilizations. Results at time $t=1s$}
+    \label{gjv_rv_parabola_converence}
+\end{figure}
+
+
+
+\subsection{Concluding remarks}
+
+
+
+
+
+
+
+
 
 
 
