@@ -5,41 +5,44 @@
 
 
 
-In the previous chapter the SW equations have been analyzed considering the coupled convective and oscillatory mechanisms. However, in some regions of the domain, the solution of the equations can be convection dominated. Specifically, where there is a movement of the shoreline --like run-up or flooding--, the problem is convection dominated.
-This mechanism suggests the use of Lagrangian strategies, which have been successfully applied
+In the previous chapter the SW equations have been analyzed considering the coupled convective and oscillatory mechanisms in an Eulerian framework. However, in some regions of the domain, the solution of the equations can be convection dominated. Specifically, where there is a movement of the shoreline --like run-up or flooding--, the problem is convection dominated.
+This mechanism suggests the use of Lagrangian strategies, which have been successfully applied to convection diffusion and Navier-Stokes problems.
 
+In this chapter, the developments of the Particle Finite Element Method (PFEM) are applied to the SW equations. The basis of the PFEM family of methods consists on a splitting operator, solving two stage fashion the convective operator and the rest of the equations. In the case of the SW equations, there is a stage for convection and other stage for wave mechanism.
+The main advantage of the PFEM lies in using the variational principle of FEM. Hence, the formulations presented in chapter \refeq{eulerian_sw} are applicable with small modifications. The novelty of the PFEM consists on solving the convection with a particle method.
 
+In the family of PFEM there are two main groups, the moving mesh and the fixed mesh. The mesh moving algorithm was firstly presented to the scientific community \cite{idelsohn2003,PFEM2004} and has been widely applied to a high number of situations \cite{larese2008,Salazar2012,onate2008}. In this method, the particles traditionally coincides with the nodes. After the convection stage --and eventually, remeshing--, the mesh inherits the displacements of the convection. Those displacements are part of the material derivative involved in the variational principle of the equations.
 
+Lately, a second generation of the PFEM was presented \cite{idelsohn2012}. It uses a fixed mesh and is known as PFEM-2. The main idea consists on decoupling the particles from the nodes, leading to a duality of spaces: the FEM discretization and the particles discretization. Its main drawback is the introduction of projections between the two spaces but the cost of the projection is expected to be recovered by the use of a fixed mesh strategy without remeshing \cite{idelsohn2015,puigferrat2021}.
 
-Hasta el presente punto se han estudiado las ecuaciones de aguas poco profundas teniendo en cuenta la dualidad entre el mecanismo convectivo y la ecuación de onda. Sin embargo, en diferentes regiones del dominio, la solución de las ecuaciones puede estar dominada por uno de los dos mecanismos. Concretamente, en regiones donde hay un movimiento de la línea de costa o el avance de una inundación, nos encontraremos ante un problema altamente convectivo. Este tipo de comportamiento sugiere el uso de estrategias lagrangianas, ampliamente utilizadas en problemas de convección-difusión a altos número de Péclet, que luego han sido extrapoladas para resolver también las ecuaciones de Navier-Stokes.
-
-En esta sección tomamos los desarrollos propios de los métodos de partículas (PFEM) para llevarlos al campo de las ecuaciones de aguas poco profundas. La familia de métodos PFEM consisten en aplicar un operador separador, que permite resolver por separado el término convectivo del resto de términos, tradicionalmente, difusivos y viscosos. En este caso, el operador separador nos permitirá resolver por un lado, el término convectivo y, por otro, el término de onda, junto con los términos fuente. La gran ventaja de la familia PFEM es que sigue utilizando el principio variacional de FEM, con lo que las formulaciones presentadas anteriormente servirán de base para resolver las ecuaciones en formulación Lagrangiana. En este caso, únicamente será necesario introducir la novedad de la parte de integración del término convectivo, ahí es donde entra en juego el método de partículas.
-
-En la familia PFEM, nos encontramos con dos grandes variantes, la de malla móvil y la de malla fija. El método de malla móvil es el primero que se presentó a la comunidad científica y el que lleva más años en desarrollo. En este método, las partículas coinciden tradicionalmente con los nodos. Después del paso de convección y, eventualmente remallado, la malla acumula unos desplazamientos que son empleados para resolver las acuaciones en formulación Lagrangiana. Posteriormente, se desarrolló una segunda versión de PFEM en la que se utiliza una malla fija, también llamado PFEM-2. la idea consiste en desacoplar las partículas de los nodos, dando lugar a una dualidad de espacios, el espacio de interpolación de FEM y el espacio de las partículas. Esto conlleva la necesidad un mayor espacio de memoria y la necesidad de introducir proyecciones, pues hay que guardar la información en dos espacios. Ahora, este coste se ve compensado por el ahorro de la fase de remallado.
 
 
 \section{Introduction}
 
-La formulación Lagrangiana parte de la definición de derivada material. Sea $\varphi$ una propiedad escalar o vectorial, aplicando la regla de la cadena se obtiene la derivada material:
+The Lagrangian formulation starts by the definition of the material derivative. Let $\varphi$ be a scalar or vector property, the material derivative is obtained by applying the chain rule:
 \begin{subequations} \label{mat_derivative}
 \begin{align}
 \frac{D}{Dt}\varphi(\mathbf{x},t) &= \pder{\varphi}{t} + u\cdot\nabla\varphi \label{mat_derivative:deriv} \\
 \pder{\mathbf{x}}{t} &= \mathbf{u} \label{mat_derivative:conv}
 \end{align}
 \end{subequations}
-El procedimiento Lagrangiano consiste en resolver por separado las ecuaciones (\ref{mat_derivative:deriv}) y (\ref{mat_derivative:conv}). Si aplicamos la derivada material a las ecuaciones de balance genéricas
+The Lagrangian procedure consist on solving separately the equations (\ref{mat_derivative:deriv}) and (\ref{mat_derivative:conv}). To apply this staggered procedure, a generic conservation balance is considered,
 \begin{equation} \label{conserv_balance}
 \pder{\varphi}{t} + \nabla \mathbf{F} = 0
 \end{equation}
-donde $\mathbf{F}$ es el vector de flujo en un volumen de control infinitesimal. La ecuación de balance se linaliza separando los flujos convectivos ($\mathcal{L}_1$) de los flujos no convectivos ($\mathcal{L}_2$)
+where $\mathbf{F}$ is the fluxes vector in an infinitesimal volume of control. The balance equation is split into the convective and non convective fluxes, $\mathcal{L}_1$ and $\mathcal{L}_2$ respectively.
 \begin{equation} \label{spatial_balance_linearized}
     \pder{\varphi}{t} + \mathcal{L}_1 \varphi + \mathcal{L}_2 \varphi = 0
 \end{equation}
-Si se introduce la ecuación (\ref{mat_derivative}) en (\ref{spatial_balance_linearized}), obtendremos la siguiente expresión
+After introducing equation (\ref{mat_derivative}) into (\ref{spatial_balance_linearized}), the following expression is obtained,
 \begin{equation} \label{mat_balance_liearized}
     \frac{D\varphi}{Dt} + \mathcal{L}_2 \varphi = 0
 \end{equation}
-La estrategia numérica para resolver la ecuación de balance (\ref{conserv_balance}) de modo Lagrangiano consiste en aplicar un spliting, generalmente el splitting de Godunov \textcolor{red}{CITE} de primer orden on el operador de Strang \textcolor{red}{CITE} de segundo orden. El operador elegido define el orden y el modi en el que se resuelven numéricamente las ecuaciones (\ref{mat_derivative:conv}) y (\ref{mat_balance_liearized}) para una discretización temporal.
+
+Finally, the numerical strategy for solving a balance equation (\ref{conserv_balance}) in a Lagrangian framework consists on applying a splitting, generally, the first order Godunov splitting \cite{leveque2002} or the second order Strang splitting \cite{macnamara2016}.
+The order of accuracy of the splitting operator is related to the sequence and the mode how equations (\ref{mat_derivative:conv}) and (\ref{mat_balance_liearized}) are temporally integrated.
+
+
 
 
 
