@@ -64,11 +64,15 @@ Additionally, an iterative scheme can be introduced, since the solution of the n
 
 
 
+
+
 \subsection{Governing equations}
 
-Dado que los nodos de la malla coinciden con las partículas y la convección incluye todas las propiedades intrínsecas, todo el vector de incógnitas $\bm\phi$ será tratado en un marco Lagrangiano.
-%A partir de este punto, el lector puede observar la simplicidad de las ecuaciones expresadas en variables primitivas ($\mathbf u, h$), respecto a las variables conservativas ($\mathbf q, h$). Por este motivo, se estudiará la precisión de la solución obtenida mediante variables primitivas en un marco Lagrangiano. Las ecuaciones de gobierno expresadas en variables primitivas siguen la expresión
-Como se ha avanzado, la expresión de las ecuaciones de balance en variables primitivas en un marco Lagrangiano es considerablemente más fácil de resolver, dada su linealidad. Por ello, tras deducir la expresión de las ecuaciones y plantear el procedimiento numérico, se evaluará la precisión de la solución obtenida en comparación con los procedimientos anteriormente propuestos.
+
+Given that the nodes of the SW discretization are particles, the intrinsic properties are in a Lagrangian frame, thus, both mass and momentum follow a Lagrangian formulation. This fact modifies the non-linearity of the system of equations to be solved, making them easier to solve. On the other hand, in the Lagrangian framework the convection is evaluated in terms of the primitive variables. We will take advantage of this characteristic to solve the primitive SW, which are more linear than the conservative ones.
+The accuracy of the solutions obtained with the proposed method will be compared against the methods presented in the previous chapter.
+
+
 
 
 En primer lugar, el vector de incógnitas conservativo $\bm\phi$ se expresa en términos del vector $\bm\psi$. Y el desarrollo de las ecuaciones de gobierno (\ref{sw_primitive_balance}) resulta en el siguiente sistema para el balance de momentum y de masa:
