@@ -11,6 +11,23 @@ La estrategia consiste en un remallado jerárquico, donde cada nivel tiene un ta
 Este modo de trabajar con un remallado jerárquico facilita mucho la tarea de des-refinado, pues simplemente hay que eliminar elementos del nivel inferior, sin tener que reconstruir conectividades. El principal inconveniente del remallado jerárquico es el tratamiento de los nodos colgantes que aparecen en la frontera de los subdominios. De modo análogo a la discretización espacial, en la discretización temporal también aparecen pasos colgados, que se tienen que interpolar entre dos pasos de tiempo superiores.
 
 
+\begin{figure}
+\centering
+\begin{subfigure}{.8\textwidth}
+    \includegraphics[width=\textwidth]{img/multigrid/grid1.pdf}
+    \vspace{1em}
+\end{subfigure}
+\begin{subfigure}{.8\textwidth}
+    \includegraphics[width=\textwidth]{img/multigrid/grid2.pdf}
+    \vspace{1em}
+\end{subfigure}
+\begin{subfigure}{.8\textwidth}
+    \includegraphics[width=\textwidth]{img/multigrid/grid3.pdf}
+    \vspace{1em}
+\end{subfigure}
+\caption{Different refinement zones for a domain.}
+\end{figure}
+
 \section{Algorithm}
 
 
