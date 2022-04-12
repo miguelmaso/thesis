@@ -53,14 +53,29 @@ The PFEM method has been widely applied to solve the incompressible Navier-Stoke
 The moving mesh allows to fit the sub-domains with the discretization and the boundaries are tracked in a natural way.
 When the PFEM is applied to the SW equations, the mesh moving will be solving the water domain in the horizontal plane. That is, the moving shoreline in the SW equations is playing the role of the free surface in the NS equations.
 
-Once the discretization describes and follows the fluid motion --$\eta$ and $\mathbf{u}$--, there appears the need to introduce another discretization to define the fixed topography and its variations --$z$--, since it does not move with the fluid. The duality of discretizations introduce the need of a mapping between the two meshes. The topography data need to be mapped to the computational mesh for solving the equations. And the primal variables need to be mapped to the topographical mesh for visualization purpose.
-This approach present some analogy with embedded formulations, except on the fact that the discontinuity is on the fluid --computational domain-- instead of the topography --geometric domain--.
+Once the discretization describes and follows the fluid motion --$\eta$ and $\mathbf{u}$--, there appears the need to introduce another discretization to define the fixed topography and its variations --$z$--, since it does not move with the fluid. The duality of discretizations introduce the need of a mapping between the two meshes. The topography data need to be mapped to the computational mesh for solving the equations. And the primal variables need to be mapped to the topographical mesh for visualization purpose. See figure \ref{pfem_dual_mesh}, where the fluid domain $\Omega_w$ si inside the computational domain $\Omega$. The topographic domain $\Omega_T$ coincides with the computational domain $\Omega$.
+This approach presents some analogies with embedded formulations, except on the fact that the discontinuity is on the fluid --computational domain-- instead of the topography --geometric domain--.
+
+
+\begin{figure} [ht]
+    \centering
+    \includegraphics[width=.6\textwidth]{img/lagrangian/dual_pfem_mesh.pdf}
+    \caption{Spatial discretization for the mesh moving PFEM algorithm.}
+    \label{pfem_dual_mesh}
+\end{figure}
 
 Going back to the definition of the SW flow, the set of particles moving in the Lagrangian frame, convect the intrinsic properties (density, water depth, velocity, flow rate, etc.). The equations follow an \emph{updated lagrangian} formulation, that is, the variables are assumed to be known at time $t$ but unknown for the time $t+\Delta t$. Given that the variational principle is used to solve the equations in the continuum media, those is identified with the fluid domain, excluding the dry part. Once the convection is solved and the shoreline is updated, the system of equations is solved again.
 
 Some modifications to this procedure may be considered. For example, an excessive deformation of the elements, without inverting them, may require a remeshing step. In that case, the identification of the shoreline coincides with the previous time step, but the interior domain will be refined. With a proper mesh quality control, the remeshing step can be applied only to those steps which really need it.
 
-Additionally, an iterative scheme can be introduced, since the solution of the nwe system of equations at time step $t + \Delta t$ modifies the integration of the convective term. Usually this outer iteration loop is skipped by an explicit approximation of the convective term.
+Additionally, an iterative scheme can be introduced, since the solution of the nwe system of equations at time step $t + \Delta t$ modifies the integration of the convective term. Usually this outer iteration loop is skipped by an explicit approximation of the convective term. The full path of the solution procedure is resumed in figure \ref{sw_pfem_algorithm}.
+
+\begin{figure} [ht]
+    \centering
+    \includegraphics[width=.6\textwidth]{img/lagrangian/sw_pfem_algorithm.pdf}
+    \caption{PFEM algorithm for the SW equations.}
+    \label{sw_pfem_algorithm}
+\end{figure}
 
 
 
@@ -69,31 +84,29 @@ Additionally, an iterative scheme can be introduced, since the solution of the n
 \subsection{Governing equations}
 
 
-Given that the nodes of the SW discretization are particles, the intrinsic properties are in a Lagrangian frame, thus, both mass and momentum follow a Lagrangian formulation. This fact modifies the non-linearity of the system of equations to be solved, making them easier to solve. On the other hand, in the Lagrangian framework the convection is evaluated in terms of the primitive variables. We will take advantage of this characteristic to solve the primitive SW, which are more linear than the conservative ones.
+Given that the nodes of the SW discretization are particles, the intrinsic properties are in a Lagrangian frame, thus, both mass and momentum balances follow a Lagrangian formulation. This fact reduces the non-linearity of the system of equations to be solved, making them easier to solve. On the other hand, in the Lagrangian framework the convection can be evaluated in terms of the primitive variables. We will take advantage of this characteristic to solve the primitive SW, which are more linear than the conservative ones.
 The accuracy of the solutions obtained with the proposed method will be compared against the methods presented in the previous chapter.
 
-
-
-
-En primer lugar, el vector de incógnitas conservativo $\bm\phi$ se expresa en términos del vector $\bm\psi$. Y el desarrollo de las ecuaciones de gobierno (\ref{sw_primitive_balance}) resulta en el siguiente sistema para el balance de momentum y de masa:
+Let the conservative vector of unknowns $\bm\phi$ be expressed in terms of the primitive set of variables $\bm\psi$. we recover the SW equations in terms of the primitive variables:
 \begin{subequations}
 \begin{align}
     \pder{\mathbf{u}}{t} &= \mathbf{u} \cdot \nabla \mathbf{u} + g \nabla(h-z_b) + g\mathbf{S}_f = \mathbf{0} \\
     \pder{h}{t} &= \mathbf{u} \cdot \nabla h + h \nabla \mathbf{u} = 0
 \end{align}
 \end{subequations}
-Después de introducir la definición (\ref{mat_derivative:deriv}) se otiene
+The introduction of the material derivative definition yields
 \begin{subequations} \label{pfem_mat_balance}
 \begin{align}
     \frac{D\mathbf{u}}{Dt} &= g \nabla(h-z_b) + g\mathbf{S}_f = \mathbf{0} \\
     \frac{Dh}{Dt} &= h \nabla \mathbf{u} = 0
 \end{align}
 \end{subequations}
-Del mismo modo que en las secciones anteriores, si la solución $\psi$ es suficientemente suave, tambien verificará la formulación cuasilineal
-\begin{equation}
+
+Analogously to the previous sections, if the solution $\psi$ is sufficiently smooth, it will also verify the quasilinear form
+\begin{equation} \label{pfem_mat_balance_lin}
     \frac{D\bm{\psi}}{Dt} + \mathbf{A}_i\pder{\bm{\psi}}{x_i} + \mathbf{S}\bm{\psi} + \mathbf{T} = 0
 \end{equation}
-La matriz $\mathbf{S}$ y el vector $\mathbf{T}$ son los mismos que los definidos en la sección \ref{equations}. Donde a las matrices tangentes $\mathbf{A}_i$ se les ha sustraído el término diagonal, que corresponde al término convectivo:
+Where the matrix $\mathbf{S}$ and the vector $\mathbf{T}$ are the same than those defined in section \ref{equations}. The tangent matrices $\mathbf{A}_i$ have a new expression for this case, according to the change of variables and to the material derivative. The null diagonal corresponds to the non-convective look of the equations.
 \begin{equation}
     \mathbf{A}_1 = \left[\begin{array}{ccc}
         0 & 0 & g \\
@@ -107,48 +120,51 @@ La matriz $\mathbf{S}$ y el vector $\mathbf{T}$ son los mismos que los definidos
     \end{array}\right]
 \end{equation}
 
-Los autovalores de $\mathbf{A}_i$ son $\lambda = \pm c$, siendo $c = \sqrt{gh}$ la velocidad de propoagación de las ondas de superficie. Estos autovalores difieren de los tracicionales valores $u+c$ y $u-c$ porque estamos en un marco Lagrangiano, que se deplaza con velocidad $u$. Igualmente, las matrices $\mathbf{A}_i$ requieren positividad de la columna de agua $h$, de otro modo, serán matrices singulares.
+
+The eigenvalues of $\mathbf{A}_i$ for the one-dimensional case are $\lambda = \pm c$, being $c=\sqrt{gh}$ the surface waves speed. These eigenvalues differ from $u+c$ and $u-c$ since we are in a Lagrangian frame, moving at velocity $u$.
+For the two-dimensional case, the eigenvalues for each direction are obtained projecting $\mathbf{A}_i$ onto a unit vector and are always $-c$, $0$ and $c$.
+The system is still hyperbolic and the positivity of $h$ is required. 
 
 
 
-\subsection{Principio variacional}
 
-A pesar de que las ecuaciones de gobierno no tienen un aspecto convectivo, es necesario estabilizarlas debido a la incomptatiblidad de interpolación \cite{codina2008}. Emplearemos el método de estabilización FIC \cite{onate1998} aplicada a las ecuaciones hiperbolicas. Como se ha mencionado antes, esta formulación presenta una simplificación significativa respecto a la fórmula general de las ecuaciones expresadas en términos de las variables conservativas en un marco Euleriano. El residuo de la ecuación se define del siguiente modo:
+\subsection{Variational principle}
+
+
+Despite the non-convective look of (\ref{pfem_mat_balance}), they need stabilization because of the incompatibility of the interpolation \cite{codina2008}. The fic-based stabilization method from \cite{onate1998} and from the previous sections will be reused. As stated before, this formulation presents a significative simplification with respect to the conservative equations in an Eulerian frame. The residual of the equations is defined as
 \begin{equation}
     \mathbf{r} \defeq \frac{D\bm{\psi}}{Dt} + \mathbf{A}_i\pder{\bm{\psi}}{x_i} + \mathbf{S}\bm{\psi} + \mathbf{T} = 0 \quad i = 1,2
 \end{equation}
 
-Es importante notar que el número de dimansiones es $n_d=2$ mientras que el número de incógnitas o de ecuaciones de balance es $n_b=3$. Las ecuaciones de balance FIC modificadas se obptienen planteando equilibrio en un dominio discreto de longitud $l^e$ empleando series de Taylor \cite{onate2001}. Empleando notación indicial, la ecuación de balance modificada FIC de primer orden se expresa como:
+The number of dimensions is $n_d=2$ and the number of balance equations is $n_b=3$. The FIC-balance using a first order expansion of Taylor series has the following expression:
 \begin{equation} \label{fic_expression}
-    r_j = \frac{1}{2} l_{ijk}^e \pder{r_k}{x_i} \qquad i \in \{1,n_d\} \ , \ j,k \in \{1,n_b\}
+    r_j - \frac{1}{2} l^e \frac{\mathbf{A}_i}{\lambda_{max}} \pder{r_j}{x_i} = 0 \qquad i \in \{1,n_d\} \ , \ j \in \{1,n_b\}
 \end{equation}
-donde $l_{ijk}^e$ representa la longitud característica del elemento $l^e$ proyectada sobre las características de la ecuación. Retomando la notación compacta, se expresa como:
-\begin{equation}
-    \mathbf{l}_i^e = l^e \frac{\mathbf{A}_i}{\lambda_{max}}
-\end{equation}
+To introduce stability in the desired direction, the characteristic element length $l^e$ has been projected onto the normalized characteristics of the equation, $\mathbf{A}_i/\lambda_{max}$.
+In practice, the term $\frac{1}{2}$ is replaced by an algorithmic constant $\beta$ in order to control the amount of extra diffusion. This parameter will be analyzed latter.
 
-En la práctica, el término $\frac{1}{2}$ se sustituye por una constante algorítmica $\beta$ para controlar la cantidad de difusión añadida. Este parámetro se estudiará más adelante y se fija como $\beta=0.01$.
 
-La formulación FIC es el resultado de introducir la ecuacion de aguas poco profundas (\ref{pfem_mat_balance}) en la ecuación proveniente de la expansión del equilibrio en series de Taylor (\ref{fic_expression}). El prinicipio variacional se obtiene multiplicando el balance FIC por una función de test $\omega_k$ e integrando en el dominio $\Omega_w$.
+The resulting SW FIC-based stabilization is obtained from (\ref{pfem_mat_balance_lin}) and (\ref{fic_expression}). The variational principle is obtained by multiplying the FIC balance by a test function $\omega_k$ and integrating over the domain $\Omega_w$.
 \begin{equation} \label{variational_fic_lagr}
-    \int_{\Omega_w} \left(\omega_k \mathbf{r} + \Omega_k \beta l^e \frac{\mathbf{A}_i}{\lambda} \pder{\mathbf{r}}{x_i}\right) d\Omega = 0
+    \int_{\Omega_w} \left(\omega_k \mathbf{r} + \omega_k \beta l^e \frac{\mathbf{A}_i}{\lambda} \pder{\mathbf{r}}{x_i}\right) d\Omega = 0
 \end{equation}
 
-The second term of Equation (\ref{variational_fic_lagr}) is integrated by parts. Note that the element length $l^e$, the linearization matrix $\mathbf{A}_i$ and its eigenvalue $\lambda$ are defined constant inside the element. Hence, the boundary integral which appears after integration by parts should be understood as the boundary of all the elements
+
+\textcolor{red}{The second term of Equation (\ref{variational_fic_lagr}) is integrated by parts.} Note that the geometries are linear and the element length $l^e$ and the linearization matrix $\mathbf{A}_i$ are defined constant inside the element. Hence, the boundary integral which appears after integration by parts should be understood as the boundary of all the elements
 
 \begin{equation} \label{variational_fic_lagr_parts}
-\int_\Omega \omega_k \mathbf{r} d\Omega
-- \int_\Omega \beta l^e\frac{\mathbf{A}_i}{\lambda}\pder{\omega_k}{x_i} \mathbf{r} d\Omega
+\int_{\Omega_w} \omega_k \mathbf{r} d\Omega
+- \int_{\Omega_w} \beta l^e\frac{\mathbf{A}_i}{\lambda}\pder{\omega_k}{x_i} \mathbf{r} d\Omega
 + \sum_e \int_{\Gamma_e} \beta l^e\frac{\mathbf{A}_i}{\lambda}\omega_kn_k \mathbf{r} d\Gamma = 0
 \end{equation}
 In this work we neglect the boundary integrals assuming that the residual $\mathbf{r}$ is null at the boundary of the elements. At this point we introduce the balance Equation (\ref{pfem_mat_balance}) and integrate by parts again. The result is
 
 \begin{multline} \label{variational_balance_fic_lagr}
-\int_\Omega \left(
+\int_{\Omega_w} \left(
     \omega_k \pder{\bm{\psi}}{t} + \omega_k \mathbf{A}_i\pder{\bm{\psi}}{x_i}
     + \pder{\omega_k}{x_j} \mathbf{K}_{jk} \pder{\bm{\psi}}{x_i} + \mathbf{S}\bm{\psi} + \mathbf{F}
 \right) d\Omega\\ -
-\int_\Omega \frac{\beta l^e}{\lambda} \left(
+\int_{\Omega_w} \frac{\beta l^e}{\lambda} \left(
     \pder{\omega_k}{x_j} \mathbf{A}_j \pder{\bm{\psi}}{t}
     + \pder{\omega_k}{x_j} \mathbf{A}_j\mathbf{A}_i\pder{\bm{\psi}}{x_i}
     + \ppder{\omega_k}{x_j} \mathbf{A}_j\mathbf{K}_{jk} \pder{\bm{\psi}}{x_i} \right. \\
@@ -161,9 +177,12 @@ Equation (\ref{variational_balance_fic_lagr}) is the stabilized variational form
 
 
 
-\subsection{Operador convectivo}
+\subsection{Convective operator}
 
-La ecuación (\ref{mat_derivative:deriv}) se debe integrar en el tiempo. Dado que no presenta ningún operador diferencial espacial, no es necesario aplicar un principio variacional, y se resolverá nodalmente. La trayectoria de cada punto material está desacoplada del resto. La ecuación (\ref{mat_derivative:deriv}) se reescribe en forma integral como
+
+Apart from solving Eq. (\ref{pfem_mat_balance}), Eq. (\ref{mat_derivative:deriv}) needs to be integrated in time. Given that (\ref{mat_derivative:deriv}) does not involve a spatial derivatives, there is no need to use a variational principle and can be evaluated nodally. In other words, the trajectory of the particles is decoupled from the wave.
+
+In order to evaluate the trajectory of the particles, Eq. (\ref{mat_derivative:deriv}) is rewritten in integral form
 \begin{subequations}
 \begin{align}
     \mathbf{x}(t^{n+1}) &= \mathbf{x}(t^n) + \int_{t^n}^{t^{n+1}} \mathbf{u}(t) dt \\
@@ -172,45 +191,34 @@ La ecuación (\ref{mat_derivative:deriv}) se debe integrar en el tiempo. Dado qu
 \end{subequations}
 
 
-Dado que se emplea una discretización temporal $t=t^1, \dots, t^n$, los valores de $t$ no se conocen de forma contínua, sino solamente en momentos discretos. Por ello se emplea el siguiente esquema de integración explícito de segundo orden:
+As far as the time variable is evaluated at discrete intervals $t = t^1, \dots t^n$, the continuous value of $t$ is not known. Therefore, a generic finite difference can be used to evaluate the position continuously in time:
 \begin{equation}
     \mathbf{x}^{n+1} = \mathbf{x}^n +
         (1-\theta) (\Delta t \mathbf{u}^n + \frac{1}{2} \Delta t^2 \mathbf{a}^n) +
         \theta (\Delta t \mathbf{u}^{n+1} + \frac{1}{2} \Delta t^2 \mathbf{a}^{n+1})
 \end{equation}
-
-El hecho de emplear la velocidad interpolada en el paso de tiempo $n+1$ poviene de que las ecuaciones (\ref{mat_derivative:deriv}) y (\ref{pfem_mat_balance}) están acopladas. El uso de un operador convectivo implícito o explícito depederá del tipo de splitting y de esquema iterativo elegido para hallar la solución.
-
-
-\subsection{Discretización espacial}
-
-La presente metodología requiere dos discretizaciones, una discretización fija que contiene la información topográfica, y otra discretización móvil que contiene las variables características y se extiende sobre el subdominio mojado. La figura (\ref{pfem_dual_mesh}) muestra las dos discretizaciones, donde el dominio mojado está contenido en el dominio de cálculo $\Omega_w \subseteq \Omega$.
-
-\begin{figure}
-    \centering
-    \includegraphics[width=.6\textwidth]{img/lagrangian/dual_pfem_mesh.pdf}
-    \caption{Discretización espacial para el algoritmo PFEM de malla móvil}
-    \label{pfem_dual_mesh}
-\end{figure}
-
-Se introduce una discretización de elementos finitos $\Omega_h$ para el subdominio $\Omega_w$, donde cada variable $\psi$ puede ser interpolada empleando las funciones base de los elementos finitos como
-\begin{equation}
-    \psi = \sum_a^{N_\Omega} N_a(\mathbf{x}) \psi_{a}
-\end{equation}
-donce $N_\Omega$ representa el número total de nodos en $\Omega_h$ y $\psi_a$ es el valor nodal de cada variable, ya sea una incógnita o cualquier variable característica. Se procede de igual modo para el dominio $\Omega$, donde están definidas las variables del terreno: la topografía y la rugosidad.
+The fact of using the velocity interpolated is related to the coupled nature of equations (\ref{mat_derivative:deriv}) y (\ref{pfem_mat_balance}). The choose of an implicit or explicit finite differencing depends on the splitting and the iterative scheme.
 
 
-\subsection{Limitaciones del método}
 
-Por un lado, dado que se están empleando las ecuaciones en variables primitivas, este método está especialmente indicado para resolver problemas en régimen subcrítico. No obstante, también es aplicable a problemas en régimen supercrítico, pues no hay ningún impedimento de estabilidad. La mayor limitación la encontramos en la presencia de discontinuidades, pues fácilmente se producirá una inversión de elementos. Este problema no se puede solucionar con un remallado, ya que los valores nodales resultarán en una interpolación errónea de las variables. A través de la figura \ref{pfem_shock} puede verse que la condición $CFL<1$ es un requisito para prevenir la inversión de elementos, incluso para esquemas de integración temporal implícitos.
 
-\begin{figure}
+\subsection{Limitations of the method}
+
+The main advantage of this method consists on the possibility of solving convective problems with the primitive equations, specially when there is a moving shoreline. However, the major limitation is faced on the inner discontinuities, since the semi-implicit convection operator may invert elements. This problem is not solved with remeshing because the nodal values will resort on a wrong interpolation of the variables. Figure \ref{pfem_shock} shows a graphical representation of the strong conditions $CFL<1$ in order to prevent the inversion of elements.
+
+\begin{figure} [htb]
     \centering
     \includegraphics[width=.8\textwidth]{img/lagrangian/pfem_shock.pdf}
-    \caption{Incompatibilidad que se presenta para el algoritmo de malla móvil ante la presencia de discontinuidades.}
+    \caption{Incompatibility of the mesh moving algorithm for solving problems with shocks.}
     \label{pfem_shock}
 \end{figure}
 
+While the primitive variables are not optimal to solve shocks, the mesh moving algorithm presents another difficulty.
+Both methods present restrictions, but the nature of that difficulties are different. The restriction of the primitive variables is related to the conservation of the momentum at discrete level. The restriction of the mesh moving algorithm is associated to the finite differencing convective operator.
+
+
+
+\subsection{Examples}
 
 
 \section{Fixed mesh methods}
