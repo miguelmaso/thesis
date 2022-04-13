@@ -303,20 +303,22 @@ After the particles are moved, the ones that leave the domain are removed.
 
 In this work the computational domain is initially seeded with fifteen particles per element. This number does not remain constant during the simulation because particles can freely enter and exit finite elements as they move through the domain. Thereby, in order to properly perform the advection stage, every time step the domain is reseed with particles so as to ensure that a minimum number is present within each finite element. This number of particles was chosen to be four. Particles can also be eliminated from each finite element in order to limit the computational cost. In this case, the maximum number of particles allowed per finite element is sixteen. These particle thresholds were chosen as they have proven to give accurate results in previous works \cite{idelsohn2015}.
 
-\begin{figure}
+\begin{figure} [htb]
 \begin{subfigure}{0.48\textwidth}
     \centering
     \includegraphics[width=\textwidth]{img/lagrangian/pfem2_convection_stage.pdf}
-    \caption{Convection of a particle}
+    \caption{Explicit advection stage using particles (in red). Next, the particles' information is transferred to the mesh nodes.}
     \label{pfem2_convection_stage}
 \end{subfigure}
 \hfill
 \begin{subfigure}{0.48\textwidth}
     \centering
     \includegraphics[width=\textwidth]{img/lagrangian/pfem2_wave_stage.pdf}
-    \caption{Contribution of the wave solution from the mesh to the particle}
+    \caption{After the computation of the wave stage, the FE nodes contribute to the particles.}
     \label{pfem2_wave_stage}
 \end{subfigure}
+\caption{Illustration of the two main steps of the PFEM2 framework.}
+\label{pfem2_diffusion_and_wave_stages}
 \end{figure}
 
 
@@ -344,20 +346,22 @@ where $\mathcal L$ is the projection operator from the particles to the finite e
 where the index $i$ runs over all the mesh nodes, where $e$ runs over the elements sharing node $i$ and where $p_e$ runs over the particles contained in element $e$.
 
 
-\begin{figure}
+\begin{figure} [htb]
 \begin{subfigure}{0.47\textwidth}
     \centering
     \includegraphics[width=\textwidth]{img/lagrangian/projection.pdf}
-    \caption{Particle contribution to the nodes.}
+    \caption{Each particle contribute to the nodes from its element.}
     \label{pfem2_projection}
 \end{subfigure}
 \hfill
 \begin{subfigure}{0.47\textwidth}
     \centering
     \includegraphics[width=\textwidth]{img/lagrangian/projection_full.pdf}
-    \caption{Kernel of elements and its particles contributong to a node.}
+    \caption{Kernel of elements and particles contributong to a node.}
     \label{pfem2_projection_full}
 \end{subfigure}
+\caption{Illustration of the projection stage of the PFEM2 framework.}
+\label{pfem2_projection_full_illustrations}
 \end{figure}
 
 
