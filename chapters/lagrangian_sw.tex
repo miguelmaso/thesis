@@ -9,7 +9,7 @@ In the previous chapter the SW equations have been analyzed considering the coup
 This mechanism suggests the use of Lagrangian strategies, which have been successfully applied to convection diffusion and Navier-Stokes problems.
 
 In this chapter, the developments of the Particle Finite Element Method (PFEM) are applied to the SW equations. The basis of the PFEM family of methods consists on a splitting operator, solving two stage fashion the convective operator and the rest of the equations. In the case of the SW equations, there is a stage for convection and other stage for wave mechanism.
-The main advantage of the PFEM lies in using the variational principle of FEM. Hence, the formulations presented in chapter \refeq{eulerian_sw} are applicable with small modifications. The novelty of the PFEM consists on solving the convection with a particle method.
+The main advantage of the PFEM lies in using the variational principle of FEM. Hence, the formulations presented in chapter \ref{eulerian_sw} are applicable with small modifications. The novelty of the PFEM consists on solving the convection with a particle method.
 
 In the family of PFEM there are two main groups, the moving mesh and the fixed mesh. The mesh moving algorithm was firstly presented to the scientific community \cite{idelsohn2003,PFEM2004} and has been widely applied to a high number of situations \cite{larese2008,Salazar2012,onate2008}. In this method, the particles traditionally coincides with the nodes. After the convection stage --and eventually, remeshing--, the mesh inherits the displacements of the convection. Those displacements are part of the material derivative involved in the variational principle of the equations.
 
@@ -230,9 +230,9 @@ Both methods present restrictions, but the nature of that difficulties are diffe
 In this section a Lagrangian procedure with fixed mesh is presented. This procedure is an extension of PFEM-2 \cite{idelsohn2012} to the SW equations. In contrast to the mesh moving algorithm, the particles does not coincide with the nodes, but they move over the FE mesh. This procedure has the advantage of avoiding the remeshing step, but the cost of a projection from the particles to the mesh.
 
 Let $\mathcal{P}$ be a set of particles randomly seed over the SW domain. The density of the particles is such that the average number of particles per element is greater than one. This particles move over the domain transporting the intrinsic variables of the fluid, namely density, water depth, flow rate, etc. This convection stage is finalized with a projection of the variables of the particles to the FE mesh.
+The solution of the step is completed with the FE counterpart, solved in the fixed mesh following a Lagrangian framework. Finally, updating the particles is a trivial operation since the FE interpolation allows to evaluate the unknowns at an arbitrary point, namely, the particles.
+Figure \ref{pfem2_stage_flowchart} summarizes the main stages of the PFEM-2 algorithm.
 
-
-En primer lugar, se define un conjunto de partículas que ocupan el dominio de aguas poco profundas. La densidad de partículas será tal que, habrá más partículas que elementos para el mismo dominio. Estas partícluas se desplazan transportando las propiedades intrínsecas (densidad, calado, velocidad, caudal, etc.). Después de la fase de desplazamiento, se proyectan las variables intrínsecas a la malla de elementos finitos, dando paso a la solución de un sistema de ecuaciones en un marco Lagrangiano. Es importante recalcar que para ello no se ha requierido ningún movimiento de la malla, pero sí la definición de una proyección. Esta primera proyección es trivial, ya que se emplea la interpolación de los elementos finitos.
 
 \begin{figure}
     \centering
@@ -241,59 +241,141 @@ En primer lugar, se define un conjunto de partículas que ocupan el dominio de a
     \label{pfem2_stage_flowchart}
 \end{figure}
 
-%La información de la malla de elementos finitos se puede proyectar fácilmente a las partículas utilizando las funciones de forma. Sin embargo, la proyección de las partículas a la malla de elementos finitos requiere la definición de otra proyección.
 
-%Estas partículas que se ha introducido, después de desplazarse, proyectan las variables intrínsecas a la malla de elementos finitos, dando paso a la solución de un sistema de ecuaciones en un marco Lagrangiano. Es importante recalcar que para ello no se ha requierido ningún movimiento de la malla, pero sí la definición de una proyección.
+In the same way as the mesh moving algorithm, this scheme may undergo certain variations. Strictly speaking, the mass and momentum balance are a coupled system of equations and the Lagrangian split does not modify that property. This will be analyzed in the following sections.
 
-Un vez resuelto el sistema de ecuaciones, las partículas actualizan las variables características. Esta segunda proyección es un paso crítico, pues resulta necesario definir una proyección de los elementos a als partículas. Esta explicación resume brevemente el esquema de funcionamiento de una iteración no lineal. Usualmente, suele emplearse una sola iteración.
 
-Igual que en el algoritmo de malla móvil, este esquema puede sufrir algunas variaciones, pues, en sentido estricto, se trata de un esquema implícito que requiere iterar entre en paso de convección y la resolución del sistema de ecuaciones. Dejamos el análisis del sistema de integración temporal para más adelante.
 
-\begin{figure}
+\subsection{Governing equations}
+
+
+In contrast to the moving mesh algorithm, the nodes receive information from the particles without experimenting mesh displacement.
+This fact allows to arbitrarily choose a Lagrangian or Eulerian framework, even for only one of the balance equations.
+This property of the PFEM-2 algorithm allows more flexibility. The choose of the equations as well as the framework can optimize the computational cost and the approximation of the physical properties.
+For example, Heniche pointed out in \cite{heniche2000} that the residual of the momentum balance does not differenciate the sign of the water depth if conservative variables are employed, $\mathbf{r}_\mathbf{q}(h) = \mathbf{r}_\mathbf{q}(-h)$.
+This property suggests the use of conservative variables in combination with a mixed framework.
+\begin{subequations} \label{pfem2_sw_eq}
+\begin{align}
+    &\frac{D\mathbf{q}}{Dt} + \mathbf{q} \nabla \cdot \mathbf{u} + gh \nabla (h-z) + S_f = \mathbf{0} \\
+    &\pder{h}{t} + \nabla \cdot \mathbf{q} = 0
+\end{align}
+\end{subequations}
+
+
+The first term involving spatial dervivatives in the momentum balance comes from applying the chain rule to the fluxes vector and substracting the convective term. The remaining terms corresponds to the compressibility of the SW equations --it is important to remember the analogy between the SW equations and the compressible NS equations--.
+
+Several possibilities are presented to deal with this term. The first one consists on recovering the Eulerian quasilinear form and then, apply the material derivative. The second one imply a projection to compute the divergence of the velocity. Lastly, an updated Lagrangian formulation can be used to compute the divergence term.
+
+The first option is preferred since it is more consistent with the previous sections and does not introduce extra steps. The linearization matrices follow the next expression:
+\begin{equation}
+    \mathbf{A}_1 = \left[\begin{matrix}
+        u_1  & 0   & -u_1^2 + gh \\
+        u_2  & 0   & -u_1 u_2 \\
+        1    & 0   & 0
+    \end{matrix} \right]
+    \quad , \quad
+    \mathbf{A}_2 = \left[\begin{matrix}
+        0   & u_1  & -u_1 u_2 \\
+        0   & u_2  & -u_2^2 + gh \\
+        0   & 1    & 0
+    \end{matrix} \right]
+\end{equation}
+
+
+
+
+\subsection{PFEM-2 algorithm}
+
+
+The outlined algorithm is explained in more detail in the section. The more important parts are the computations carried out by each discrete space. The communication between them and the intergation in time are stricly related.
+
+
+\subsubsection{Convection}
+
+
+Let us assume that the particles move as material points and that each one stores the point concentration of the property $\phi_p = \phi(\mathbf x_p)$. Since the variables are not known for any arbitrary time $t$, but only for the discrete time steps $1,\ 2\dots n,\ n+1\dots$, the advection of a particle can be approximated using a $\theta$-family discretization as:
+\begin{equation}
+\mathbf{x}_p^{n+1} = \mathbf{x}_n^p + (1-\theta) \int_{t_n}^{t_{n+1}} \mathbf{v}_n(\mathbf{x}_p^t)dt + \theta \int_{t_n}^{t_{n+1}} \mathbf{v}_{n+1}(\mathbf{x}_p^t)dt
+\end{equation}
+
+If the velocity field is known, the system becomes explicit and the problem is reduced to moving the particles along the streamlines. The problem is solved using an explicit forward integration ($\theta=0$) with substepping \cite{idelsohn2012}. An illustration is given in figure \ref{pfem2_convection_stage}. This method, also known as XIVAS \cite{idelsohn2013}\cite{idelsohn2014}, was initially applied to a variable velocity field.
+After the particles are moved, the ones that leave the domain are removed.
+
+In this work the computational domain is initially seeded with fifteen particles per element. This number does not remain constant during the simulation because particles can freely enter and exit finite elements as they move through the domain. Thereby, in order to properly perform the advection stage, every time step the domain is reseed with particles so as to ensure that a minimum number is present within each finite element. This number of particles was chosen to be four. Particles can also be eliminated from each finite element in order to limit the computational cost. In this case, the maximum number of particles allowed per finite element is sixteen. These particle thresholds were chosen as they have proven to give accurate results in previous works \cite{idelsohn2015}.
+
+\begin{figure} [htb]
 \begin{subfigure}{0.48\textwidth}
     \centering
     \includegraphics[width=\textwidth]{img/lagrangian/pfem2_convection_stage.pdf}
-    \caption{Convection of a particle}
+    \caption{Explicit advection stage using particles (in red). Next, the particles' information is transferred to the mesh nodes.}
     \label{pfem2_convection_stage}
 \end{subfigure}
 \hfill
 \begin{subfigure}{0.48\textwidth}
     \centering
     \includegraphics[width=\textwidth]{img/lagrangian/pfem2_wave_stage.pdf}
-    \caption{Contribution of the wave solution from the mesh to the particle}
+    \caption{After the computation of the wave stage, the FE nodes contribute to the particles.}
     \label{pfem2_wave_stage}
 \end{subfigure}
+\caption{Illustration of the two main steps of the PFEM2 framework.}
+\label{pfem2_diffusion_and_wave_stages}
 \end{figure}
 
-\subsection{Ecuaciones de gobierno}
-
-A diferencia del algoritmo de malla móvil, los nodos reciben la información característica de la nueva configuración, sin que la malla se haya desplazado. Este hecho permite utilizar arbitrariamente un esquema Lagrangiano o Euleriano, independientemente de cómo se haya resuelto la convección. A la luz de esta consideración, es importante ver que la expresión de la conservación de la masa en un esquema Euelriano es trivial cuando se consideran variables conservativas. De este modo, consideramos la formulación Lagrangiana solamente en el balance de cantidad de movimiento. Otra posibilidad sería emplear las mismas ecuaciones de gobierno que en el caso de PFEM de malla móvil.
-
-La aplicación de la regla de la cadena al operador convectivo nos lleva a la introducción de un nuevo término en el balande de cantidad de movimiento. Este término corresponde a la compresibilidad del flujo. Es importante recordad la analogía entre las ecuaciones de flujo compresible y las ecuaciones aguas poco profundas. Con tal de linealizar la solución del sistema de ecuaciones, se presentan tres vías que serán estudiadas:
-\begin{itemize}
-    \item Incluir el término de transporte compresible en el sistema de ecuaciones. Esta es la solución más consistente, sin embargo, la mas costosa ya que introduce una no linealidad y teŕminos que deben ser incluidos en la estabilización.
-    \item Calcular el término compresible mediante la divergencia de los desplazamientos. Puesto que en la etapa de convección se calculan los desplazamientos, se dispone de los elementos necesarios para calcular la divergencia, modificando así la proyección de las variables intrínsecas a la malla de elementos finitos.
-    \item Si la importancia relativa del presente término lo permite, omitirlo. Esta alternativa práctica, requiere la evaluación de aplicabilidad.
-\end{itemize}
 
 
-\subsection{Projection}
+\subsubsection{Projection}
 
-\begin{figure}
+
+When solving the advective step in Equation (\ref{pfem2_sw_eq}), the particles concentration at $\mathbf x_p^{n+1}$ is the same as at the onset of the time step ($\mathbf x_p^n$). This is equivalent to saying that the advective step assumes $\frac{D\phi}{D t}=0$. This modification in the field described by the particles needs to be transferred onto the finite element space. As usual in particle-based techniques, such as PFEM, a projection procedure is used to transfer the information from the particles to the finite elements in the underlying mesh. In our work we use
+
+\begin{equation}
+    \phi^* = \mathcal L(\phi_p)
+\end{equation}
+
+where $\mathcal L$ is the projection operator from the particles to the finite element space and $\phi^*$ is the result of the advection at the time step $n+1$. In this case, a first order explicit projection has been used and all the particles in the elements surrounding a node contribute to that node, i.e.
+%TODO: ($\theta = ? $)
+
+\begin{equation}
+    \phi_i^* = \dfrac
+    {\Sigma_e\Sigma_{p_e} w_p \phi_p}
+    {\Sigma_e\Sigma_{p_e} w_p}
+    \quad \text{with} \quad
+    w_p = N_{ei}(\mathbf x_p)
+\end{equation}
+
+where the index $i$ runs over all the mesh nodes, where $e$ runs over the elements sharing node $i$ and where $p_e$ runs over the particles contained in element $e$.
+
+
+\begin{figure} [htb]
 \begin{subfigure}{0.47\textwidth}
     \centering
     \includegraphics[width=\textwidth]{img/lagrangian/projection.pdf}
-    \caption{Particle contribution to the nodes.}
+    \caption{Each particle contribute to the nodes from its element.}
     \label{pfem2_projection}
 \end{subfigure}
 \hfill
 \begin{subfigure}{0.47\textwidth}
     \centering
     \includegraphics[width=\textwidth]{img/lagrangian/projection_full.pdf}
-    \caption{Kernel of elements and its particles contributong to a node.}
+    \caption{Kernel of elements and particles contributong to a node.}
     \label{pfem2_projection_full}
 \end{subfigure}
+\caption{Illustration of the projection stage of the PFEM2 framework.}
+\label{pfem2_projection_full_illustrations}
 \end{figure}
+
+
+\subsubsection{Material derivative}
+
+
+\subsubsection{Particles update}
+The last step of the PFEM2 algorithm is to add the contribution of the solution of Equation (\ref{pfem2_sw_eq}) to the particles. To avoid the accumulation of projection errors and additional diffusion, the information from the particles is updated using an incremental scheme. This step only involves the evaluation of the unknown at each particle position in the finite element mesh as:
+
+\begin{equation}
+    \phi_p^{n+1} = \phi_p^n + \phi({\bf x}_p^{n+1}) - \phi({\bf x}_p^*)
+\end{equation}
+
+
 
 \subsection{Conclusiones}
 
