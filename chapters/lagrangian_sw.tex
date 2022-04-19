@@ -365,7 +365,25 @@ where the index $i$ runs over all the mesh nodes, where $e$ runs over the elemen
 \end{figure}
 
 
-\subsubsection{Material derivative}
+\subsubsection{Wave equation stage}
+
+
+Once the convective problem is solved explicitly in the particles and the results are transferred to the mesh nodes, the lagrangian residual (Equation (\ref{pfem2_sw_eq})) is solved in a fixed mesh with an Eulerian FIC-FEM technique. The spatial discretization and the time integration scheme follows the procedure explained in Section \ref{sec:fic_fem_stabilization}.
+However, the time integration scheme follows a first-order BDF or Backward Euler.
+The time derivatives are computed according to the next expressions
+\begin{align} \label{pfem2_time_derivatives}
+    \dot{\mathbf{q}} &= \frac{\mathbf{q}^{n+1} - \mathbf{q}^*}{\Delta t} \\
+    \dot{h} &= \frac{h^{n+1} - h^n}{\Delta t}
+\end{align}
+Equation (\ref{pfem2_time_derivatives}) includes the contribution of the advection computed with the particles through the variables $^*$. It is important to note that the water depth is still using a partial derivative.
+
+Another minor modification with respect to the Eulerian framework, is the use of the advected values as initial guess for the iterative strategy:
+\begin{align}
+    \mathbf{q}^{n+1,0} = \mathbf{q}^* \\
+    h^{n+1,0} = h^*
+\end{align}
+
+Finally, it is worth to remark the need of stabilization, since the discretization does not fulfill the compatiility of interpolation. Though, several authors report instabilities but does not associate them to the \emph{inf-sup} condition. The stability is introduced following the procedure explained in section \ref{sec:fic_fem_stabilization}.
 
 
 \subsubsection{Particles update}
@@ -377,19 +395,33 @@ The last step of the PFEM2 algorithm is to add the contribution of the solution 
 
 
 
+\subsection{Examples}
+
+
 \subsection{Conclusiones}
 
-Los métodos Lagrangianos presentan un esquema que permite un ahorro computacional. La gran ventaja que tienen es la facilidad para tratar el movimiento de la líne de costa o el avance de una inundación, evitando todos los problemas derivados de tener que incluir el dominio seco en el cálculo. El principal inconveniente de los métodos Lagrangianos está originado en que el campo de velocidades es discontínuo cuando hay un resalto hidráulico. Así como la discontinuidad que presenta la línea de costa queda resuelta de modo natural en los métodos Lagrangianos, la discontiuidad de los resaltos hidráulicos puede llevar a la inversión de elementos o proyecciones inadecuadas. Este aspecto necesita de técnicas específicas en los que la solución puede ser muy sensible al método utilizado, o puede ser poco robusta.
-
-Por lo general, ante la presencia de resaltes hidráulicos, son preferibles los esquemas de integración temporal explícitos, frente a los implícitos. Puesto que la derivada no está definida en las discontinuidades, los esquemas semi-implícitos pueden llevar a soluciones que no convergen.
 
 
 
 
-\section{Examples}
 
 
 
 \section{Concluding remarks}
 
+
+Lagrangian methods exhibit some computational benefits but the main advantage is its natural tracking of the shoreline. Especially the mesh moving algorithm, does not need additional threatments since it is not affected by the dry domain. The main drawback of the Lagrangian methods is related to the compressible behavior of the SW equations. On the on side, the velocity field is discontinuous around shocks and the staggered character of the time strategy is not suited to this phenomena. Furthermore, the explicit calculation of the convection faces a strong restriction on the CFL number.
+On the other side, the Lagrangian formulation does not achieve the desired linearzation when compressible formulations are considered.
+Figure \ref{pfem_euler_convergence} shows a schematic of the order of convergence in terms of the Froude number. When the Froude number is equal to 1, there is a discontinuity. The moving shreline is charaterized by a very elevated Froude number, since the shoreline involves a quasi zero water depth.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=\textwidth]{img/lagrangian/pfem_euler_convergence.png}
+    \caption{Qualitative representation of the order of convergence in terms of the Froude number.}
+    \label{pfem_euler_convergence}
+\end{figure}
+
+
+A global overview of the Lagrangian and Eulerian methods identifies the Eulerian framework as the robust one. Nevertheless, the Lagrangian framework is still interesting for the shoreline tracking.
+A promising combination would be an arbitrary Lagrangian-Eulerian formulation using the Eulerian framework where shocks and oscillatory behavior is dominant, and using a Lagrangian framework where the shoreline is moving.
 
