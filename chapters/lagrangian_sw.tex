@@ -102,7 +102,7 @@ The introduction of the material derivative definition yields
 \end{align}
 \end{subequations}
 
-Analogously to the previous sections, if the solution $\psi$ is sufficiently smooth, it will also verify the quasilinear form
+Analogously to the previous sections, if the solution $\psi$ is sufficiently smooth, it will also verify the quasi-linear form
 \begin{equation} \label{pfem_mat_balance_lin}
     \frac{D\bm{\psi}}{Dt} + \mathbf{A}_i\pder{\bm{\psi}}{x_i} + \mathbf{S}\bm{\psi} + \mathbf{T} = 0
 \end{equation}
@@ -252,7 +252,7 @@ In the same way as the mesh moving algorithm, this scheme may undergo certain va
 In contrast to the moving mesh algorithm, the nodes receive information from the particles without experimenting mesh displacement.
 This fact allows to arbitrarily choose a Lagrangian or Eulerian framework, even for only one of the balance equations.
 This property of the PFEM-2 algorithm allows more flexibility. The choose of the equations as well as the framework can optimize the computational cost and the approximation of the physical properties.
-For example, Heniche pointed out in \cite{heniche2000} that the residual of the momentum balance does not differenciate the sign of the water depth if conservative variables are employed, $\mathbf{r}_\mathbf{q}(h) = \mathbf{r}_\mathbf{q}(-h)$.
+For example, Heniche pointed out in \cite{heniche2000} that the residual of the momentum balance does not distinguish the sign of the water depth if conservative variables are employed, $\mathbf{r}_\mathbf{q}(h) = \mathbf{r}_\mathbf{q}(-h)$.
 This property suggests the use of conservative variables in combination with a mixed framework.
 \begin{subequations} \label{pfem2_sw_eq}
 \begin{align}
@@ -262,9 +262,9 @@ This property suggests the use of conservative variables in combination with a m
 \end{subequations}
 
 
-The first term involving spatial dervivatives in the momentum balance comes from applying the chain rule to the fluxes vector and substracting the convective term. The remaining terms corresponds to the compressibility of the SW equations --it is important to remember the analogy between the SW equations and the compressible NS equations--.
+The first term involving spatial derivatives in the momentum balance comes from applying the chain rule to the fluxes vector and subtracting the convective term. The remaining terms corresponds to the compressibility of the SW equations --it is important to remember the analogy between the SW equations and the compressible NS equations--.
 
-Several possibilities are presented to deal with this term. The first one consists on recovering the Eulerian quasilinear form and then, apply the material derivative. The second one imply a projection to compute the divergence of the velocity. Lastly, an updated Lagrangian formulation can be used to compute the divergence term.
+Several possibilities are presented to deal with this term. The first one consists on recovering the Eulerian quasi-linear form and then, apply the material derivative. The second one imply a projection to compute the divergence of the velocity. Lastly, an updated Lagrangian formulation can be used to compute the divergence term.
 
 The first option is preferred since it is more consistent with the previous sections and does not introduce extra steps. The linearization matrices follow the next expression:
 \begin{equation}
@@ -287,7 +287,7 @@ The first option is preferred since it is more consistent with the previous sect
 \subsection{PFEM-2 algorithm}
 
 
-The outlined algorithm is explained in more detail in the section. The more important parts are the computations carried out by each discrete space. The communication between them and the intergation in time are stricly related.
+The outlined algorithm is explained in more detail in the section. The more important parts are the computations carried out by each discrete space. The communication between them and the integration in time are strictly related.
 
 
 \subsubsection{Convection}
@@ -298,7 +298,7 @@ Let us assume that the particles move as material points and that each one store
 \mathbf{x}_p^{n+1} = \mathbf{x}_n^p + (1-\theta) \int_{t_n}^{t_{n+1}} \mathbf{v}_n(\mathbf{x}_p^t)dt + \theta \int_{t_n}^{t_{n+1}} \mathbf{v}_{n+1}(\mathbf{x}_p^t)dt
 \end{equation}
 
-If the velocity field is known, the system becomes explicit and the problem is reduced to moving the particles along the streamlines. The problem is solved using an explicit forward integration ($\theta=0$) with substepping \cite{idelsohn2012}. An illustration is given in figure \ref{pfem2_convection_stage}. This method, also known as XIVAS \cite{idelsohn2013}\cite{idelsohn2014}, was initially applied to a variable velocity field.
+If the velocity field is known, the system becomes explicit and the problem is reduced to moving the particles along the streamlines. The problem is solved using an explicit forward integration ($\theta=0$) with a proper sub-step \cite{idelsohn2012}. An illustration is given in figure \ref{pfem2_convection_stage}. This method, also known as XIVAS \cite{idelsohn2013}\cite{idelsohn2014}, was initially applied to a variable velocity field.
 After the particles are moved, the ones that leave the domain are removed.
 
 In this work the computational domain is initially seeded with fifteen particles per element. This number does not remain constant during the simulation because particles can freely enter and exit finite elements as they move through the domain. Thereby, in order to properly perform the advection stage, every time step the domain is reseed with particles so as to ensure that a minimum number is present within each finite element. This number of particles was chosen to be four. Particles can also be eliminated from each finite element in order to limit the computational cost. In this case, the maximum number of particles allowed per finite element is sixteen. These particle thresholds were chosen as they have proven to give accurate results in previous works \cite{idelsohn2015}.
@@ -326,7 +326,7 @@ In this work the computational domain is initially seeded with fifteen particles
 \subsubsection{Projection}
 
 
-When solving the advective step in Equation (\ref{pfem2_sw_eq}), the particles concentration at $\mathbf x_p^{n+1}$ is the same as at the onset of the time step ($\mathbf x_p^n$). This is equivalent to saying that the advective step assumes $\frac{D\phi}{D t}=0$. This modification in the field described by the particles needs to be transferred onto the finite element space. As usual in particle-based techniques, such as PFEM, a projection procedure is used to transfer the information from the particles to the finite elements in the underlying mesh. In our work we use
+When solving the advective stage in Equation (\ref{pfem2_sw_eq}), the particles concentration at $\mathbf x_p^{n+1}$ is the same as at the onset of the time step ($\mathbf x_p^n$). This is equivalent to saying that the advective step assumes $\frac{D\phi}{D t}=0$. This modification in the field described by the particles needs to be transferred onto the finite element space. As usual in particle-based techniques, such as PFEM, a projection procedure is used to transfer the information from the particles to the finite elements in the underlying mesh. In our work we use
 
 \begin{equation}
     \phi^* = \mathcal L(\phi_p)
@@ -357,7 +357,7 @@ where the index $i$ runs over all the mesh nodes, where $e$ runs over the elemen
 \begin{subfigure}{0.47\textwidth}
     \centering
     \includegraphics[width=\textwidth]{img/lagrangian/projection_full.pdf}
-    \caption{Kernel of elements and particles contributong to a node.}
+    \caption{Kernel of elements and particles contributing to a node.}
     \label{pfem2_projection_full}
 \end{subfigure}
 \caption{Illustration of the projection stage of the PFEM2 framework.}
@@ -377,13 +377,13 @@ The time derivatives are computed according to the next expressions
 \end{align}
 Equation (\ref{pfem2_time_derivatives}) includes the contribution of the advection computed with the particles through the variables $^*$. It is important to note that the water depth is still using a partial derivative.
 
-Another minor modification with respect to the Eulerian framework, is the use of the advected values as initial guess for the iterative strategy:
+Another minor modification with respect to the Eulerian framework, is the use of the convected values as initial guess for the iterative strategy:
 \begin{align}
     \mathbf{q}^{n+1,0} = \mathbf{q}^* \\
     h^{n+1,0} = h^*
 \end{align}
 
-Finally, it is worth to remark the need of stabilization, since the discretization does not fulfill the compatiility of interpolation. Though, several authors report instabilities but does not associate them to the \emph{inf-sup} condition. The stability is introduced following the procedure explained in section \ref{sec:fic_fem_stabilization}.
+Finally, it is worth to remark the need of stabilization, since the discretization does not fulfill the compatibility of interpolation. Though, several authors report instabilities but does not associate them to the \emph{inf-sup} condition. The stability is introduced following the procedure explained in section \ref{sec:fic_fem_stabilization}.
 
 
 \subsubsection{Particles update}
@@ -398,7 +398,7 @@ The last step of the PFEM2 algorithm is to add the contribution of the solution 
 \subsection{Examples}
 
 
-\subsection{Conclusiones}
+\subsection{Conclusions}
 
 
 
@@ -410,9 +410,9 @@ The last step of the PFEM2 algorithm is to add the contribution of the solution 
 \section{Concluding remarks}
 
 
-Lagrangian methods exhibit some computational benefits but the main advantage is its natural tracking of the shoreline. Especially the mesh moving algorithm, does not need additional threatments since it is not affected by the dry domain. The main drawback of the Lagrangian methods is related to the compressible behavior of the SW equations. On the on side, the velocity field is discontinuous around shocks and the staggered character of the time strategy is not suited to this phenomena. Furthermore, the explicit calculation of the convection faces a strong restriction on the CFL number.
-On the other side, the Lagrangian formulation does not achieve the desired linearzation when compressible formulations are considered.
-Figure \ref{pfem_euler_convergence} shows a schematic of the order of convergence in terms of the Froude number. When the Froude number is equal to 1, there is a discontinuity. The moving shreline is charaterized by a very elevated Froude number, since the shoreline involves a quasi zero water depth.
+Lagrangian methods exhibit some computational benefits but the main advantage is its natural tracking of the shoreline. Especially the mesh moving algorithm, does not need additional treatment since it is not affected by the dry domain. The main drawback of the Lagrangian methods is related to the compressible behavior of the SW equations. On the on side, the velocity field is discontinuous around shocks and the staggered character of the time strategy is not suited to this phenomena. Furthermore, the explicit calculation of the convection faces a strong restriction on the CFL number.
+On the other side, the Lagrangian formulation does not achieve the desired linearization when compressible formulations are considered.
+Figure \ref{pfem_euler_convergence} shows a schematic of the order of convergence in terms of the Froude number. When the Froude number is equal to 1, there is a discontinuity. The moving shoreline is characterized by a very elevated Froude number, since the shoreline involves a quasi zero water depth.
 
 \begin{figure}
     \centering
