@@ -3,6 +3,22 @@
 \label{eulerian_bsq}
 
 
+In this chapter, a FEM approximation for the Boussinesq modified equations is presented. As stated in section \ref{equations}, the Boussinesq equations and the Saint Venant equations are of the same family. Apart from the choice of different primary variables, the main difference consists on the inclusion of the dispersive terms. However, part of the structure of the equations remains unmodified.
+
+The weak principle, the linear stabilization and the spatial discretization presented in section \ref{eulerian_sw} will be directly applied for the Boussinesq modified equations. The main differences arise from the dispersion terms.
+First of all, the dispersion terms include spatial derivatives of order higher than two. Thus, special techniques for considering the third order derivatives will be included in the FEM procedure.
+
+Secondly, the time discretization will be modified using a semi-implicit fourth-order scheme. The new time scheme allows to deal with the oscillatory behavior of the Boussinesq equations.
+Additionally, the matrix structure will suffer some modifications related to the high order derivatives and the time integration scheme.
+
+Finally, the shock capturing is not needed, since the dispersion effect prevent from breaking and the formation of steep gradients. However, in the vicinity of the shoreline or very shallow domains, the amplitude dispersion effect could dominate over the frequency dispersion, making very recommended the inclusion of a shock capturing technique. Furthermore, if the shoreline is included, the shock capturing is required, since it provides stabilization for the moving front.
+
+On another note, a section regarding the numerical treatment of absorbing boundary conditions is included. The inclusion of the frequency dispersion and the need of shortening the computational domain, lead to the open boundary conditions. On an open boundary conditions, waves can exit the computational domain and reflections must be avoided. The numerical approximation for the open boundary conditions are called absorbing boundary conditions.
+
+Finally, the chapter is closed with some examples. The examples are designed in order to test the accuracy and to show the capabilities of the presented algorithms.
+
+
+
 
 \section{Stabilized formulation for the Boussinesq modified equations}
 
