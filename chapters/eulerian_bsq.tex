@@ -67,7 +67,28 @@ Here the equations are stabilized using FIC extending the work done in \cite{mas
 
 \subsubsection{Derivatives recovery}
 
-Following \cite{walkley2002}, the third order spatial derivatives are modelled using $\mathbf{J}_\eta$ as an intermediate variable. Since it can be solved in a staggered way, the number of degrees of freedom is not increased and thus the performance of the scheme is unaltered. The auxiliary field $\mathbf{J}_\eta$ is computed using the Zhang \cite{zhang2005} super-convergent gradient recovery.
+Following \cite{walkley2002}, the third order spatial derivatives are modelled using $\mathbf{J}_\eta$ as an intermediate variable. There are several ways of computing the intermediate field $\mathbf{J}_\eta$. The first possibility is to compute it in a monolithic way, adding $\mathbf{J}_\eta$ to the degrees of freedom.
+
+A more interesting option is to compute it in a staggered way using a projection. In that case, the number of degrees of freedom is not increased and thus the time consuming performance of the scheme is unaltered. 
+
+finally, the projection for the auxiliary field $\mathbf{J}_\eta$ can be replaced by a gradient recovery technique. In that section this option is analyzed, since the gradient recovery provides more regularity, at the same time, it is very efficient.
+
+The gradient recovery technique was initially proposed by Zienkiewicz and Zhu in \cite{zienkiewicz1992}. Later, Zhang and Naga proposed some improvements for the super convergent gradient recovery in \cite{zhang2005} at boundaries. Finally, some improvements have been proposed in \cite{wu2007,ahmed2021} for adaptive meshes, but the last improvements are not going to be considered in this research.
+
+The main idea of the gradient recovery is to introduce an operator $G_h : S_h \rightarrow S_h^{n_d}$, where $S_h$ is a polynomial finite element space of degree $k$ over a triangulation $T_h$ and $n_d$ is the space dimension. After determining the values of $G_h$ at all nodes, given a solution $u_h$ , $G_h u_h \in \S_h^{n_d}$ is obtained on the whole domain.
+The triangulation can be replaced by a quadrilateral discretization. In both cases, only vertices nodes are considered, nor edge or internal nodes.
+
+For a vertex $\mathbf{x}_i$ and being $l_i^e$ the size of the largest edge attached to $\mathbf{x}_i$, the nodes on a ball $B$ are selected:
+\begin{equation}
+    B_h(\mathbf{x}_i) = \{ \mathbf{x} \in T_h : \vert \mathbf{x} - \mathbf{x}_i \vert \leq h_i^e \}
+\end{equation}
+
+
+
+
+
+\subsubsection{Time discretization}
+
 Finally, the problem (\ref{bsq_eq}) is expressed in matrix form as
 \begin{equation} \label{sw_system_matrix}
     (M + K) \dot{x} = F(x,y)
@@ -75,7 +96,6 @@ Finally, the problem (\ref{bsq_eq}) is expressed in matrix form as
 where $x$ is the vector of nodal unknowns, $y$ is the vector of nodal values corresponding to $\mathbf{J}_\eta$, $M$ is a mass matrix, $K$ correspond to the second derivatives associated to $\mathbf{J}_{\mathbf{u}}$, and $F$ is a non-linear vector which is a function of $\mathbf{u}_\beta$ and its spatial derivatives.
 
 
-\subsubsection{Time discretization}
 
 The commonly used fourth order Adams-Moulton scheme is employed for the time integration of (\ref{sw_system_matrix}), see \cite{wei1995,woo2004a,codina2008b} as an example.
 To obtain a solution at the time step $t^{n+1}$, the fixed point iterative method is employed to deal with the non-linearity of the system. Given a guess $x^{n+1,i-1}$ for $x^{n+1,i}$ at iteration $i$, the increment $\delta x^i$ is computed from
