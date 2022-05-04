@@ -1,9 +1,29 @@
 
-\chapter{Finite Element Methods for the Boussinesq modified equations}
+\chapter{Finite Element Method for the Boussinesq modified equations}
 \label{eulerian_bsq}
 
 
-In this chapter, a FEM approximation for the Boussinesq modified equations is presented. As stated in section \ref{equations}, the Boussinesq equations and the Saint Venant equations are of the same family. Apart from the choice of different primary variables, the main difference consists on the inclusion of the dispersive terms. However, part of the structure of the equations remains unmodified.
+In this chapter, a FEM approximation for the Boussinesq modified equations is presented. Having a numerical approximation for the Boussinesq modified equations is mandatory when waves are studied on a two dimensional scenario and a complex bathymetry is considered.
+
+\textcolor{red}{Some comments about numerical methods, a short state of the art.}
+
+Several numerical models appeared in the bibliography to solve the Boussinesq equations, under the possible variations for considering the dispersive terms. Abbot pioneered the FD schemes in \cite{abbott1978,abbott1979} applied to the original Boussinesq model. Later, Wei and Kirby solved the modified equations presented by Nwogu \cite{nwogu1993} using a FD scheme in \cite{wei1995}. The main advantage of the FD is the ease of treatment higher differences, even though the main difficulty consists on representing complex domains. Smallman was a pioneer applying the FD to harbours \cite{smallman1989}.
+
+A decade later, some FEM were developed to solve Boussinesq equations. In that case, some special treatment needs to be applied to the high order derivatives. Langtangen \cite{langtangen1998} used quadratic triangles while most of the authors use aan intermediate variable. Li and Liu \cite{li1999} used bilinear quadrilaterals and used a projection to approximate the gradient. Walkley \cite{walkley2002} and Woo \cite{woo2004a,woo2004b} used a projection to interpolate the second order derivatives filed. Surprisingly, the authors reported high frequency oscillations and proposed ad-hoc solutions, but until Codina \cite{codina2008,codina2008b} none of them associated the oscillations to the incompatibility of interpolation.
+
+The method has been solved using DG \cite{eskilsson2002} and FV \cite{bradford2002,stansby2003}. As reported by Stansby \cite{stansby2003}, since the FV is non-oscillatory, needs special techniques to accurately approximate the oscillatory behavior of the Boussinesq equations.
+
+This chapter includes the developments presented in chapter \ref{eulerian_sw} and adds the new techniques associated to the oscillatory and dispersive problem. 
+Som examples are included in order to test the accuracy and to show the capabilities of the presented algorithms.
+Finally, the chapter is closed with the concluding remarks.
+
+
+
+\section{Stabilized formulation for the Boussinesq modified equations}
+
+
+
+As stated in section \ref{equations}, the Boussinesq equations and the Saint Venant equations are of the same family. Apart from the choice of different primary variables, the main difference consists on the inclusion of the dispersive terms. However, part of the structure of the equations remains unmodified.
 
 The weak principle, the linear stabilization and the spatial discretization presented in section \ref{eulerian_sw} will be directly applied for the Boussinesq modified equations. The main differences arise from the dispersion terms.
 First of all, the dispersion terms include spatial derivatives of order higher than two. Thus, special techniques for considering the third order derivatives will be included in the FEM procedure.
@@ -11,17 +31,13 @@ First of all, the dispersion terms include spatial derivatives of order higher t
 Secondly, the time discretization will be modified using a semi-implicit fourth-order scheme. The new time scheme allows to deal with the oscillatory behavior of the Boussinesq equations.
 Additionally, the matrix structure will suffer some modifications related to the high order derivatives and the time integration scheme.
 
-Finally, the shock capturing is not needed, since the dispersion effect prevent from breaking and the formation of steep gradients. However, in the vicinity of the shoreline or very shallow domains, the amplitude dispersion effect could dominate over the frequency dispersion, making very recommended the inclusion of a shock capturing technique. Furthermore, if the shoreline is included, the shock capturing is required, since it provides stabilization for the moving front.
+Regarding the shock capturing, usually it is not needed since the dispersion effect prevents from breaking and the formation of steep gradients. However, in the vicinity of the shoreline or very shallow domains, the amplitude dispersion effect could dominate over the frequency dispersion, making very recommended the inclusion of a shock capturing technique. Furthermore, if the shoreline is included, the shock capturing is required, since it provides stabilization for the moving front.
 
 On another note, a section regarding the numerical treatment of absorbing boundary conditions is included. The inclusion of the frequency dispersion and the need of shortening the computational domain, lead to the open boundary conditions. On an open boundary conditions, waves can exit the computational domain and reflections must be avoided. The numerical approximation for the open boundary conditions are called absorbing boundary conditions.
 
-Finally, the chapter is closed with some examples. The examples are designed in order to test the accuracy and to show the capabilities of the presented algorithms.
 
 
-
-
-\section{Stabilized formulation for the Boussinesq modified equations}
-
+%%%%%%%%%%%
 
 The Boussinesq modified equations need to be stabilized. In this section the linear stabilization presented in \ref{sec:fic_fem_stabilization} will be applied. Since the Boussinesq equations are intended to solve oscillatory problems, the shock capturing is not relevant. However, an additional technique must be introduced in order to deal with the higher order derivatives.
 
@@ -31,9 +47,8 @@ In this section, the boundary conditions considered by the numerical model will 
 
 
 
-\subsection{Finite Element formulation}
+\subsection{Weak formulation and spatial discretization}
 
-\subsubsection{Spatial discretization}
 
 The Boussinesq equations are solved using the FEM. The space domain is interpolated with a Galerkin discretization of linear triangles and a finite difference scheme with constant time step is used to integrate the equations in time.
 Some numerical difficulties such as the third order differential operator and the time integration accuracy are addressed in \cite{walkley2002,woo2004a,wei1995}.
@@ -41,7 +56,7 @@ As stated by Codina in \cite{codina2008,codina2008b} the problem (\ref{bsq_eq}) 
 Here the equations are stabilized using FIC extending the work done in \cite{maso2022}.
 
 
-\subsubsection{Derivatives recovery}
+\subsection{Derivatives recovery}
 
 Following \cite{walkley2002}, the third order spatial derivatives are modelled using $\mathbf{J}_\eta$ as an intermediate variable. There are several ways of computing the intermediate field $\mathbf{J}_\eta$. The first possibility is to compute it in a monolithic way, adding $\mathbf{J}_\eta$ to the degrees of freedom.
 
@@ -101,7 +116,7 @@ Since the values of the nodal unknowns $u_h$ are not known a priory, the vector 
 
 
 
-\subsubsection{Time discretization}
+\subsection{Time discretization}
 
 Finally, the problem (\ref{bsq_eq}) is expressed in matrix form as
 \begin{equation} \label{sw_system_matrix}
@@ -197,7 +212,13 @@ The reflected amplitude is monotonically decreasing as the sponge width increase
 \end{figure}
 
 
-\subsection{Examples}
+\section{Examples}
+
+
+\subsection{Solitary wave propagation}
+
+
+\subsection{Absorbing boundary}
 
 
 
