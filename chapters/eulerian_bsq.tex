@@ -35,13 +35,6 @@ On another note, a section regarding the numerical treatment of absorbing bounda
 
 
 
-% The Boussinesq modified equations need to be stabilized. In this section the linear stabilization presented in \ref{sec:fic_fem_stabilization} will be applied. Since the Boussinesq equations are intended to solve oscillatory problems, the shock capturing is not relevant. However, an additional technique must be introduced in order to deal with the higher order derivatives.
-
-% In this section, the boundary conditions considered by the numerical model will be introduced. Then, the numerical procedure is explained. Here, the introduction of a gradient recovery is presented. After presenting the formulation for solving the equations, a numerical procedure for the absorbing boundary conditions will be proposed. Finally, some examples are added.
-
-
-
-
 
 \subsection{Weak formulation and linear stabilization}
 
@@ -61,9 +54,9 @@ The variational form of the Boussinesq modified equations (\ref{bsq_eq}) present
         \right)d\Omega = 0
     \end{equation}
 \end{subequations}
-where the auxiliary fields $\mathbf{J}_\eta$ and $\mathbf{J}_u$ are defined in (\ref{bsq_eq_auxiliary_J}) and involve second order derivatives of $\mathbf{u}_\beta$ and $\partial\mathbf{u}_\beta/\partial t$. E and V are the corresponding test functions for $\eta$ and $\mathbf{u}_\beta$.
+where the auxiliary fields $\mathbf{J}_\eta$ and $\mathbf{J}_u$ are defined in (\ref{bsq_eq_auxiliary_J}) and involve second order derivatives of $\mathbf{u}_\beta$ and $\partial\mathbf{u}_\beta/\partial t$. E and U are the corresponding test functions for $\eta$ and $\mathbf{u}_\beta$.
 
-In spite of the staggered formulation for the mass and momentum conservation, it is still a mixed wave formulation and the linear stabilization obtained by the FIC procedure will be applied. The additional term associated to the FIC residual could be projected onto a more general linearization matrix, including also the effects of the dispersive terms. However, the dispersive terms include different derivatives order. Since the current FIC stabilization only consider first order derivatives, the new residual term will be projected onto the fluxes matrices $\mathbf{A}_i$:
+In spite of the staggered formulation for the mass and momentum conservation, it is still a mixed wave formulation and the linear stabilization obtained by the FIC procedure will be applied. The additional term associated to the FIC residual could be projected onto a more general linearization matrix, including also the effects of the dispersive terms. However, the dispersive terms include different derivatives order. Since the current FIC stabilization only considers first order derivatives, the new residual term will be projected onto the fluxes matrices $\mathbf{A}_i$:
 \begin{equation}
     \mathbf{A}_1 = \left[\begin{array}{ccc}
         u_{\beta1} &  0         &  g      \\
@@ -76,28 +69,26 @@ In spite of the staggered formulation for the mass and momentum conservation, it
          0         & H+\eta     & u_{\beta2}
     \end{array}\right]
 \end{equation}
-where each term is obtained by linearization of the Boussinesq modified equations. The derivation of the full variational stabilized formulation is straightforward and for the sake of simplicity it is not shown.
-
-% Some numerical difficulties such as the third order differential operator and the time integration accuracy are addressed in \cite{walkley2002,woo2004a,wei1995}.
-% As stated by Codina in \cite{codina2008,codina2008b} the problem (\ref{bsq_eq}) is an hyperbolic wave in mixed form and there is an incompatibility condition (see \cite{BrezziFortin}) because the same interpolation is used for both variables, the velocity $\mathbf{u}_\beta$ and the wave amplitude $\eta$.
-% Here the equations are stabilized using FIC extending the work done in \cite{maso2022}.
+where each term is obtained by linearization of the Boussinesq modified equations. The derivation of the full variational stabilized formulation is straightforward and for the sake of simplicity it is not shown. Once the equations are stabilized, a numerical procedure to deal with the dispersive fields $\mathbf{J}_{\mathbf{u}}$ and $\mathbf{J}_\eta$ needs to be defined.
 
 
 
 \subsection{High order derivatives and dispersive fields}
 
-Following \cite{walkley2002}, the third order spatial derivatives are modelled using $\mathbf{J}_\eta$ as an intermediate variable. There are several ways of computing the intermediate field $\mathbf{J}_\eta$. The first possibility is to compute it in a monolithic way, adding $\mathbf{J}_\eta$ to the degrees of freedom.
 
+Most of the authors (see \cite{li1999,codina2008b} as an example) use a projection for the intermediate variables. However, $\mathbf{J}_{\mathbf{u}}$ only includes one time derivative and two spatial derivatives. Hence, it belongs to the finite element space and in can be integrated by parts.
+
+Following \cite{walkley2002}, the third order spatial derivatives corresponding to the mass balance dispersion are modelled using $\mathbf{J}_\eta$ as an intermediate variable. There are several ways of computing the intermediate field $\mathbf{J}_\eta$. The first possibility is to compute it in a monolithic way, adding $\mathbf{J}_\eta$ to the degrees of freedom.
 A more interesting option is to compute it in a staggered way using a projection. In that case, the number of degrees of freedom is not increased and thus the time consuming performance of the scheme is unaltered. 
 
-finally, the projection for the auxiliary field $\mathbf{J}_\eta$ can be replaced by a gradient recovery technique. In that section this option is analyzed, since the gradient recovery provides more regularity, at the same time, it is very efficient.
+Finally, the projection for the auxiliary field $\mathbf{J}_\eta$ can be replaced by a gradient recovery technique. In that section this option is analyzed, since the gradient recovery provides more regularity, at the same time, it is very efficient.
 
 The gradient recovery technique was initially proposed by Zienkiewicz and Zhu in \cite{zienkiewicz1992}. Later, Zhang and Naga proposed some improvements for the super convergent gradient recovery in \cite{zhang2005} at boundaries. Finally, some improvements have been proposed in \cite{wu2007,ahmed2021} for adaptive meshes, but the last improvements are not going to be considered in this research. The basis of the gradient recovery consists on fitting a $k+1$ polynomial degree where the finite elements space is of degree $k$.
 
 
-\subsubsection{Algorithm}
+\subsubsection{Derivatives recovery algorithm}
 
-The main idea of the gradient recovery is to introduce an operator $G_h : S_h \rightarrow S_h^{n_d}$, where $S_h$ is a polynomial finite element space of degree $k$ over a triangulation $T_h$ and $n_d$ is the space dimension. After determining the values of $G_h$ at all nodes, given a solution $u_h$ , $G_h u_h \in \S_h^{n_d}$ is obtained on the whole domain.
+The main idea of the derivatives recovery is to introduce an operator $G_h : S_h \rightarrow S_h^{n_d}$, where $S_h$ is a polynomial finite element space of degree $k$ over a triangulation $T_h$ and $n_d$ is the space dimension. After determining the values of $G_h$ at all nodes, given a solution $u_h$ , $G_h u_h \in \S_h^{n_d}$ is obtained on the whole domain.
 The triangulation can be replaced by a quadrilateral discretization. In both cases, only vertices nodes are considered, nor edge or internal nodes.
 
 For a vertex $\mathbf{x}_i$ and being $l_i^e$ the size of the largest edge attached to $\mathbf{x}_i$, a ball is defined around it:
@@ -146,19 +137,46 @@ Since the values of the nodal unknowns $u_h$ are not known a priory, the vector 
 
 
 
+\subsubsection{Discrete counterpart}
+
+
+Finally, the combination of the discrete variational principle of equations (\ref{bsq_eq_variational}) with the gradient recovery technique yields
+\begin{subequations} \label{bsq_eq_variational_discrete}
+    \begin{multline}
+        \int_\Omega\left(
+        U_h\pder{\mathbf{u}_{\beta h}}{t} + U_h\nabla \eta_h + U_h(\mathbf{u}_{\beta h} \cdot \nabla) \mathbf{u}_{\beta h} +
+        \right. \\ \left.
+            \nabla U_h \left( C_2 H^2 \nabla \cdot \pder{\mathbf{u}_{\beta h}}{t} 
+                + C_4 H \nabla \cdot \left(H \pder{\mathbf{u}_{\beta h}}{t}\right) \right)
+        \right)d\Omega = \mathbf{0}
+    \end{multline}
+    \begin{multline}
+        \int_\Omega\left(
+        E_h \pder{\eta_h}{t} + E_h\nabla \cdot \left((H+\eta_h)\mathbf{u}_{\beta h}\right) +
+        \right. \\ \left.  \vphantom{E_h \pder{\eta_h}{t}}
+            E_h\nabla \cdot \left(C_1 H^3 L_h \mathbf{u}_{\beta h} + C_3 H^2 L_h (H\mathbf{u}_{\beta h}) \right)
+        \right)d\Omega = 0
+    \end{multline}
+\end{subequations}
+
+Definition (\ref{bsq_eq_variational_discrete}) completes the spatial discretization of the problem. It is important to recall that the stabilization terms are omitted but should be introduced in the algebraic formulation.
+
+Moreover, in order to extend the present formulation to the shoreline, three modifications are made. Firstly, the terms not including time derivatives are multiplied by the et fraction $w$. Secondly, a residual-based viscosity stabilization is added, acting as a shock capturing where waves break and steep gradients are formed. Lastly, an artificial damping in the dry domain is added to the momentum balance in order to freeze the flow in dry areas.
+
+
 
 \subsection{Time discretization}
 
-Finally, the problem (\ref{bsq_eq}) is expressed in matrix form as
+The discrete formulation (\ref{bsq_eq_variational_discrete}) is expressed in matrix form as
 \begin{equation} \label{sw_system_matrix}
-    (M + K) \dot{x} = F(x,y)
+    (M + K) \dot{x} = F(x)
 \end{equation} 
-where $x$ is the vector of nodal unknowns, $y$ is the vector of nodal values corresponding to $\mathbf{J}_\eta$, $M$ is a mass matrix, $K$ correspond to the second derivatives associated to $\mathbf{J}_{\mathbf{u}}$, and $F$ is a non-linear vector which is a function of $\mathbf{u}_\beta$ and its spatial derivatives.
+where $x$ is the vector of nodal unknowns, $M$ is a mass matrix, $K$ correspond to the second derivatives associated to $\mathbf{J}_{\mathbf{u}}$, and $F$ is a non-linear vector which is a function of $\mathbf{u}_\beta$, $\eta$ and $\mathbf{J}_\eta$.
 
-
-
+Therefore, the system of ordinary equations needs to be integrated in time taking account of its non-linearity.
 The commonly used fourth order Adams-Moulton scheme is employed for the time integration of (\ref{sw_system_matrix}), see \cite{wei1995,woo2004a,codina2008b} as an example.
-To obtain a solution at the time step $t^{n+1}$, the fixed point iterative method is employed to deal with the non-linearity of the system. Given a guess $x^{n+1,i-1}$ for $x^{n+1,i}$ at iteration $i$, the increment $\delta x^i$ is computed from
+Let us consider a partition of the time interval $[0, T]$ into time steps of, for simplicity, equal size $\delta t$. We denote with superscript n the approximation of a function at time $t^n = n\delta t$.
+To obtain a solution at the time step $t^{n+1}$, the iterative fixed point method is employed to deal with the non-linearity of the system. Given a guess $x^{n+1,i-1}$ for $x^{n+1,i}$ at iteration $i$, the increment $\delta x^i$ is computed from
 \begin{multline}
     24 (M + K) \delta x^i = 
     24 (M + K) (x^n - x^{n+1,i-1}) \\
@@ -168,13 +186,13 @@ To obtain a solution at the time step $t^{n+1}$, the fixed point iterative metho
 The time integration is closed using the explicit third order Adams-Bashforth scheme to predict the initial guess $x^{n+1,0}$ for the non-linear iterations
 \begin{multline}
     12 (M + K) x^{n+1,0} = 
-    12 (M + K) x^n \\
+    12 (M + K) x^n 
      + \delta t (23F^n - 16F^{n-1} + 5F^{n-2}) + O(\delta t^3)
     \label{adams-bashforth}
 \end{multline}
 
-The system of (\ref{adams-moulton}) and (\ref{adams-bashforth}) is solved using a direct solver. Given the problem is small, this is not expensive.
-Convergence is achieved when $\delta x^i$ is sufficiently small. Then, the solution $x^{n+1}$ is set as $x^{n+1,i}$.
+The system of (\ref{adams-moulton}) and (\ref{adams-bashforth}) is solved using a direct solver. Given that usually, the problems solved by the Boussinesq equations are small compared with fully resolved model, the use of a direct solver will not be a problem in terms of time consumption.
+Convergence is achieved when $\delta x^i$ is sufficiently small. Then, the solution $x^{n+1}$ is set as $x^{n+1,i}$ and the procedure is repeated for the next time step.
 
 
 
