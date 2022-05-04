@@ -1,5 +1,5 @@
 
-\chapter{State of the art}
+\section{State of the art}
 \label{state_art}
 
 
@@ -8,18 +8,18 @@ The analysis of the numerical methods for the shallow water equations is more ex
 
 
 
-\section{Numerical methods for the Navier-Stokes model}
+\subsection{Numerical methods for the Navier-Stokes model}
 
-\subsection{Overview}
+% \subsubsection{Overview}
 
-\subsection{Particle methods}
-
-
-
-\section{Numerical methods for the shallow water models}
+% \subsubsection{Particle methods}
 
 
-\subsection{Overview}
+
+\subsection{Numerical methods for the shallow water models}
+
+
+\subsubsection{Overview}
 
 The computation of the dry-wet interface of the shallow water equations is a challenging problem. Due to the hyperbolic character of the equations the water height requires positivity ($h>0$) and oscillations can trigger global failure of the system. Löhner \cite{lohner2008} made a review of possible approximation methods to solve fluid dynamics. Being $u^h = N^i\hat{u}_i$ ($i=1,2,\dots,m$) an approximation of the solution $u$, the weighted residual is defined as
 
@@ -44,11 +44,11 @@ Discontinuous Galerkin (DG)     & polynomial & $N^i \ \text{if} \ x\in\Omega_{el
 In table \ref{possible_trial_functions} there are a set of possible trial and test functions and the resulting approximation method. In the recent decades a new family of finite elements have been developed which are known as the discontinuous Galerkin (DG). We are interested on the implementation of \emph{continuous Galerkin finite elements} in KratosMultiphysics.
 
 
-\subsection{Stabilized methods}
+\subsubsection{Stabilized methods}
 
 
 
-\subsection{Monotonicity preserving finite elements}
+\subsubsection{Monotonicity preserving finite elements}
 
 Following Löhner review, there are three classical approaches: stabilized finite elements \cite{lohner2008}, flux corrected transport (FCT) \cite{lohner2008ch9} and edge based finite elements \cite{lohner2008ch10}.
 
@@ -65,9 +65,9 @@ monotonicity preserving. However, Badia and Hierro presented a monotonicity pres
 finite volume approximation of convective terms. If it is assumed that the fluxes of the variables are constant along the edges, a discontinuity will occur at the edge midpoint. Then, one can replace the Galerkin flux by a Riemann flux and obtain a total variational diminishing scheme (TVD).
 
 
-\subsection{Particle methods}
+% \subsubsection{Particle methods}
 
 
 
-\section{Coupling strategies}
+\subsection{Coupling strategies}
 

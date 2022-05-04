@@ -40,6 +40,14 @@ $\rho$ is the fluid density, $p$ is the pressure, $\mathbf{u}$ is the velocity, 
 
 
 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+
 \section{Shallow water equations}
 
 
@@ -136,7 +144,15 @@ In the case of positive eigenvalues, the flux is supercritical, this means that 
 For the two dimensional case, does not exist a unique decomposition and this is known as amplitude dispersion. This means there is not an unique direction of propagation. The projection to the velocity direction -the main direction- will provide the eigenvalues $\lambda_1 = u - c$, $\lambda_2 = u$ and $\lambda_3 = u + c$.
 
 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
 \subsection{Boundary conditions}
+\label{equations_sw_bc}
+
 
 The problem is closed with appropriate boundary conditions: an initial condition
 \begin{equation}
@@ -170,6 +186,9 @@ if the outflow is supercritical, no conditions have to be imposed.
 \end{equation*}
 
 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
 
@@ -236,6 +255,10 @@ In the following sections, the rain, the atmospheric pressure and the wind frict
 
 
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 
 
 
@@ -252,6 +275,11 @@ In other words, in a change of regime there is a discontinuity in both velocity 
 
 In spite of this accuracy limitation near shocks, the non linearity reduction makes the primitive variables interesting from the numerical point of view, since less iteration will be needed to achieve convergence.
 Furthermore, good results are obtained for flows at low Froude numbers, such as estuaries, tidal currents or waves propagation.
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
 
@@ -300,6 +328,12 @@ Analogously, the same procedure is applied to the topography terms and to the bo
 
 
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
 
 \section{Boussinesq modified equations}
 
@@ -317,15 +351,21 @@ According to the classification of Peregrine \cite{peregrine1967}, the dimension
 Both parameters allow to relate the concepts of amplitude and frequency dispersion. These concepts define how the wave propagates. Is well known that a wave propagates at speed $c=\sqrt{gH}$, but due to the convective term, this speed also depends on the wave amplitude, then introducing a non-linearity. Thus, considering the non-linearity, the wave speed increases as $c=\sqrt{g(H+\eta)}$. This phenomenon is known as amplitude dispersion and a first consequence is that every wave will end breaking, since the wave crest propagates faster than the wave bosom. The importance of the amplitude dispersion is related to the non-linearity ratio $\epsilon$.
 
 
-\begin{figure}
+\begin{figure} [ht]
     \centering
     \includegraphics[width=.95\textwidth]{img/eq/boussinesq_dispersion.pdf}
-    \caption{Snapshots of a wave propagation. Top: Amplitude dispersion. Bottom: Frequency dispersion}
+    \caption{Boussinesq equations. Snapshots of a wave propagation. Top: Amplitude dispersion. Bottom: Frequency dispersion}
     \label{boussinesq_dispersion}
 \end{figure}
 
 
 In practice, this phenomenon does not happen. From linear wave theory we know that the celerity depends not only on the water depth, but also on the wavenumber $k=2\pi/\lambda$. This is known as frequency dispersion and this mechanism is missing on the Saint-Venant equations. The introduction of some extra terms leads to the Boussinesq equations, which model the frequency dispersion. Once the frequency dispersion is included, classical soliton waves can be obtained. In a soliton wave, breaking never occurs during the propagation, since the non linear terms are in equilibrium with dispersive terms.
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 
 
 \subsection{Derivation of the modified Boussinesq equations}
@@ -385,6 +425,12 @@ and the $C_i$ constants depend on the choice of $\beta$
 \end{equation}
 
 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
 \subsection{Dispersion properties and range of applicability}
 
 This equations present as a free parameter $\beta$ the relative elevation at which the velocity is evaluated. Its value goes from $-1$ at the seabed, to $0$ at the free surface. Since the equations are an approximation of the fully dispersive and nonlinear problem, the parameter $\beta$ is chosen to minimize the errors introduced by the approximation.
@@ -414,7 +460,7 @@ Finally, the value of $\beta$ has been chosen to minimize the error at the range
 \begin{figure}
     \centering
     \includegraphics[width=.8\textwidth]{img/eq/dispersion_beta.pdf}
-    \caption{Comparison of normalized phase speeds for different values of $\beta$}
+    \caption{Comparison of normalized phase speeds of the Boussinesq modified equations for different values of $\beta$}
     \label{phase_speed_beta}
 \end{figure}
 
@@ -428,6 +474,37 @@ According to \cite{ursell1953} the nonlinearity and dispersion parameters $\epsi
 
 
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+\subsection{Boundary conditions}
+\label{equations_bsq_bc}
+
+
+The boundary conditions presented in section \ref{equations_sw_bc} are applicable to the Boussinesq equations.
+However, since the oscillatory behavior is usually prevalent over the convective phenomenon, the boundary conditions are slightly different, both from the physical and the numerical point of view.
+The three types of boundary conditions considered for the Boussinesq problems, inflow $\Gamma_I$, reflecting $\Gamma_R$ and absorbing $\Gamma_A$ boundaries have a direct equivalence respectively with the inflow $\Gamma_I$, solid $\Gamma_S$ and outflow $\Gamma_O$ boundaries stated in section \ref{equations_sw_bc}. Those subdomains are such that $\Gamma_I \cup \Gamma_R \cup \Gamma_A = \partial \Omega$, being $\partial\Omega$ the boundary of the domain.
+
+\paragraph{Inflow boundary} Both free surface and velocity are known at $\Gamma_I$. Typically it is used to impose a wave generator. Since the wave amplitude is known, the horizontal velocity can be obtained using linear wave theory.
+
+\paragraph{Reflecting boundary} No fluid should pass through an impermeable wall. This implies imposing the normal component of the velocity to be zero.
+\begin{equation*}
+    \bar{\mathbf{u}} \cdot \mathbf{n} = 0 \quad \text{on} \ \Gamma_R
+\end{equation*}
+Following Woo and Liu \cite{woo2004a}, the above relation must be rewritten in terms of $\mathbf{u}_\beta$ and the velocities are related as
+\begin{equation*}
+    \bar{\mathbf{u}} = \mathbf{u}_\beta + H^{-1} \mathbf{J}_\eta
+\end{equation*}
+Hence, the complete formulation of a reflective boundary is
+\begin{equation}
+    \bar{\mathbf{u}}_\beta \cdot \mathbf{n} = 0 \quad
+    \mathbf{J}_\eta \cdot \mathbf{n} = 0 \quad
+    \text{on} \ \Gamma_R
+\end{equation}
+
+\paragraph{Absorbing boundary} An outgoing wave should not return to the computational domain through $\Gamma_A$. A practical implementation of the absorbing boundaries are the sponge layers \cite{israeli1981, wei1995} and will be explained in section \ref{eulerian_bsq_absorbing}
 
 
 

@@ -29,30 +29,6 @@ In this section, the boundary conditions considered by the numerical model will 
 
 
 
-\subsection{Boundary conditions}
-
-
-There are three types of boundary conditions considered for the Boussinesq problems, inflow $\Gamma_I$, reflecting $\Gamma_R$ and absorbing $\Gamma_A$ boundaries. Those subdomains are such that $\Gamma_I \cup \Gamma_R \cup \Gamma_A = \partial \Omega$, being $\partial\Omega$ the boundary of the domain.
-
-\paragraph{Inflow boundary $\Gamma_I$} Both free surface and velocity are known at the boundary. Typically it is used to impose a wave generator. Since the wave amplitude is known, the horizontal velocity can be obtained using linear wave theory.
-
-\paragraph{Reflecting boundary $\Gamma_R$} No fluid should pass through an impermeable wall. This implies imposing the normal component of the velocity to be zero.
-\begin{equation*}
-    \bar{\mathbf{u}} \cdot \mathbf{n} = 0 \quad \text{on} \ \Gamma_R
-\end{equation*}
-Following Woo and Liu \cite{woo2004a}, the above relation must be rewritten in terms of $\mathbf{u}_\beta$ and the velocities are related as
-\begin{equation*}
-    \bar{\mathbf{u}} = \mathbf{u}_\beta + H^{-1} \mathbf{J}_\eta
-\end{equation*}
-Hence, the complete formulation of a reflective boundary is
-\begin{equation}
-    \bar{\mathbf{u}}_\beta \cdot \mathbf{n} = 0 \quad
-    \mathbf{J}_\eta \cdot \mathbf{n} = 0 \quad
-    \text{on} \ \Gamma_R
-\end{equation}
-
-\paragraph{Absorbing boundary $\Gamma_A$} An outgoing wave should not return to the computational domain. A practical implementation of the absorbing boundaries are the sponge layers \cite{israeli1981, wei1995}, where som extra diffusion and a newtonian damper are added near the boundary. Those artificial coefficients varies exponentially, from zero to a given value near the boundary.
-
 
 
 \subsection{Finite Element formulation}
@@ -159,6 +135,8 @@ Convergence is achieved when $\delta x^i$ is sufficiently small. Then, the solut
 
 
 \subsection{Absorbing boundary conditions}
+\label{eulerian_bsq_absorbing}
+
 
 Frequently, the need to shorten the numerical domain arises. This can be achieved by the imposition of open boundaries, also known as radiant boundaries. The open boundaries allow the exit of the waves as well as the consistency of the system of equations in order to ensure the existence and uniqueness of the solution. Additionally, the numerical tool for the boundary has to be compatible with the numerical approach for the inner domain.
 
