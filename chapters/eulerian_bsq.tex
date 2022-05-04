@@ -73,16 +73,54 @@ A more interesting option is to compute it in a staggered way using a projection
 
 finally, the projection for the auxiliary field $\mathbf{J}_\eta$ can be replaced by a gradient recovery technique. In that section this option is analyzed, since the gradient recovery provides more regularity, at the same time, it is very efficient.
 
-The gradient recovery technique was initially proposed by Zienkiewicz and Zhu in \cite{zienkiewicz1992}. Later, Zhang and Naga proposed some improvements for the super convergent gradient recovery in \cite{zhang2005} at boundaries. Finally, some improvements have been proposed in \cite{wu2007,ahmed2021} for adaptive meshes, but the last improvements are not going to be considered in this research.
+The gradient recovery technique was initially proposed by Zienkiewicz and Zhu in \cite{zienkiewicz1992}. Later, Zhang and Naga proposed some improvements for the super convergent gradient recovery in \cite{zhang2005} at boundaries. Finally, some improvements have been proposed in \cite{wu2007,ahmed2021} for adaptive meshes, but the last improvements are not going to be considered in this research. The basis of the gradient recovery consists on fitting a $k+1$ polynomial degree where the finite elements space is of degree $k$.
 
 The main idea of the gradient recovery is to introduce an operator $G_h : S_h \rightarrow S_h^{n_d}$, where $S_h$ is a polynomial finite element space of degree $k$ over a triangulation $T_h$ and $n_d$ is the space dimension. After determining the values of $G_h$ at all nodes, given a solution $u_h$ , $G_h u_h \in \S_h^{n_d}$ is obtained on the whole domain.
 The triangulation can be replaced by a quadrilateral discretization. In both cases, only vertices nodes are considered, nor edge or internal nodes.
 
-For a vertex $\mathbf{x}_i$ and being $l_i^e$ the size of the largest edge attached to $\mathbf{x}_i$, the nodes on a ball $B$ are selected:
+For a vertex $\mathbf{x}_i$ and being $l_i^e$ the size of the largest edge attached to $\mathbf{x}_i$, a ball is defined around it:
 \begin{equation}
-    B_h(\mathbf{x}_i) = \{ \mathbf{x} \in T_h : \vert \mathbf{x} - \mathbf{x}_i \vert \leq h_i^e \}
+    B_{l_i^e}(\mathbf{x}_i) = \{ \mathbf{x} \in T_h : \vert \mathbf{x} - \mathbf{x}_i \vert \leq l_i^e \}
+\end{equation}
+and all the vertices inside the ball are selected. If the number of nodes $n_n$ inside the ball $B_{l_i^e}(\mathbf{x}_i)$ is less than $m = (k+n_d) (k+n_d+1) / 2$, then the ball is extended to two times the edge length, $B_{2l_i^e}$. This process of increasing the radius is repeated until there are enough nodes in the ball. The nodes inside a ball are denoted as $\mathbf{x}_{ij}$ and the polynomial $p_{k+1}$ is fitted using local coordinates with $\mathbf{x}_i$ at the origin and the scaling parameter $l=l_i^e$,
+\begin{equation}
+    p_{k+1} = \mathbf{P}^T \mathbf{a} = \hat{\mathbf{P}}^T \hat{\mathbf{a}}
+\end{equation}
+where
+\begin{subequations}
+\begin{equation*}
+         \mathbf{P}^T  = (1,x,y,x^2,...,x^{k+1},x^ky,...,y^{k+1}), \quad
+    \hat{\mathbf{P}}^T = (1,\xi,\eta,\xi^2,...,\xi^{k+1},\xi^k\eta,...,\eta^{k+1})
+\end{equation*}
+\begin{equation*}
+         \mathbf{a}^T  = (a_1,a_2,...,a_m), \quad
+    \hat{\mathbf{a}}^T = (a_1,la_2,...,l^{k+1}a_m),
+\end{equation*}
+\end{subequations}
+And the coefficient vector $\mathbf{a}$ is determined by the linear system
+\begin{equation} \label{superconvergent_polynomial}
+    A^T A \hat{\mathbf{a}} = A^T \mathbf{b}_h
+\end{equation}
+where $\mathbf{b}_h^T = (u_h(\mathbf{x}_{i1}), u_h(\mathbf{x}_{i2}), ... , u_h(\mathbf{x}_{in_n}))$ and
+\begin{equation*}
+A = \left(\begin{matrix}
+    1 & \xi_1 & \eta_1 & ... & \eta_1^{k+1} \\
+    1 & \xi_2 & \eta_2 & ... & \eta_2^{k+1} \\
+    \vdots & \vdots & \vdots & \ddots & \vdots \\
+    1 & \xi_{n_n} & \eta_{n_n} & ... & \eta_{n_n}^{k+1} \\
+\end{matrix}\right)
+\end{equation*}
+A condition for (\ref{superconvergent_polynomial}) having solution is that $Rank(A) = m$, which is practically always satisfied when $n_n > m$ and the mesh has a reasonable quality. Finally, it is possible to define the gradient at the point $\mathbf{x}_i$ as
+\begin{equation}
+    G_h u_h (\mathbf{x}_i) = \nabla p_{k+1} (0,0,\mathbf{x}_i)
 \end{equation}
 
+Similarly, the gradient of a divergence can be obtained when the polynomial is applied to a vector field. This procedure can be applied up to derivatives of order $k+1$, which for linear elements are second-order derivatives. Finally, the gradient of the divergence reads
+\begin{equation}
+    L_h u_h (\mathbf{x}_i) = \nabla \nabla \cdot p_{k+1} (0,0,\mathbf{x}_i)
+\end{equation}
+
+Since the values of the nodal unknowns $u_h$ are not known a priory, the vector of coefficients $\mathbf{a}$ will be expressed as a linear combination of $u_h(\mathbf{x}_{ij})$. Depending on which derivatives of $\mathbf{P}$ are seek, the linear combination will be some selected rows of $(A^T A)^{-1}A^T$.
 
 
 
