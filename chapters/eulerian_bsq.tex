@@ -5,15 +5,13 @@
 
 In this chapter, a FEM approximation for the Boussinesq modified equations is presented. Having a numerical approximation for the Boussinesq modified equations is mandatory when waves are studied on a two dimensional scenario and a complex bathymetry is considered.
 
-\textcolor{red}{Some comments about numerical methods, a short state of the art.}
-
 Several numerical models appeared in the bibliography to solve the Boussinesq equations, under the possible variations for considering the dispersive terms. Abbot pioneered the FD schemes in \cite{abbott1978,abbott1979} applied to the original Boussinesq model. Later, Wei and Kirby solved the modified equations presented by Nwogu \cite{nwogu1993} using a FD scheme in \cite{wei1995}. The main advantage of the FD is the ease of treatment higher differences, even though the main difficulty consists on representing complex domains. Smallman was a pioneer applying the FD to harbours \cite{smallman1989}.
 
 A decade later, some FEM were developed to solve Boussinesq equations. In that case, some special treatment needs to be applied to the high order derivatives. Langtangen \cite{langtangen1998} used quadratic triangles while most of the authors use aan intermediate variable. Li and Liu \cite{li1999} used bilinear quadrilaterals and used a projection to approximate the gradient. Walkley \cite{walkley2002} and Woo \cite{woo2004a,woo2004b} used a projection to interpolate the second order derivatives filed. Surprisingly, the authors reported high frequency oscillations and proposed ad-hoc solutions, but until Codina \cite{codina2008,codina2008b} none of them associated the oscillations to the incompatibility of interpolation.
 
 The method has been solved using DG \cite{eskilsson2002} and FV \cite{bradford2002,stansby2003}. As reported by Stansby \cite{stansby2003}, since the FV is non-oscillatory, needs special techniques to accurately approximate the oscillatory behavior of the Boussinesq equations.
 
-This chapter includes the developments presented in chapter \ref{eulerian_sw} and adds the new techniques associated to the oscillatory and dispersive problem. 
+This chapter includes the developments presented in chapter \ref{eulerian_sw} and presents the new techniques associated to the oscillatory and dispersive problem. 
 Som examples are included in order to test the accuracy and to show the capabilities of the presented algorithms.
 Finally, the chapter is closed with the concluding remarks.
 
@@ -37,26 +35,56 @@ On another note, a section regarding the numerical treatment of absorbing bounda
 
 
 
-%%%%%%%%%%%
+% The Boussinesq modified equations need to be stabilized. In this section the linear stabilization presented in \ref{sec:fic_fem_stabilization} will be applied. Since the Boussinesq equations are intended to solve oscillatory problems, the shock capturing is not relevant. However, an additional technique must be introduced in order to deal with the higher order derivatives.
 
-The Boussinesq modified equations need to be stabilized. In this section the linear stabilization presented in \ref{sec:fic_fem_stabilization} will be applied. Since the Boussinesq equations are intended to solve oscillatory problems, the shock capturing is not relevant. However, an additional technique must be introduced in order to deal with the higher order derivatives.
-
-In this section, the boundary conditions considered by the numerical model will be introduced. Then, the numerical procedure is explained. Here, the introduction of a gradient recovery is presented. After presenting the formulation for solving the equations, a numerical procedure for the absorbing boundary conditions will be proposed. Finally, some examples are added.
+% In this section, the boundary conditions considered by the numerical model will be introduced. Then, the numerical procedure is explained. Here, the introduction of a gradient recovery is presented. After presenting the formulation for solving the equations, a numerical procedure for the absorbing boundary conditions will be proposed. Finally, some examples are added.
 
 
 
 
 
-\subsection{Weak formulation and spatial discretization}
+\subsection{Weak formulation and linear stabilization}
 
 
-The Boussinesq equations are solved using the FEM. The space domain is interpolated with a Galerkin discretization of linear triangles and a finite difference scheme with constant time step is used to integrate the equations in time.
-Some numerical difficulties such as the third order differential operator and the time integration accuracy are addressed in \cite{walkley2002,woo2004a,wei1995}.
-As stated by Codina in \cite{codina2008,codina2008b} the problem (\ref{bsq_eq}) is an hyperbolic wave in mixed form and there is an incompatibility condition (see \cite{BrezziFortin}) because the same interpolation is used for both variables, the velocity $\mathbf{u}_\beta$ and the wave amplitude $\eta$.
-Here the equations are stabilized using FIC extending the work done in \cite{maso2022}.
+The Boussinesq equations are solved using the FEM. The background of chapter \ref{eulerian_sw} allows to interpolate the space domain with a Galerkin discretization of linear triangles or bilinear quadrilaterals. A finite difference scheme with constant time step is used to integrate the equations in time.
+
+The variational form of the Boussinesq modified equations (\ref{bsq_eq}) presented in section \ref{equations_bsq} read
+\begin{subequations} \label{bsq_eq_variational}
+    \begin{equation}
+        \int_\Omega\left(
+        U\pder{\mathbf{u}_\beta}{t} + U\nabla \eta + U(\mathbf{u}_\beta \cdot \nabla) \mathbf{u}_\beta + U\mathbf{J}_u
+        \right)d\Omega = \mathbf{0}
+    \end{equation}
+    \begin{equation}
+        \int_\Omega\left(
+        E\pder{\eta}{t} + E\nabla \cdot \left((H+\eta)\mathbf{u}_\beta\right) + E\nabla \cdot \mathbf{J}_\eta 
+        \right)d\Omega = 0
+    \end{equation}
+\end{subequations}
+where the auxiliary fields $\mathbf{J}_\eta$ and $\mathbf{J}_u$ are defined in (\ref{bsq_eq_auxiliary_J}) and involve second order derivatives of $\mathbf{u}_\beta$ and $\partial\mathbf{u}_\beta/\partial t$. E and V are the corresponding test functions for $\eta$ and $\mathbf{u}_\beta$.
+
+In spite of the staggered formulation for the mass and momentum conservation, it is still a mixed wave formulation and the linear stabilization obtained by the FIC procedure will be applied. The additional term associated to the FIC residual could be projected onto a more general linearization matrix, including also the effects of the dispersive terms. However, the dispersive terms include different derivatives order. Since the current FIC stabilization only consider first order derivatives, the new residual term will be projected onto the fluxes matrices $\mathbf{A}_i$:
+\begin{equation}
+    \mathbf{A}_1 = \left[\begin{array}{ccc}
+        u_{\beta1} &  0         &  g      \\
+         0         & u_{\beta2} &  0      \\
+         H+\eta    &  0         & u_{\beta1}
+    \end{array}\right] \quad , \quad
+    \mathbf{A}_2 = \left[\begin{array}{ccc}
+        u_{\beta1} &  0         &  0      \\
+         0         & u_{\beta2} &  g      \\
+         0         & H+\eta     & u_{\beta2}
+    \end{array}\right]
+\end{equation}
+where each term is obtained by linearization of the Boussinesq modified equations. The derivation of the full variational stabilized formulation is straightforward and for the sake of simplicity it is not shown.
+
+% Some numerical difficulties such as the third order differential operator and the time integration accuracy are addressed in \cite{walkley2002,woo2004a,wei1995}.
+% As stated by Codina in \cite{codina2008,codina2008b} the problem (\ref{bsq_eq}) is an hyperbolic wave in mixed form and there is an incompatibility condition (see \cite{BrezziFortin}) because the same interpolation is used for both variables, the velocity $\mathbf{u}_\beta$ and the wave amplitude $\eta$.
+% Here the equations are stabilized using FIC extending the work done in \cite{maso2022}.
 
 
-\subsection{Derivatives recovery}
+
+\subsection{High order derivatives and dispersive fields}
 
 Following \cite{walkley2002}, the third order spatial derivatives are modelled using $\mathbf{J}_\eta$ as an intermediate variable. There are several ways of computing the intermediate field $\mathbf{J}_\eta$. The first possibility is to compute it in a monolithic way, adding $\mathbf{J}_\eta$ to the degrees of freedom.
 
@@ -65,6 +93,9 @@ A more interesting option is to compute it in a staggered way using a projection
 finally, the projection for the auxiliary field $\mathbf{J}_\eta$ can be replaced by a gradient recovery technique. In that section this option is analyzed, since the gradient recovery provides more regularity, at the same time, it is very efficient.
 
 The gradient recovery technique was initially proposed by Zienkiewicz and Zhu in \cite{zienkiewicz1992}. Later, Zhang and Naga proposed some improvements for the super convergent gradient recovery in \cite{zhang2005} at boundaries. Finally, some improvements have been proposed in \cite{wu2007,ahmed2021} for adaptive meshes, but the last improvements are not going to be considered in this research. The basis of the gradient recovery consists on fitting a $k+1$ polynomial degree where the finite elements space is of degree $k$.
+
+
+\subsubsection{Algorithm}
 
 The main idea of the gradient recovery is to introduce an operator $G_h : S_h \rightarrow S_h^{n_d}$, where $S_h$ is a polynomial finite element space of degree $k$ over a triangulation $T_h$ and $n_d$ is the space dimension. After determining the values of $G_h$ at all nodes, given a solution $u_h$ , $G_h u_h \in \S_h^{n_d}$ is obtained on the whole domain.
 The triangulation can be replaced by a quadrilateral discretization. In both cases, only vertices nodes are considered, nor edge or internal nodes.

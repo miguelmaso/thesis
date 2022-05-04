@@ -22,6 +22,7 @@ Then, some simplifications for the free surface flows are made, yielding the sha
 
 
 \section{Navier-Stokes equations}
+\label{equations_ns}
 
 
 The motion of a fluid is described by the Navier-Stokes equations. The case of a free surface flow is described by that equations and the free surface is located where the densities or the fluid properties are discontinuous. In general, an air-water interface is assumed but some natural phenomena may include a more complex configuration, such as debris flow-air-water interfaces. All this continuous media can be considered isotermal and incompressible, and the standard formulation of the Navier-Stokes equations can be used.
@@ -49,6 +50,7 @@ $\rho$ is the fluid density, $p$ is the pressure, $\mathbf{u}$ is the velocity, 
 
 
 \section{Shallow water equations}
+\label{equations_sw}
 
 
 The flow of water in shallow layers occurs in a wide range of situations, such as coastal dynamics and hydraulics. In these free surface flows in relatively thin layers compared to the characteristic horizontal length, the horizontal velocities are of primary importance. Under that circumstances, the problem can be reasonably approximated the horizontal plane.
@@ -336,6 +338,7 @@ Analogously, the same procedure is applied to the topography terms and to the bo
 
 
 \section{Boussinesq modified equations}
+\label{equations_bsq}
 
 
 The presented SWE are suited to solve convective flows as well as free surface waves. Both phenomena are present in the hyperbolic equations. As the water depth increases, the oscillatory phenomenon or amplitude dispersion increases its relative importance.
@@ -396,15 +399,15 @@ where the $3$ subscript denotes differentiation with respect to $x_3$.
 Finally, the equations are evaluated at an arbitrary depth $x_3=\beta H$ and the set of Boussinesq-type equations are:
 
 \begin{subequations} \label{bsq_eq}
-\begin{equation} \label{bsq_eq_mass}
-    \pder{\eta}{t} + \nabla \cdot \left((H+\eta)\mathbf{u}_\beta\right) + \nabla \cdot \mathbf{J}_\eta = 0
-\end{equation}
 \begin{equation} \label{bsq_eq_mom}
     \pder{\mathbf{u}_\beta}{t} + \nabla \eta + (\mathbf{u}_\beta \cdot \nabla) \mathbf{u}_\beta + \mathbf{J}_u = \mathbf{0}
 \end{equation}
+\begin{equation} \label{bsq_eq_mass}
+    \pder{\eta}{t} + \nabla \cdot \left((H+\eta)\mathbf{u}_\beta\right) + \nabla \cdot \mathbf{J}_\eta = 0
+\end{equation}
 \end{subequations}
 where the auxiliary fields $\mathbf{J}_\eta$ and $\mathbf{J}_u$ introduce the dispersive mechanism and are defined according to the following expressions
-\begin{subequations}
+\begin{subequations} \label{bsq_eq_auxiliary_J}
 \begin{equation}
     {J}_\eta =
         C_1 H^3 \nabla \nabla \cdot \mathbf{u}_\beta +

@@ -25,23 +25,43 @@ In this chapter, the general procedure for FEM is presented. Then, some stabiliz
 
 
 
-We consider a balance equation in the space domain $\Omega$ and the time interval $[0,T]$. Let $\bm{\phi}$ and $\bm{\psi}$ be vector functions of the domain $\Omega \times [0,T]$ and $\mathbf{r}$ the residual of the balance equations expressed in terms of the unknown $\bm{\phi}$.
-The space of functions that are square-integrable in $\Omega$ is denoted as $L^2(\Omega)$. And the space of functions whose derivatives up to order $m\geq0$ belong to $L^2(\Omega)$ is denoted by $H^m(\omega)$. The space $H_0^1(\Omega)$ consists on a subspace of $H^1(\Omega)$ vanishing on $\partial \Omega$.
+We consider a balance equation in the space domain $\Omega$ and the time interval $[0,T]$. Let $\bm{\phi}$ and $W$ be vector functions of the domain $\Omega \times [0,T]$ and $\mathbf{r}$ the residual of the balance equations expressed in terms of the unknown $\bm{\phi}$.
+The space of functions that are square-integrable in $\Omega$ is denoted as $L^2(\Omega)$. And the space of functions whose derivatives up to order $m\geq0$ belong to $L^2(\Omega)$ is denoted by $H^m(\Omega)$. The space $H_0^1(\Omega)$ consists on a subspace of $H^1(\Omega)$ vanishing on $\partial \Omega$.
 
 Using this notation, the space of functions for the continuous problem are $V \defeq H^1(\Omega)$ and for the test functions $V_0 \defeq H_0^1(\Omega)$.
-The variational form of the balance equations can be expressed as find $\bm{\phi} \in V$ such that $\forall \bm{\psi} \in V_0$
+The variational form of the balance equations can be expressed as find $\bm{\phi} \in V$ such that $\forall W \in V_0$
 \begin{equation} \label{variational_form}
-    \int_\Omega \bm{\psi} \cdot \mathbf{r}(\bm{\phi}) \ d\Omega = 0
+    \int_\Omega W \cdot \mathbf{r}(\bm{\phi}) \ d\Omega = 0
 \end{equation}
 
 
 
-The standard Galerkin approximation \ref{variational_form} is straightforward. Let $\mathcal{P}_h$ be a partition of the domain $\Omega$. The diameter of an element domain $e\in\mathcal{P}_h$ is denoted by $l_e$. From the polynomial spaces defined by the finite elements, we can construct the subspaces $V_h\in V$ and $V_{h,0}\in V_0$. The Galerkin approximation of the balance equations can be expressed as find $\bm{\phi}_h \in V_h$ such that $\forall \bm{\psi} \in V_{h,0}$
+The standard Galerkin approximation \ref{variational_form} is straightforward. Let $\mathcal{P}_h$ be a partition of the domain $\Omega$. The diameter of an element domain $e\in\mathcal{P}_h$ is denoted by $l_e$. From the polynomial spaces defined by the finite elements, we can construct the subspaces $V_h\in V$ and $V_{h,0}\in V_0$. The Galerkin approximation of the balance equations can be expressed as find $\bm{\phi}_h \in V_h$ such that $\forall W_h \in V_{h,0}$
 \begin{equation} \label{discrete_variational}
-    \int_\Omega \bm{\psi} \cdot \mathbf{r}(\bm{\phi}) \ d\Omega = 0
+    \int_\Omega W_h \cdot \mathbf{r}(\bm{\phi}_h) \ d\Omega = 0
 \end{equation}
 
-Unfortunately, this problem is not straightforward to solve using finite elements, as its discrete version is not numerically stable. In fact, to ensure that the problem of finding $\bm{\phi}$ has a stable solution, the space must verify the inf-sub condition \cite{codina2011}.
+Unfortunately, this problem is not straightforward to solve using finite elements, as its discrete version is not numerically stable. In fact, to ensure that the problem of finding $\bm{\phi}_h$ has a stable solution, the space must verify the inf-sub condition \cite{codina2011}.
+
+
+
+% We consider a balance equation in the space domain $\Omega$ and the time interval $[0,T]$. Let $\bm{\phi}$ and $\bm{\psi}$ be vector functions of the domain $\Omega \times [0,T]$ and $\mathbf{r}$ the residual of the balance equations expressed in terms of the unknown $\bm{\phi}$.
+% The space of functions that are square-integrable in $\Omega$ is denoted as $L^2(\Omega)$. And the space of functions whose derivatives up to order $m\geq0$ belong to $L^2(\Omega)$ is denoted by $H^m(\omega)$. The space $H_0^1(\Omega)$ consists on a subspace of $H^1(\Omega)$ vanishing on $\partial \Omega$.
+
+% Using this notation, the space of functions for the continuous problem are $V \defeq H^1(\Omega)$ and for the test functions $V_0 \defeq H_0^1(\Omega)$.
+% The variational form of the balance equations can be expressed as find $\bm{\phi} \in V$ such that $\forall \bm{\psi} \in V_0$
+% \begin{equation} \label{variational_form}
+%     \int_\Omega \bm{\psi} \cdot \mathbf{r}(\bm{\phi}) \ d\Omega = 0
+% \end{equation}
+
+
+
+% The standard Galerkin approximation \ref{variational_form} is straightforward. Let $\mathcal{P}_h$ be a partition of the domain $\Omega$. The diameter of an element domain $e\in\mathcal{P}_h$ is denoted by $l_e$. From the polynomial spaces defined by the finite elements, we can construct the subspaces $V_h\in V$ and $V_{h,0}\in V_0$. The Galerkin approximation of the balance equations can be expressed as find $\bm{\phi}_h \in V_h$ such that $\forall \bm{\psi} \in V_{h,0}$
+% \begin{equation} \label{discrete_variational}
+%     \int_\Omega \bm{\psi} \cdot \mathbf{r}(\bm{\phi}) \ d\Omega = 0
+% \end{equation}
+
+% Unfortunately, this problem is not straightforward to solve using finite elements, as its discrete version is not numerically stable. In fact, to ensure that the problem of finding $\bm{\phi}$ has a stable solution, the space must verify the inf-sub condition \cite{codina2011}.
 
 
 
@@ -73,7 +93,7 @@ An Eulerian approach based on the work of \cite{leclerc1990} and \cite{heniche20
 \subsection{FIC stabilization}
 \label{sec:stabilization}
 
-We will consider the quasi-linear balance equations written in residual form as a vector
+We will start considering the quasi-linear balance equations written in residual form as a vector
 
 \begin{equation} \label{residual}
 \mathbf{r} \defeq 
@@ -82,8 +102,7 @@ We will consider the quasi-linear balance equations written in residual form as 
 \end{equation}
 where $n_d=2$ is the number of dimensions. The size of the vector $\mathbf{r}$ is equal to the number of balance equations, $n_b=3$.
 
-In the one dimensional case ($n_d=1$) and scalar balance ($n_b=1$), the FIC-based stabilization is based on a modified non local version of the governing equations as \cite{onate1998}
-
+In the one dimensional case ($n_d=1$) and scalar balance ($n_b=1$), the FIC-based stabilization is based on a modified non local version of the governing equations \cite{onate1998}, where the fluxes are expanded using a Taylor approximation. The modified residual reads
 \begin{equation}
 r - \frac{1}{2}l^e\pder{r}{x} = 0
 \end{equation}
