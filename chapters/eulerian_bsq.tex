@@ -310,8 +310,9 @@ The solitary wave is characterized by two physical parameters, the maximum ampli
 \subsubsection{Numerical results}
 
 
-A rectangular domain $\Omega = [0,100m] \times [0,5m]$ is considered.
+A rectangular domain $\Omega = [0,100m] \times [0,1m]$ is considered. The time interval considered is $t\in[0,20s]$. The full signal --$\eta$ and $u$-- given by the analytical solution is imposed at the left boundary $\Gamma_\text{left}$ during all the temporal domain. Reflecting boundary conditions are considered at the rest of boundaries, $\Gamma_R = \Gamma \cap \Gamma_\text{left}$.
 
+Both triangular and quadrilateral discretizations of $l^e=0.3m$ are considered. The time step is constant during all the simulation and is computed in order to keep a $CFL\leq0.5$. The resultant time step is $\Delta t\approx0.02s$.
 
 
 \subsection{Absorbing boundary}
