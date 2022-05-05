@@ -198,7 +198,7 @@ Convergence is achieved when $\delta x^i$ is sufficiently small. Then, the solut
 
 
 
-\subsection{Absorbing boundary conditions}
+\section{Absorbing boundary conditions}
 \label{eulerian_bsq_absorbing}
 
 
@@ -247,13 +247,8 @@ where $\mathcal{H}$ is the Heaviside function, $d$ is the distance from a point 
 
 In Fig. \ref{absorbing_boundary} the propagation of a train of regular waves is shown. Ate the left end of the domain, waves are generated. At the right end of the domain there is a sponge layer. Studies carried out by Carmigniani in \cite{carmigniani2018} show that some combinations of the maximum absorption, layer width and exponential degree can produce undesired reflections. For example, an excessive absorption can generate reflections at the beginning of the sponge layer.
 
-An exponent $n=3$ for expression \ref{exponential_sponge_layer} is chosen, it considerably minimizes the reflection \cite{carmigniani2018}. A sensibility analysis of the parameters $d_0$ y $\gamma_{\max}$ should be done.
-It is useful to express the maximum distance and absorption in terms of the wavelength and frequency. In practice, the width of the sponge layer is used to be $d_0 \approx 2\lambda$ and the absorption coefficient $\gamma \approx 0.5\omega$.
 
-The reflected amplitude is monotonically decreasing as the sponge width increases. Nevertheless, the reflection exhibits a local minimum with respect to the absorption coefficient. This makes highly recommended to adjust the parameters of the sponge layer according to the  maximum wavelength.
-
-
-\begin{figure}
+\begin{figure}[ht]
     \centering
     \includegraphics[width=.8\textwidth]{img/absorbing_boundary/absorbing_boundary.pdf}
     \caption{Propagation and absorption of a train of waves. The shadow region shows the width of the sponge layer.}
@@ -261,13 +256,66 @@ The reflected amplitude is monotonically decreasing as the sponge width increase
 \end{figure}
 
 
+An exponent $n=3$ for expression \ref{exponential_sponge_layer} is chosen, it considerably minimizes the reflection \cite{carmigniani2018}. A sensibility analysis of the parameters $d_0$ y $\gamma_{\max}$ should be done.
+It is useful to express the maximum distance and absorption in terms of the wavelength and frequency. In practice, the width of the sponge layer is used to be $d_0 \approx 2\lambda$ and the absorption coefficient $\gamma \approx 0.5\ \omega$.
+
+The reflected amplitude is monotonically decreasing as the sponge width increases. Nevertheless, the reflection exhibits a local minimum with respect to the absorption coefficient. This makes highly recommended to adjust the parameters of the sponge layer according to the  maximum wavelength.
+
+
+
+
 \section{Examples}
+
+
+The examples included in this section are devoted to test the accuracy of the presented formulation. In the first example, the propagation of a solitary wave along a uniform chanel is analyzed and compared against an analytical solution. In the second example, the accuracy of the absorbing boundary conditions is studied, and a sensitivity analysis of the damping parameters is performed. More complex examples can be found in chapter \ref{coupling} 
 
 
 \subsection{Solitary wave propagation}
 
 
+Analytical solutions for the Boussinesq equations can be found under specific situations, such as solitary or regular waves and uniform topography. If the two dimensional case is considered, symmetry is required. In that case, we select a solitary wave propagating along a channel with constant depth. The analytical solution found bw Wei in \cite{wei1995} is employed to generate the solitary wave and to check if it propagates correctly. The numerical wave is compared against the analytical wave at several points in the channel.
+
+
+\subsubsection{Analytical solution}
+
+Wei obtained the analytical solution for a solitary wave by rewriting the equations (\ref{bsq_eq}) in dimensionless form, substituting the velocity by its potential ($\varphi$ such that $u = \partial \varphi / \partial x$) and assuming an hyperbolic solution for the velocity, $\varphi' = A\,\text{sech}^2(B\xi)$. Finally, after recovering the dimensional form, the analytical solution has the following form:
+\begin{align}
+    u    &= A_0 \, \text{sech}^2 \phi \\
+    \eta &= A_1 \, \text{sech}^2 \phi + A_2 \, \text{sech}^4 \phi
+\end{align}
+where
+\begin{equation}
+\begin{split}
+    A_0 &= \frac{C^2-1}{C}\sqrt{gh} \\
+    A_1 &= \frac{C^2-1}{3(C_2 + C_4 + \sfrac{1}{3} - C^2 (C_2 + C_4))} H \\[2pt]
+    A_2 &= -\frac{(C^2-1)^2}{2C^2}\frac{C_2 + C_4 + \sfrac{1}{3} + 2C^2(C_2 + C_4)}{C_2 + C_4 + \sfrac{1}{3} - C^2(C_2 + C_4)} H \\
+    \phi &= k (x - ct)
+\end{split}
+\end{equation}
+The constants $C_2$ and $C_4$ are part of the Boussinesq equations and are defined in (\ref{bsq_eq_C_constants}). $\phi$ is the phase function, $c$ is the wave speed and $k$ is the wavenumber. The dimensionless phase speed $C$ is computed as the root of the polynomial
+\begin{multline*}
+    2(C_2 + C_4) C^6
+    -\left(3C_2 + 3C_4 + \sfrac{1}{3} + 2\frac{\eta_{\text{max}}}{H}(C_2 + C_4)\right) C^4 \\
+    +2\frac{\eta_{\text{max}}}{H} (C_2 + C_4 + \sfrac{1}{3}) C^2
+    +C_2 + C_4 + \sfrac{1}{3} = 0
+\end{multline*}
+Finally,
+\begin{equation*}
+    c = C\sqrt{gh} \quad \text{and} \quad
+    k = \frac{1}{H}\sqrt{\frac{C^2 - 1}{4(C_2 + C_4 + \sfrac{1}{3} - C^2(C_2 + C_4))}}
+\end{equation*}
+The solitary wave is characterized by two physical parameters, the maximum amplitude $\eta_\text{max}$ and the water depth of the channel $H$.
+
+
+\subsubsection{Numerical results}
+
+
+A rectangular domain $\Omega = [0,100m] \times [0,5m]$ is considered.
+
+
+
 \subsection{Absorbing boundary}
+
 
 
 
