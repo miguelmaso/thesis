@@ -310,10 +310,23 @@ The solitary wave is characterized by two physical parameters, the maximum ampli
 \subsubsection{Numerical results}
 
 
-A rectangular domain $\Omega = [0,100m] \times [0,1m]$ is considered. The time interval considered is $t\in[0,20s]$. The full signal --$\eta$ and $u$-- given by the analytical solution is imposed at the left boundary $\Gamma_\text{left}$ during all the temporal domain. Reflecting boundary conditions are considered at the rest of boundaries, $\Gamma_R = \Gamma \cap \Gamma_\text{left}$.
+A rectangular domain $\Omega = [0,100m] \times [0,1m]$ is considered. The time interval considered is $t\in[0,20s]$. The full signal --$\eta$ and $u$-- given by the analytical solution is imposed at the left boundary $\Gamma_\text{left}$ during all the temporal domain. Reflecting boundary conditions are considered at the rest of boundaries, $\Gamma_R = \Gamma \cap \Gamma_\text{left}$. The water depth is $1m$ and several amplitudes as considered, $\eta_\text{max}=0.1$, $0.3$ and $0.5m$.
 
 Both triangular and quadrilateral discretizations of $l^e=0.3m$ are considered. The time step is constant during all the simulation and is computed in order to keep a $CFL\leq0.5$. The resultant time step is $\Delta t\approx0.02s$.
 
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=.8\textwidth]{img/boussinesq/gauges.pdf}
+    \caption{Solitary wave propagation. Time series at fixed positions.}
+    \label{bsq_solitary_wave_gauges}
+\end{figure}
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=.8\textwidth]{img/boussinesq/shapes.pdf}
+    \caption{Solitary wave propagation. Shape modification after propagation. Several amplitudes are compared.}
+    \label{bsq_solitary_wave_shapes}
+\end{figure}
 
 \subsection{Absorbing boundary}
 
