@@ -278,7 +278,7 @@ Analytical solutions for the Boussinesq equations can be found under specific si
 
 \subsubsection{Analytical solution}
 
-Wei obtained the analytical solution for a solitary wave by rewriting the equations (\ref{bsq_eq}) in dimensionless form, substituting the velocity by its potential ($\varphi$ such that $u = \partial \varphi / \partial x$) and assuming an hyperbolic solution for the velocity, $\varphi' = A\,\text{sech}^2(B\xi)$. Finally, after recovering the dimensional form, the analytical solution has the following form:
+Wei obtained the analytical solution for a solitary wave by rewriting the equations (\ref{bsq_eq}) in dimensionless form, substituting the velocity by its potential ($\varphi$ such that $u = \partial \varphi / \partial x$) and assuming an hyperbolic solution for the velocity, $\varphi' = A\,\text{sech}^2(B\xi)$. Terms of order $O(\epsilon^2, \epsilon\mu^2)$ are truncated. Finally, after recovering the dimensional form, the analytical solution reads
 \begin{align}
     u    &= A_0 \, \text{sech}^2 \phi \\
     \eta &= A_1 \, \text{sech}^2 \phi + A_2 \, \text{sech}^4 \phi
@@ -292,7 +292,7 @@ where
     \phi &= k (x - ct)
 \end{split}
 \end{equation}
-The constants $C_2$ and $C_4$ are part of the Boussinesq equations and are defined in (\ref{bsq_eq_C_constants}). $\phi$ is the phase function, $c$ is the wave speed and $k$ is the wavenumber. The dimensionless phase speed $C$ is computed as the root of the polynomial
+The constants $C_2$ and $C_4$ are part of the Boussinesq equations and are defined in (\ref{bsq_eq_C_constants}). $\phi$ is the phase function, $c$ is the phase speed and $k$ is the wavenumber. The dimensionless phase speed $C$ is computed as the root of the polynomial
 \begin{multline*}
     2(C_2 + C_4) C^6
     -\left(3C_2 + 3C_4 + \sfrac{1}{3} + 2\frac{\eta_{\text{max}}}{H}(C_2 + C_4)\right) C^4 \\
@@ -310,9 +310,11 @@ The solitary wave is characterized by two physical parameters, the maximum ampli
 \subsubsection{Numerical results}
 
 
-A rectangular domain $\Omega = [0,100m] \times [0,1m]$ is considered. The time interval considered is $t\in[0,20s]$. The full signal --$\eta$ and $u$-- given by the analytical solution is imposed at the left boundary $\Gamma_\text{left}$ during all the temporal domain. Reflecting boundary conditions are considered at the rest of boundaries, $\Gamma_R = \Gamma \cap \Gamma_\text{left}$. The water depth is $1m$ and several amplitudes as considered, $\eta_\text{max}=0.1$, $0.3$ and $0.5m$.
+A rectangular domain $\Omega = [0,100m] \times [0,1m]$ is considered. The time interval considered is $t\in[0,20s]$. The full signal --$\eta$ and $u$-- given by the analytical solution is imposed at the left boundary $\Gamma_\text{left}$ during all the temporal domain. Reflecting boundary conditions are considered at the rest of boundaries, $\Gamma_R = \Gamma \cap \Gamma_\text{left}$. The water depth is $H=1m$ and several amplitudes as considered, $\eta_\text{max}=0.1$, $0.3$ and $0.3m$.
 
 Both triangular and quadrilateral discretizations of $l^e=0.3m$ are considered. The time step is constant during all the simulation and is computed in order to keep a $CFL\leq0.5$. The resultant time step is $\Delta t\approx0.02s$.
+
+The propagation of the smaller solitary wave is recorded at Figure \ref{bsq_solitary_wave_gauges}. Three time series are shown, near the generation of the solitary wave ($20m$), after a short period of propagation ($50m$) and after a long distance ($150m$). For tat wave specifications, $\epsilon=0.1$ and $\mu=0.04$ there is no appreciable variation in the wave amplitude nor in the phase speed from theory.
 
 \begin{figure}[ht]
     \centering
@@ -321,12 +323,16 @@ Both triangular and quadrilateral discretizations of $l^e=0.3m$ are considered. 
     \label{bsq_solitary_wave_gauges}
 \end{figure}
 
+The amplitude variations of the three solitary waves is analyzed in detail in Figure \ref{bsq_solitary_wave_shapes}. For each wave, two time series are compared against the analytical solution. The shapes of the solitary waves are compared centered at the phased and using dimensionless coordinates. The important characteristic of the numerical method is that the wave travels a long distance without being affected by numerical dissipation. The main difference is at the predicted phase speed is somewhat small. This difference is bigger as long as the wave amplitude increases. It would be interesting to compare the analytical solution against experimental results.
+
 \begin{figure}[ht]
     \centering
     \includegraphics[width=.8\textwidth]{img/boussinesq/shapes.pdf}
     \caption{Solitary wave propagation. Shape modification after propagation. Several amplitudes are compared.}
     \label{bsq_solitary_wave_shapes}
 \end{figure}
+
+The obtained results are comparable to those exposed in \cite{wei1995}. There is no appreciable damping on the wave amplitude and the phase speed is underestimated for high wave amplitudes.
 
 \subsection{Absorbing boundary}
 
