@@ -243,23 +243,7 @@ A possible expression for $\gamma$ is
 \begin{equation} \label{exponential_sponge_layer}
     \gamma(\mathbf{x}) = \gamma_{\max} \mathcal{H}(d_0 - d(\mathbf{x})) \frac{e^{\left(\frac{d_0 - d(\mathbf{x})}{d_0}\right)^n} - 1}{e - 1}
 \end{equation}
-where $\mathcal{H}$ is the Heaviside function, $d$ is the distance from a point to the computational boundary.
-
-In Fig. \ref{absorbing_boundary} the propagation of a train of regular waves is shown. Ate the left end of the domain, waves are generated. At the right end of the domain there is a sponge layer. Studies carried out by Carmigniani in \cite{carmigniani2018} show that some combinations of the maximum absorption, layer width and exponential degree can produce undesired reflections. For example, an excessive absorption can generate reflections at the beginning of the sponge layer.
-
-
-\begin{figure}[ht]
-    \centering
-    \includegraphics[width=.8\textwidth]{img/absorbing_boundary/absorbing_boundary.pdf}
-    \caption{Propagation and absorption of a train of waves. The shadow region shows the width of the sponge layer.}
-    \label{absorbing_boundary}
-\end{figure}
-
-
-An exponent $n=3$ for expression \ref{exponential_sponge_layer} is chosen, it considerably minimizes the reflection \cite{carmigniani2018}. A sensibility analysis of the parameters $d_0$ y $\gamma_{\max}$ should be done.
-It is useful to express the maximum distance and absorption in terms of the wavelength and frequency. In practice, the width of the sponge layer is used to be $d_0 \approx 2\lambda$ and the absorption coefficient $\gamma \approx 0.5\ \omega$.
-
-The reflected amplitude is monotonically decreasing as the sponge width increases. Nevertheless, the reflection exhibits a local minimum with respect to the absorption coefficient. This makes highly recommended to adjust the parameters of the sponge layer according to the  maximum wavelength.
+where $\mathcal{H}$ is the Heaviside function, $d$ is the distance from a point to the computational boundary and the exponent $n$ is a constant which is taken as 3.
 
 
 
@@ -314,18 +298,18 @@ A rectangular domain $\Omega = [0,100m] \times [0,1m]$ is considered. The time i
 
 Both triangular and quadrilateral discretizations of $l^e=0.3m$ are considered. The time step is constant during all the simulation and is computed in order to keep a $CFL\leq0.5$. The resultant time step is $\Delta t\approx0.02s$.
 
-The propagation of the smaller solitary wave is recorded at Figure \ref{bsq_solitary_wave_gauges}. Three time series are shown, near the generation of the solitary wave ($20m$), after a short period of propagation ($50m$) and after a long distance ($150m$). For tat wave specifications, $\epsilon=0.1$ and $\mu=0.04$ there is no appreciable variation in the wave amplitude nor in the phase speed from theory.
-
-\begin{figure}[ht]
+\begin{figure} [tb!]
     \centering
     \includegraphics[width=.8\textwidth]{img/boussinesq/gauges.pdf}
     \caption{Solitary wave propagation. Time series at fixed positions.}
     \label{bsq_solitary_wave_gauges}
 \end{figure}
 
+The propagation of the smaller solitary wave is recorded at Figure \ref{bsq_solitary_wave_gauges}. Three time series are shown, near the generation of the solitary wave ($20m$), after a short period of propagation ($50m$) and after a long distance ($150m$). For tat wave specifications, $\epsilon=0.1$ and $\mu=0.04$ there is no appreciable variation in the wave amplitude nor in the phase speed from theory.
+
 The amplitude variations of the three solitary waves is analyzed in detail in Figure \ref{bsq_solitary_wave_shapes}. For each wave, two time series are compared against the analytical solution. The shapes of the solitary waves are compared centered at the phased and using dimensionless coordinates. The important characteristic of the numerical method is that the wave travels a long distance without being affected by numerical dissipation. The main difference is at the predicted phase speed is somewhat small. This difference is bigger as long as the wave amplitude increases. It would be interesting to compare the analytical solution against experimental results.
 
-\begin{figure}[ht]
+\begin{figure}[htb!]
     \centering
     \includegraphics[width=.8\textwidth]{img/boussinesq/shapes.pdf}
     \caption{Solitary wave propagation. Shape modification after propagation. Several amplitudes are compared.}
@@ -334,8 +318,45 @@ The amplitude variations of the three solitary waves is analyzed in detail in Fi
 
 The obtained results are comparable to those exposed in \cite{wei1995}. There is no appreciable damping on the wave amplitude and the phase speed is underestimated for high wave amplitudes.
 
+
+
 \subsection{Absorbing boundary}
 
+
+In this example the accuracy of absorbing boundary conditions is analyzed. Let $\Omega = [0,100m] \times [0,1m]$ be the spatial domain $[0,100s]$ the temporal domain. This correspond to a $1m$ width and $100m$ long channel, the considered water depth is $1m$. At the lef end of domain waves are generated during the interval $[0,30s]$ and at the right end of the channel there is an absorbing boundary condition. Fig. \ref{bsq_abc_boundary} shows the propagation of the train of waves and the absorption at the right end of the channel.
+
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=.8\textwidth]{img/boussinesq/absorbing_boundary.pdf}
+    \caption{Absorbing boundary condition. Propagation and absorption of a train of waves. The shadow region shows the width of the sponge layer.}
+    \label{bsq_abc_boundary}
+\end{figure}
+
+
+The train of waves is monochromatic with $0.075m$ amplitude and $2s$ period. The corresponding wavelength is ${\sim}5m$. In order to avoid the generation of higher frequencies, the signal has been imposed gradually during the first two periods and decreased gradually during the last two periods.
+
+Regarding the absorbing boundary, studies carried out by Carmigniani in \cite{carmigniani2018} show that some combinations of the maximum absorption, the layer width and the exponential degree can lead to undesired reflections. For example, an excessive absorption can generate reflections at the beginning of the sponge layer.
+
+
+An exponent $n=3$ for expression \ref{exponential_sponge_layer} is chosen, it considerably minimizes the reflection \cite{carmigniani2018}. A sensitivity analysis for the parameters $d_0$ and $\gamma_{\max}$ is performed.
+It is useful to express the maximum distance and absorption in terms of the wavelength and frequency.
+\begin{equation*}
+    d_0 = D \lambda \ , \quad \gamma_{max} = B \omega
+\end{equation*}
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=.8\textwidth]{img/boussinesq/reflection_coefficient.pdf}
+    \caption{Absorbing boundary condition. Computed reflection coefficients.}
+    \label{bsq_abc_reflection_coefficients}
+\end{figure}
+
+
+Several numerical experiments have been carried out with a set of relative dampings and relative lengths. A total of $150$ combinations have been simulated in order to cover the region $B\in[1, 10] \times D\in[0.5, 5]$. The computed reflection coefficients are summarized in Fig. \refeq{bsq_abc_reflection_coefficients}.
+
+The reflected amplitude is monotonically decreasing as the sponge width increases. Nevertheless, the reflection exhibits a local minimum with respect to the absorption coefficient. This makes highly recommended to adjust the parameters of the sponge layer according to the  maximum wavelength.
+In practice, the width of the sponge layer is used to be $d_0 \approx 2\lambda$ and the absorption coefficient $\gamma \approx 2\ \omega$.
 
 
 
