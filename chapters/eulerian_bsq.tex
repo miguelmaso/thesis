@@ -363,3 +363,10 @@ In practice, the width of the sponge layer is used to be $d_0 \approx 2\lambda$ 
 \section{Concluding remarks}
 
 
+In this chapter, a finite element approximation of the Boussinesq modified equations has been presented. From the numerical point of view, the model has been approximated by the FIC-based stabilization and a semi-implicit predictor-corrector scheme has been used to advance in time. High order derivatives are approximated using an intermediate projection, computed with the superconvergent gradient recovery technique.
+The numerical approximation of the radiation boundary condition is known as absorbing boundary and it has been modelled using a sponge layer.
+
+The accuracy of the method, has been tested for linear triangles and bilinear quadrilaterals. The FEM formulation has been tested with the simulation of a solitary wave and comparing it against an analytical solution. The effectivity of the absorbing boundary has been analyzed with a train of regular waves in a channel.
+
+The proposed method has proven to be accurate and the introduction of numerical dissipation is small. The results are comparable to the ones proposed in the literature \cite{nwogu1993,wei1995,walkley2002,codina2008b}. The absorbing boundary conditions have been improved.
+
