@@ -940,9 +940,9 @@ The last one is devoted to test all the capabilities of the formulation in a pra
 
 \subsubsection{Oscillation in a parabolic basin}
 
-The second example is a classical benchmark oriented to test the accuracy of the location of the moving boundary. The topography follows a parabolic profile while the initial free surface elevation is planar and intersects the topography. The initial configuration corresponds to zero velocity but the free surface is in a non horizontal plane. The solution of the problem is oscillatory and the free surface elevation remains planar. An analytical solution can be found in the compilation made by Delestre et al. \cite{delestre2013}.
+This is a classical benchmark oriented to test the accuracy of the location of the moving boundary. The topography follows a parabolic profile and the water body oscillates on it. The initial configuration corresponds to zero velocity but the free surface is in a non horizontal plane. Given the parabolic profile of the topography, exists an analytical solution for the oscillatory problem and the free surface elevation remains planar. Details about the derivation of the analytical solution can be found in the compilation made by Delestre et al. in \cite{delestre2013}.
 
-The domain $\Omega$ is defined in the interval $[0,L]\times[0,1]m$ where $L=10m$ and all the boundaries are reflective ($\mathbf{u}\cdot\mathbf{n} = 0$). The topography is given by the following expression
+The spatial domain $\Omega$ is defined in the interval $[0,L]\times[0,1]m$ where $L=10m$ and all the boundaries are reflective ($\mathbf{u}\cdot\mathbf{n} = 0$). The topography is given by the following expression
 \begin{equation}
 z(x,y) = h_0 \left(\frac{1}{a^2}\left(x - \frac{L}{2}\right)^2 - 1\right)
 \end{equation}
@@ -969,8 +969,8 @@ x_1(t) = -\frac{1}{2}\cos(2Bt) - a + \frac{L}{2} \\
 x_2(t) = -\frac{1}{2}\cos(2Bt) + a + \frac{L}{2}
 \end{split}
 \end{equation}
-
 In that example the selected parameters are $h_0=1m$ and $a=1m$.
+
 
 The domain $\Omega$ is discretized using several meshes in order to perform a convergence analysis. The meshes employed are listed in Table \ref{parabola_convergence}. Figure \ref{parabola_mesh} shows one of the intermediate mesh. Once the simulation begins, the water starts to oscillate on the parabolic basin and the velocity field is constant on the spatial domain, while follows a periodic function respect to the time.
 
@@ -980,17 +980,20 @@ The domain $\Omega$ is discretized using several meshes in order to perform a co
     \label{parabola_mesh}
 \end{figure}
 
-Figure \ref{parabola_graphic} shows a cut along the mesh at different times. The most challenging problem is to capture the discontinuity of the velocity. Even though the velocity presents a discontinuity, it isn't the origin of the oscillatory behavior since the velocity is not a degree of freedom. It can be appreciated how the discontinuity of the velocity is not an issue.
 
-\begin{figure}
-\begin{minipage}{0.4\textwidth}
-    \includegraphics[width=\textwidth]{img/eulerian/par/conv_1.pdf}
-    \captionsetup{margin={0cm, 0cm}}
+A cut along the mesh is depicted in Figure \ref{parabola_graphic} showing the free surface, the velocity and the location of the shoreline.
+Since the shoreline is moving, several problems may arise, such as the stability of the wetting or drying element or capturing the discontinuity of the velocity. Fortunately, the velocity is not a a degree of freedom and this will help to avoid spurious oscillations in the vicinity of the shoreline.
+
+
+
+\begin{figure} [htp]
+    \centering
+    \includegraphics[width=.4\textwidth]{img/eulerian/par/conv_1.pdf}
     \caption{Parabolic basin. Convergence graph.}
     \label{parabola_convergence}   
-\end{minipage}
-\hfill
-\begin{minipage}{0.58\textwidth}
+\end{figure}
+
+\begin{table} [htb]
     \centering
     \begin{tabular}{>{\small}rcccc} \hline
     $n_{nodes}$ & $\Delta x$ & $\Delta t$ & CFL & $L_2(e_{rel})$ \\ \hline
@@ -1001,11 +1004,9 @@ Figure \ref{parabola_graphic} shows a cut along the mesh at different times. The
 101,101 & 0.01 & 0.0003 & 0.5 & 0.0049 \\
     \hline
     \end{tabular}
-    \captionsetup{margin={0cm, 0cm}}
-    \captionof{table}{Parabolic basin. Convergence error for the water height.}
+    \caption{Parabolic basin. Convergence error for the water height.}
     \label{parabola_convergence_tab}
-\end{minipage}
-\end{figure}
+\end{table}
 
 \begin{figure}[H]
 \begin{subfigure}{\textwidth}
@@ -1023,7 +1024,41 @@ Figure \ref{parabola_graphic} shows a cut along the mesh at different times. The
 \label{parabola_graphic}
 \end{figure}
 
-A mass conservation test is performed with the mesh of size $0.05m$ in a simulation of $5s$. The results are presented in Figure \ref{parabola_mass}. The integration of the mass is performed over all the domain and over the wet domain. The wet domain is identified with the wet fraction, requiring that it is equal to $1$. Since the presented scheme is not mass sign preserving, the wet mass can not be equal to the total mass and a small fraction is lost from the wet domain. The loss depends on the element size and presents an oscillatory behavior inherent of the method. Figure \ref{parabola_mass} shows that the mass loss is bounded and the mean does not increase with time.
+
+A global representation of the solution at time $t=1s$ is presented in Figure \ref{parabola_results}.
+In that case the finest mesh ($\Delta x=0.01m$) has been used, for visualization purpose the discretization is not shown. As expected, there is no variation on the results in the transversal section.
+
+
+\begin{figure}[H]
+    \begin{subfigure}{.05\textwidth}
+        \caption{}
+    \end{subfigure}
+    \begin{minipage}[c]{.94\textwidth}
+        \includegraphics[width=\textwidth]{img/eulerian/par/height.png}
+    \end{minipage}
+\par\medskip
+    \begin{subfigure}{.05\textwidth}
+        \caption{}
+    \end{subfigure}
+    \begin{minipage}[c]{.94\textwidth}
+        \includegraphics[width=\textwidth]{img/eulerian/par/momentum.png}
+    \end{minipage}
+\par\medskip
+    \begin{subfigure}{.05\textwidth}
+        \caption{}
+    \end{subfigure}
+    \begin{minipage}[c]{.94\textwidth}
+        \includegraphics[width=\textwidth]{img/eulerian/par/velocity.png}
+    \end{minipage}
+\caption{Parabolic basin. Contour lines with the fine mesh of size $0.01m$ at time $t=1s$. (a) Water height, (b) x-discharge and (c) x-velocity. There is no legend for simplicity.}
+\label{parabola_results}
+\end{figure}
+
+
+
+A mass conservation test is performed with the mesh of size $0.05m$ in a simulation of $5s$. The results are presented in Figure \ref{parabola_mass}. The integration of the mass is performed over all the domain and over the wet domain. The wet domain is identified with the wet fraction, requiring that it is equal to $1$. Since the presented schemes are not mass sign preserving, the wet mass can not be equal to the total mass and a small fraction is lost from the wet domain. The loss depends on the element size and presents an oscillatory behavior inherent of the method.
+
+Regarding the different non linear stabilizations, it is clear that none of the presented methods is able to ensure monotonicity. Nevertheless, the gradient jump viscosity method reduces the magnitude of the oscillations. Another interesting feature is that the maximum oscillation is bounded and does not increase during the natural oscillations of the sloshing. The flux-corrected algorithm presents the maximum spurious oscillations.
 
 
 \begin{figure}[H]
@@ -1033,38 +1068,14 @@ A mass conservation test is performed with the mesh of size $0.05m$ in a simulat
     \label{parabola_mass}
 \end{figure}
 
-Figure \ref{parabola_results} shows the results using the finest mesh. The discretization is not shown for the sake of simplicity. As expected, there is no variation on the results in the transversal section.
 
-\begin{figure}[H]
-    \begin{subfigure}{.05\textwidth}
-        \caption{}
-    \end{subfigure}
-    \begin{minipage}[c]{.94\textwidth}
-        \includegraphics[width=\textwidth]{img/eulerian/par/height_1.0.png}
-    \end{minipage}
-\par\medskip
-    \begin{subfigure}{.05\textwidth}
-        \caption{}
-    \end{subfigure}
-    \begin{minipage}[c]{.94\textwidth}
-        \includegraphics[width=\textwidth]{img/eulerian/par/momentum_1.0.png}
-    \end{minipage}
-\par\medskip
-    \begin{subfigure}{.05\textwidth}
-        \caption{}
-    \end{subfigure}
-    \begin{minipage}[c]{.94\textwidth}
-        \includegraphics[width=\textwidth]{img/eulerian/par/velocity_1.0.png}
-    \end{minipage}
-\caption{Parabolic basin. Results with the fine mesh of size $0.01m$ at time $t=1s$. (a) Water height, (b) x-discharge and (c) x-velocity. There is no legend for simplicity, the red color is positive and blue means a null or negative magnitude.}
-\label{parabola_results}
-\end{figure}
 
 
 
 \subsubsection{Short channel with smooth transition and shock}
 
-The third example in a benchmark based on the Mac Donald's type solutions \cite{macdonald1997}. The analytical solution can be found in the same compilation than the previous example \cite{delestre2013}. This test presents a channel with a steady state solution. There is a subcritical inlet and a transcritical flow is produced. The outlet is also subcritical and then a shock is generated at $\sfrac{2}{3}$ of the channel. The aim of this example is to evaluate the shock capturing technique presented and the correct location of the hydraulic jump, which depends on the bottom friction law.
+
+The second example consists on a benchmark based on the Mac Donald's type solutions \cite{macdonald1997}. The analytical solution can be found in the compilation which was referenced in the previous example \cite{delestre2013}. This test presents a channel with a steady state solution. There is a subcritical inlet and a transcritical flow is produced. The outlet is also subcritical and then a shock is generated at $\sfrac{2}{3}$ of the channel. The aim of this example is to evaluate the shock capturing technique presented and the correct location of the hydraulic jump, which depends on the bottom friction law.
 
 Here we will consider the 1D shallow water equations without diffusion and only with Manning bottom friction as source term. A steady state solution satisfies $\pder{q}{x}=0$ and Equation (\ref{general_sw}) reduces to
 \begin{equation} \label{steady_state}
