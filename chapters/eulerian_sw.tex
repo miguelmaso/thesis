@@ -785,7 +785,7 @@ The presented limiting is based on the monotonicity requirements for scalar conv
     \item transformation of the variables into characteristic variables in order to obtain a set of decoupled system of equations where the principles of the flux correction for pure convection can be applied.
 \end{itemize}
 
-In omission of source terms, equation (\textcolor{red}{EQ RESIDUAL}) can be multiplied by the $\mathbf{T}_i$ base of eigenvectors and transformed into a set of decoupled pure convection problems
+In omission of source terms, equation (\ref{residual}) can be multiplied by the $\mathbf{T}_i$ base of eigenvectors and transformed into a set of decoupled pure convection problems
 
 \begin{equation}
 \pder{\Phi_{jk}}{t} + \Lambda_{ikk} \pder{\Phi_{jk}}{x_i} = 0 , \quad
@@ -793,29 +793,12 @@ k = 1:\text{dim}+1 , \quad
 i,j = 1:\text{dim}
 \end{equation}
 
-This transformation can be computed locally at each node and depends on the current solution at time $t^{n+1}$. However, for the two dimensional case, the set of variables $\phi$ is transformed in a two dimensional vector of variables $\Phi_i$, hence the scalar transport correction techniques should be extended to vectorial transport.
+This transformation should be computed locally at each node and depends on the current solution at time $t^{n+1}$. However, for the two dimensional case, the set of variables $\phi$ is transformed in a two dimensional vector of variables $\Phi_i$, hence the scalar transport correction techniques should be extended to vectorial transport.
 
 
+The difficulties presented by the variables transformation lead to the consideration if it is worth computing them rather that directly using the independent variables or an indicator. The limiting based on the independent variables was the choice presented in \cite{lohner2008ch9} and it is the approach followed in this study.
 
-NOTE: This transformation requires more study, specially for the convection of vectors and the corresponding flux correction technique.
-
-
-\subsection{Examples}
-
-\textcolor{red}{TODO: INCORPORATE RESULTS...}
-
-
-\subsection{Concluding remarks}
-
-\textcolor{red}{DRAFT}
-
-Importance of stabilizing the high order solution. Otherwise, phenomena such as terracing or excessive diffusivity ,ay appear.
-
-Difficulty in the definition of the convergence criterion. Even if the incremental displacements of the iterative solution procedure, the desired convergence is not achieved. Probably, this stagnant point of the solution is related to smalls oscillations of the corrections.
-
-The computational cost is high. Though the algorithm has to solve a system with the same number of degrees of freedom than a linear stabilized problem (\ref{sec:fic_fem_stabilization}), the introduction of the corrections is non linear. The required number of iterations is higher than those required for a RV-based shock capturing. A practical option is to limit the iterations up to a fixed number. However, this approach will lack an accurate control of the obtained precision for transient problems. For example, the flow in front an obstacle is highly dynamic and it may require more iterations than a prefixed number.
-
-Regarding the global solution and its robustness, good results are obtained. However, a better order of convergence is expected.
+In section \ref{sec:examples} the accuracy of the flux corrected algorithm will be analyzed and compared against the residual-based formulation. In the following section an alternative to the flux corrected algorithm is explored.
 
 
 
@@ -900,33 +883,7 @@ The parameter $c_{gjv}$ is an algorithmic constant. The original expression depe
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\subsection{Example: Combination with stabilization}
 
-
-The main problem of linear stabilizations is the loss of the monotonic properties which may be provided by nonlinear stabilizations. For that reason, in \cite{guermond2011} is proposed to use a nonlinear stabilization alone. This is the case of EV.
-However, the use of nonlinear stabilization alone, may lead to unwanted results. The most common undesired results are such as terracing near the boundaries \cite{lohner2008ch9,kuzmin2005b} and mesh-dependent diffusivity \cite{badia2014}.
-
-It is known that the combination of GJV with SUPG or FIC is not monotonicity preserving. However, the monotonic properties can be improved if it is compared against a standard RV method.
-
-
-
-
-\textcolor{red}{COMPARE THE OSCILLATIONS AND THE L2 ERROR FOR:
-\begin{itemize}
-\item FIC+RV
-\item FIC+GJV
-\item NONE+RV
-\item NONE+GJV
-\end{itemize}
-}
-
-
-\begin{figure}
-    \centering
-    \includegraphics[width=.7\textwidth]{img/eulerian/gjv/gjv_rv_parabola_convergence.pdf}
-    \caption{Planar surface in parabolic basin. Convergence analysis of non-linear stabilizations. Results at time $t=1s$}
-    \label{gjv_rv_parabola_converence}
-\end{figure}
 
 
 \subsection{Examples}
@@ -988,7 +945,7 @@ Since the shoreline is moving, several problems may arise, such as the stability
 
 \begin{figure} [htp]
     \centering
-    \includegraphics[width=.4\textwidth]{img/eulerian/par/conv_1.pdf}
+    \includegraphics[width=.8\textwidth]{img/eulerian/par/conv_1.pdf}
     \caption{Parabolic basin. Convergence graph.}
     \label{parabola_convergence}   
 \end{figure}
@@ -1056,6 +1013,19 @@ In that case the finest mesh ($\Delta x=0.01m$) has been used, for visualization
 
 
 
+
+
+\paragraph{Combination of linear with non linear stabilization}
+
+
+The main problem of linear stabilizations is the loss of the monotonic properties which may be provided by nonlinear stabilizations. For that reason, in \cite{guermond2011} is proposed to use a nonlinear stabilization alone. This is the case of EV.
+However, the use of nonlinear stabilization alone, may lead to unwanted results. The most common undesired results are such as terracing near the boundaries \cite{lohner2008ch9,kuzmin2005b} and mesh-dependent diffusivity \cite{badia2014}.
+
+It is known that the combination of GJV with SUPG or FIC is not monotonicity preserving. However, the monotonic properties can be improved if it is compared against a standard RV method.
+
+
+
+
 A mass conservation test is performed with the mesh of size $0.05m$ in a simulation of $5s$. The results are presented in Figure \ref{parabola_mass}. The integration of the mass is performed over all the domain and over the wet domain. The wet domain is identified with the wet fraction, requiring that it is equal to $1$. Since the presented schemes are not mass sign preserving, the wet mass can not be equal to the total mass and a small fraction is lost from the wet domain. The loss depends on the element size and presents an oscillatory behavior inherent of the method.
 
 Regarding the different non linear stabilizations, it is clear that none of the presented methods is able to ensure monotonicity. Nevertheless, the gradient jump viscosity method reduces the magnitude of the oscillations. Another interesting feature is that the maximum oscillation is bounded and does not increase during the natural oscillations of the sloshing. The flux-corrected algorithm presents the maximum spurious oscillations.
@@ -1100,6 +1070,7 @@ The problem is initialized with the following values:
 \end{split}
 \end{equation}
 
+
 The Manning coefficient is $0.0328\ \text{m}^{-1/3}\text{s}$ and the water height $h_{ex}(x)$ is a piecewise function defined in \cite{delestre2013}. The discontinuity of the water height function is located at $x=200/3m$ and defines the hydraulic jump. The expression of the stationary exact water depth is:
 \begin{equation} \label{jump_height_definition}
     h_{ex} = \begin{cases}
@@ -1122,22 +1093,21 @@ The table from Figure \ref{hydraulic_jump_convergence} shows the error of the $x
 
 Results from different meshes are compared in Figures \ref{mac_donald_shock_graph_5} and \ref{mac_donald_shock_graph_2}. The oscillations are reduced with the finer mesh (Figure \ref{mac_donald_shock_graph_2}), but there is a peak on the discharge at the location of the shock. This peak is initiated because the momentum balance includes the gradient of the total water depth, and the analytical gradient is a Dirac delta function.
 
-\begin{figure}
+\begin{figure} [ht]
     \includegraphics[width=\textwidth]{img/eulerian/jump/sketch.pdf}
     \caption{Short channel. Geometry of the channel. The vertical line shows the position of the hydraulic jump.}
     \label{chanel_geometry}
 \end{figure}
 
 
-\begin{figure}
-\begin{minipage}{0.4\textwidth}
-    \includegraphics[width=\textwidth]{img/eulerian/jump/momentum_convergence.pdf}
-    \captionsetup{margin={0cm,0cm}}
+\begin{figure} [htb]
+    \centering
+    \includegraphics[width=.8\textwidth]{img/eulerian/jump/momentum_convergence.pdf}
     \caption{Short channel. Convergence graph for the $x$-discharge.}
     \label{hydraulic_jump_convergence}
-\end{minipage}
-\hfill
-\begin{minipage}{0.58\textwidth}
+\end{figure}
+
+\begin{table}
     \centering
     \begin{tabular}{>{\small}rcccc} \hline
     $n_{nodes}$ & $\Delta x$ & $\Delta t$ & CFL   & $L_2(e_{rel})$ \\ \hline
@@ -1146,24 +1116,26 @@ Results from different meshes are compared in Figures \ref{mac_donald_shock_grap
     2211        &        0.5 &      0.005 & 0.062 & 0.088 \\
     13026       &        0.2 &      0.005 & 0.15  & 0.041 \\ \hline
     \end{tabular}
-    \captionof{table}{Short channel. Error for the $x$-discharge.}
+    \caption{Short channel. Error for the $x$-discharge.}
     \label{hydraulic_jump_convergence_tab}
-\end{minipage}
-\end{figure}
+\end{table}
 
 
 \begin{figure}
-    \centering
-    \includegraphics[width=\textwidth]{img/eulerian/jump/mesh_0.5.pdf}
-    \caption{Short channel. Graph along the cut defined by the center of the channel. The mesh size is $0.5m$}
-    \label{mac_donald_shock_graph_5}
-\end{figure}
-
-\begin{figure}
-    \centering
-    \includegraphics[width=\textwidth]{img/eulerian/jump/mesh_0.2.pdf}
-    \caption{Short channel. Graph along the cut defined by the center of the channel. The mesh size is $0.2m$}
-    \label{mac_donald_shock_graph_2}
+    \begin{subfigure}[b]{\textwidth}
+        \centering
+        \caption{Mesh size $0.5m$}
+        \includegraphics[width=\textwidth]{img/eulerian/jump/mesh_0.5.pdf}
+        \label{mac_donald_shock_graph_5}
+    \end{subfigure}
+    \begin{subfigure}[b]{\textwidth}
+        \centering
+        \caption{Mesh size $0.2m$}
+        \includegraphics[width=\textwidth]{img/eulerian/jump/mesh_0.2.pdf}
+        \label{mac_donald_shock_graph_2}
+    \end{subfigure}
+    \vspace*{-2em}
+    \caption{Short channel. Graph along the cut defined by the center of the channel.}
 \end{figure}
 
 
@@ -1277,6 +1249,15 @@ Regarding the performance of the FIC-FEM formulation, it captures the main aspec
 
 \subsection{Concluding remarks}
 
+
+
+
+\textcolor{gray}{
+Importance of stabilizing the high order solution. Otherwise, phenomena such as terracing or excessive diffusivity ,ay appear.
+Difficulty in the definition of the convergence criterion. Even if the incremental displacements of the iterative solution procedure, the desired convergence is not achieved. Probably, this stagnant point of the solution is related to smalls oscillations of the corrections.
+The computational cost is high. Though the algorithm has to solve a system with the same number of degrees of freedom than a linear stabilized problem (\ref{sec:fic_fem_stabilization}), the introduction of the corrections is non linear. The required number of iterations is higher than those required for a RV-based shock capturing. A practical option is to limit the iterations up to a fixed number. However, this approach will lack an accurate control of the obtained precision for transient problems. For example, the flow in front an obstacle is highly dynamic and it may require more iterations than a prefixed number.
+Regarding the global solution and its robustness, good results are obtained. However, a better order of convergence is expected.
+}
 
 
 
