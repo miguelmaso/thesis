@@ -60,7 +60,7 @@ Even though the Boussinesq equations are expressed in terms of the velocity eval
 
 We remark that the average vertical velocity of the fluid corresponds to the time derivative of the free surface elevation. This variable does not correspond to a boundary condition for the studied cases.
 
-Finally, there is an additional condition associated to $\Gamma_I$ (\ref{Gamma_i}): the dispersive field $\mathbf{J}_\eta$ relates $\bar{\mathbf{u}}$ and $\mathbf{u}_\beta$. The assumption of equal velocities is equivalent to imposing $\nabla\nabla\cdot\mathbf{u}=\mathbf{0}$.
+Finally, there is an additional condition associated to $\Gamma_I$ (see Chapter \ref{eulerian_bsq}): the dispersive field $\mathbf{J}_\eta$ relates $\bar{\mathbf{u}}$ and $\mathbf{u}_\beta$. The assumption of equal velocities is equivalent to imposing $\nabla\nabla\cdot\mathbf{u}=\mathbf{0}$.
 
 
 
@@ -110,8 +110,8 @@ Fig. \ref{piston_stroke} shows the horizontal stroke of the paddle along time. T
     \hfill
     \begin{minipage}[b]{.48\textwidth}
     \centering
-    % \includegraphics[width=.9\textwidth]{img/piston_stroke.pdf} \vspace*{-10pt}
-    \captionof{figure}{Solitary wave example. Paddle position according to time. Data provided in Krautwald et al. \cite{krautwald2020,krautwald2021,krautwald2022}.}
+    \includegraphics[width=.9\textwidth]{img/coupling/piston_stroke.pdf} \vspace*{-10pt}
+    \caption{Solitary wave example. Paddle position according to time. Data provided in Krautwald et al. \cite{krautwald2020,krautwald2021,krautwald2022}.}
     \label{piston_stroke}
     \end{minipage}
 \end{table}
@@ -146,7 +146,7 @@ We remark that the difference in the phase speed of the wave is not originated b
 
 \begin{figure} [htb]
     \centering
-    % \includegraphics[width=\textwidth]{img/solitary_wave.pdf}
+    \includegraphics[width=\textwidth]{img/coupling/solitary_wave.pdf}
     \caption{Solitary wave example. Time evolution of the free surface at two gauges.}
     \label{solitary_wave}
 \end{figure}
@@ -159,7 +159,7 @@ A global representation of the wave propagation is found in Fig. \ref{solitary_w
 
 \begin{figure} [htb]
     \centering
-    % \includegraphics[width=\textwidth]{img/solitary_wave_propagation.pdf}
+    \includegraphics[width=\textwidth]{img/coupling/solitary_wave_propagation.pdf}
     \caption{Solitary wave example. Time series obtained with the interface at $x=10m$.}
     \label{solitary_wave_propagation}
 \end{figure}
@@ -232,7 +232,7 @@ Fig. \ref{solitary_wave_time_convergence} shows the time evolution of the wave a
 
 \begin{figure} [htb]
     \centering
-    % \includegraphics[width=\textwidth]{img/solitary_wave_time_convergence.pdf}
+    \includegraphics[width=\textwidth]{img/coupling/solitary_wave_time_convergence.pdf}
     \caption{Solitary wave example. Set of analysis where the interface is active only in a part of the time domain. The marker shows when the solution tends to the resting condition.}
     \label{solitary_wave_time_convergence}
 \end{figure}
@@ -245,7 +245,7 @@ Besides the reduction of the time duration of the analyses, the optimization of 
 For this reason, we analyze here the effect of considering partial PFEM domains of $10$, $20$ and $30m$ length plus an extension acting as absorbing boundary condition, as shown in  Fig. \ref{solitary_wave_pfem_meshes}. The study is carried out for both 2D and 3D PFEM domains.
 \begin{figure} [htb]
     \centering
-    % \includegraphics[width=\textwidth]{img/solitary_wave_pfem_meshes.png}
+    \includegraphics[width=\textwidth]{img/coupling/solitary_wave_pfem_meshes.png}
     \caption{Solitary wave example. (a) The mesh with interface at $10m$, $2\,700$ elements. (b) The mesh with interface at $20m$, $3\,800$ elements. (c) Detail of the full mesh of the channel, $20\,000$ elements. The slope has a dissipative effect and is acting as an absorbing boundary.}
     \label{solitary_wave_pfem_meshes}
 \end{figure}
@@ -309,7 +309,7 @@ Fig. \ref{landslide_wave_channel} shows the geometry of the experimental setup c
 
 \begin{figure} [htb]
     \centering
-    % \includegraphics[width=\textwidth]{img/landslide_wave_channel.pdf}
+    \includegraphics[width=\textwidth]{img/coupling/landslide_wave_channel.pdf}
     \caption{Landslide wave problem. Setup of the LGW flume for the experimental and numerical analyses.}
     \label{landslide_wave_channel}
 \end{figure}
@@ -322,21 +322,21 @@ Fig. \ref{landslide_wave_channel} shows the geometry of the experimental setup c
     \begin{subfigure}[c]{\columnwidth}
         \caption{Runout ($t=0.7s$)}
         \centering
-        % \includegraphics[width=\columnwidth]{img/t07.png}
+        \includegraphics[width=\columnwidth]{img/coupling/t07.png}
         \label{t07pfemTest2}
     \end{subfigure}
 
     \begin{subfigure}[c]{\columnwidth}
         \caption{Impact ($t=1.5s$)}
         \centering
-        % \includegraphics[width=\columnwidth]{img/t15.png}
+        \includegraphics[width=\columnwidth]{img/coupling/t15.png}
         \label{t15pfemTest2}
     \end{subfigure}
 
     \begin{subfigure}[c]{\columnwidth}
         \centering
         \caption{Wave formation ($t=2.8s$)}
-        % \includegraphics[width=\columnwidth]{img/t28.png}
+        \includegraphics[width=\columnwidth]{img/coupling/t28.png}
         \label{t28pfemTest2}
     \end{subfigure}
 
@@ -347,7 +347,7 @@ Fig. \ref{landslide_wave_channel} shows the geometry of the experimental setup c
             \label{t07pfemTest2Zoom}
         \end{minipage}
         \begin{minipage}[c]{0.4\textwidth}
-            % \includegraphics[width=\textwidth]{img/t15zoom.png}
+            \includegraphics[width=\textwidth]{img/coupling/t15zoom.png}
         \end{minipage}
     \end{subfigure}
 
@@ -379,7 +379,7 @@ The SW interfaces are positioned at $2,\ 4$ and $6m$. Fig. \ref{landslide_wave_p
 
 \begin{figure} [htb]
     \centering
-    % \includegraphics[width=\textwidth]{img/landslide_wave_propagation.pdf}
+    \includegraphics[width=\textwidth]{img/coupling/landslide_wave_propagation.pdf}
     \caption{Landslide wave problem. Time series of the wave amplitude at the different recording points.}
     \label{landslide_wave_propagation}
 \end{figure}
@@ -412,14 +412,14 @@ The case study is a circular lake with a diameter of 1500 m. The landslide has a
 \begin{figure}[ht]
     \centering
     \begin{subfigure}{0.6\textwidth}
-        % \includegraphics[width=\textwidth]{img/ex3_lateralview.pdf}
+        \includegraphics[width=\textwidth]{img/coupling/ex3_lateralview.pdf}
         \caption{Side view.}
         \label{ex3_lateralview}
     \end{subfigure}
     \par\medskip
     % \quad
     \begin{subfigure}{0.75\textwidth}
-        % \includegraphics[width=\textwidth]{img/ex3_topview.pdf}
+        \includegraphics[width=\textwidth]{img/coupling/ex3_topview.pdf}
         \caption{Top view.}
         \label{ex3_topview}
     \end{subfigure}
@@ -444,28 +444,28 @@ Fig. \ref{ex3_postprocess} shows a global view of the simulated LGW and a superp
     \begin{subfigure}{\textwidth}
         \centering
         \caption{Initial configuration ($t=0s$)}
-        % \includegraphics[width=.85\textwidth]{img/ex3_t0.png}
+        \includegraphics[width=.85\textwidth]{img/coupling/ex3_t0.png}
     \end{subfigure}
     \vspace{5pt}
 
     \begin{subfigure}{\textwidth}
         \centering
         \caption{Run-out and impact ($t=5s$)}
-        % \includegraphics[width=.85\textwidth]{img/ex3_t5.png}
+        \includegraphics[width=.85\textwidth]{img/coupling/ex3_t5.png}
     \end{subfigure}
     \vspace{5pt}
 
     \begin{subfigure}{\textwidth}
         \centering
         \caption{Wave generation ($t=10s$)}
-        % \includegraphics[width=.85\textwidth]{img/ex3_t10.png}
+        \includegraphics[width=.85\textwidth]{img/coupling/ex3_t10.png}
     \end{subfigure}
     \vspace{5pt}
 
     \begin{subfigure}{\textwidth}
         \caption{Wave propagation ($t=50s$)}
         \hfill
-        % \includegraphics[width=.9\textwidth]{img/ex3_t50.png}
+        \includegraphics[width=.9\textwidth]{img/coupling/ex3_t50.png}
     \end{subfigure}
     \caption{Landslide in a representative lake. Global representation of the LGW. The NFS domain is plotted until the SW interface and only the geometry is shown. For the FFS, results for the free surface elevation are depicted.}
     \label{ex3_postprocess}
@@ -476,7 +476,7 @@ In order to assess the quality of the obtained solution, in Fig. \ref{ex3_max_wa
 
 \begin{figure} [ht]
     \centering
-    % \includegraphics[width=\textwidth]{img/ex3_max_wave_height.pdf}
+    \includegraphics[width=\textwidth]{img/coupling/ex3_max_wave_height.pdf}
     \caption{Landslide in a representative lake. Envelope of the free-water-surface elevation along sections S1 and S2.}
     \label{ex3_max_wave_height}
 \end{figure}
