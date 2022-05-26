@@ -929,7 +929,7 @@ x_2(t) = -\frac{1}{2}\cos(2Bt) + a + \frac{L}{2}
 In that example the selected parameters are $h_0=1m$ and $a=1m$.
 
 
-The domain $\Omega$ is discretized using several meshes in order to perform a convergence analysis. The meshes employed are listed in Table \ref{parabola_convergence}. Figure \ref{parabola_mesh} shows one of the intermediate mesh. Once the simulation begins, the water starts to oscillate on the parabolic basin and the velocity field is constant on the spatial domain, while follows a periodic function respect to the time.
+The domain $\Omega$ is discretized using several meshes in order to perform a convergence analysis. The meshes employed are listed in Table \ref{parabola_convergence_tab}. Figure \ref{parabola_mesh} shows one of the intermediate mesh. Once the simulation begins, the water starts to oscillate on the parabolic basin and the velocity field is constant on the spatial domain, while follows a periodic function respect to the time.
 
 \begin{figure}
     \includegraphics[width=\textwidth]{img/eulerian/par/mesh_0.1.pdf}
@@ -942,13 +942,6 @@ A cut along the mesh is depicted in Figure \ref{parabola_graphic} showing the fr
 Since the shoreline is moving, several problems may arise, such as the stability of the wetting or drying element or capturing the discontinuity of the velocity. Fortunately, the velocity is not a a degree of freedom and this will help to avoid spurious oscillations in the vicinity of the shoreline.
 
 
-
-\begin{figure} [htp]
-    \centering
-    \includegraphics[width=.8\textwidth]{img/eulerian/par/conv_1.pdf}
-    \caption{Parabolic basin. Convergence graph.}
-    \label{parabola_convergence}   
-\end{figure}
 
 \begin{table} [htb]
     \centering
@@ -1021,8 +1014,16 @@ In that case the finest mesh ($\Delta x=0.01m$) has been used, for visualization
 The main problem of linear stabilizations is the loss of the monotonic properties which may be provided by nonlinear stabilizations. For that reason, in \cite{guermond2011} is proposed to use a nonlinear stabilization alone. This is the case of EV.
 However, the use of nonlinear stabilization alone, may lead to unwanted results. The most common undesired results are such as terracing near the boundaries \cite{lohner2008ch9,kuzmin2005b} and mesh-dependent diffusivity \cite{badia2014}.
 
-It is known that the combination of GJV with SUPG or FIC is not monotonicity preserving. However, the monotonic properties can be improved if it is compared against a standard RV method.
+It is known that the combination of GJV with SUPG or FIC is not monotonicity preserving. However, the monotonic properties can be improved if it is compared against a standard RV method. The convergence of the presented methods is compared in Figure \ref{parabola_convergence}.
 
+
+
+\begin{figure} [htp]
+    \centering
+    \includegraphics[width=.8\textwidth]{img/eulerian/par/conv_1.pdf}
+    \caption{Parabolic basin. Convergence graph.}
+    \label{parabola_convergence}   
+\end{figure}
 
 
 
