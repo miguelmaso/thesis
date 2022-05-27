@@ -285,7 +285,7 @@ Furthermore, good results are obtained for flows at low Froude numbers, such as 
 
 
 
-\subsection{Equations}
+\subsection{Equations and linearization}
 
 
 The non linearity of the shallow water equations can be reduced if they are expressed in terms of the velocity. The primitive SWE can be obtained by replacing the mass balance equation into the momentum balance and expanding the derivatives:
@@ -327,6 +327,8 @@ Analogously, the same procedure is applied to the topography terms and to the bo
     \end{array}\right]
 \end{equation}
 
+
+The same boundary conditions (\ref{equations_sw_bc}) are applied to the shallow water equations written in primitive variables. The only difference is the substitution of the flow rate by the velocity and that the flow rate is then expressed in terms of the velocity and the hater depth.
 
 
 
@@ -490,7 +492,7 @@ The boundary conditions presented in section \ref{equations_sw_bc} are applicabl
 However, since the oscillatory behavior is usually prevalent over the convective phenomenon, the boundary conditions are slightly different, both from the physical and the numerical point of view.
 The three types of boundary conditions considered for the Boussinesq problems, inflow $\Gamma_I$, reflecting $\Gamma_R$ and absorbing $\Gamma_A$ boundaries have a direct equivalence respectively with the inflow $\Gamma_I$, solid $\Gamma_S$ and outflow $\Gamma_O$ boundaries stated in section \ref{equations_sw_bc}. Those subdomains are such that $\Gamma_I \cup \Gamma_R \cup \Gamma_A = \partial \Omega$, being $\partial\Omega$ the boundary of the domain.
 
-\paragraph{Inflow boundary} Both free surface and velocity are known at $\Gamma_I$. Typically it is used to impose a wave generator. Since the wave amplitude is known, the horizontal velocity can be obtained using linear wave theory.
+
 
 \paragraph{Reflecting boundary} No fluid should pass through an impermeable wall. This implies imposing the normal component of the velocity to be zero.
 \begin{equation*}
@@ -502,12 +504,22 @@ Following Woo and Liu \cite{woo2004a}, the above relation must be rewritten in t
 \end{equation*}
 Hence, the complete formulation of a reflective boundary is
 \begin{equation}
-    \bar{\mathbf{u}}_\beta \cdot \mathbf{n} = 0 \quad
+    \bar{\mathbf{u}}_\beta \cdot \mathbf{n} = 0 \ , \quad
     \mathbf{J}_\eta \cdot \mathbf{n} = 0 \quad
     \text{on} \ \Gamma_R
 \end{equation}
 
-\paragraph{Absorbing boundary} An outgoing wave should not return to the computational domain through $\Gamma_A$. A practical implementation of the absorbing boundaries are the sponge layers \cite{israeli1981, wei1995} and will be explained in section \ref{eulerian_bsq_absorbing}
+
+\paragraph{Inflow boundary} Both free surface and velocity are known at $\Gamma_I$. Typically it is used to impose a wave generator. Since the wave amplitude is known, the horizontal velocity can be obtained using linear wave theory.
+
+\begin{equation*}
+    \bar{\mathbf{u}} \cdot \mathbf{n} =u' \quad \text{or}\quad \eta=\eta' \quad \text{on} \ \Gamma_I %\label{Gamma_i}
+\end{equation*}
+
+Since the Boussinesq equations are used to solve oscillatory problems, typically in a subcritical regime, only one variable should be imposed. In the case of a supercritical regime, both variables must be imposed in order to define a well-posed problem. Whereas the velocity is imposed, the same procedure with the dispersive term than in $\Gamma_R$ should be considered. The corresponding $\mathbf{J}_\eta$ must be computed. Imposing $\mathbf{J}_\eta\cdot\mathbf{n}=0$ is another possibility and it corresponds to consider $\bar{\mathbf{u}} = \mathbf{u}_\beta$.
+
+
+\paragraph{Absorbing boundary} Absorbing boundaries are known as the approximation of open boundaries. An outgoing wave should not return to the computational domain through $\Gamma_A$. A practical implementation of absorbing boundaries are sponge layers \cite{israeli1981, wei1995} and will be explained in section \ref{eulerian_bsq_absorbing}
 
 
 

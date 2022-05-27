@@ -6,7 +6,7 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{Prologue}
+\section{Overview}
 
 
 Floods are complex natural phenomena with a great assortment of causes and a huge casuistic
@@ -35,42 +35,44 @@ Even though this study is about the numerical modelling of water related hazards
 \end{figure}
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% The main objective of this thesis is the coupling of different scales in natural hazards. Usually, the action is originated in a far filed from where the the vulnerability is located. There are three scenarios with different scale. The action may be generated in a local or global scale, depending on the nature of the phenomena. The propagation is usually in the large scale and it introduces the need of using reduced models. Finally, the evaluation of the resilience of singular structures requires to descend to the local scale.
 
-\section{Objectives} 
+% The objectives can be summarized as
+% \begin{itemize}
+%     \item aaa
+% \end{itemize}
+
+% Large scale: 2D simplifications for the Navier-Stokes equations.
+
+% Local scale: the turbulent flow require the solution of the Navier-Stokes equations with high fidelity resolution.
 
 
-The main objective of this thesis is the coupling of different scales in natural hazards. Usually, the action is originated in a far filed from where the the vulnerability is located. There are three scenarios with different scale. The action may be generated in a local or global scale, depending on the nature of the phenomena. The propagation is usually in the large scale and it introduces the need of using reduced models. Finally, the evaluation of the resilience of singular structures requires to descend to the local scale.
-
-The objectives can be summarized as
-\begin{itemize}
-    \item aaa
-\end{itemize}
-
-Large scale: 2D simplifications for the Navier-Stokes equations.
-
-Local scale: the turbulent flow require the solution of the Navier-Stokes equations with high fidelity resolution.
 
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{Organization of the thesis}
+\section{Objectives and outline}
 
 
-This thesis is structured in \textcolor{red}{\bfseries N} chapters, including the present introduction. Chapter \ref{equations} presents a review of the governing equations and the known methods used in the literature to obtain numerical approximations.
-The bibliographic revision is specially extensive for the shallow water equations.
+The work developed within the framework of this thesis can be enclosed in the global objective of investigating finite element formulation applied to large-scale water-related hazards. In particular, the analyzed methods have to be capable of reproducing local-scale effects around structures of interest and accurately model the large-scale propagation. This requirement lead to the analysis of finite element methods for solving the Navier-Stokes equations for the local scales and solving the shallow water equations for the large scales.
+
+The Navier-Stokes equations are typically solved using the finite element method, while the shallow water equations are often solved using the finite volume method.
+Since we are interested in solving within the same framework the global simulation, a previous investigation on stabilized finite elements for the shallow water equations is presented.
+
+
+This thesis is structured in 6 chapters, including the present introduction and a bibliographic revision. The bibliographic revision is specially extensive for the shallow water equations.
+Chapter \ref{equations} presents a review of the governing equations which will be solved in the latter chapters.
 
 Chapter \ref{eulerian_sw} is dedicated to the Finite Element Method applied to the shallow water equations. Stabilized formulations and quasi-monotonic formulations are presented.
+Part of the developments of the numerical methods for the shallow water equations are moved to appendices \ref{lagrangian_sw} and \ref{mesh_refinement}, where the particle methods and mesh refinement are explored.
+%This family of methods present some interesting properties, such as the natural approximation of the shoreline. The inconvenient of the Particle methods is the lack of robustness for all the possible flow regimes.
 
-In Chapter \ref{lagrangian_sw} the Particle methods applied to the shallow water equations are presented. This family of methods present some interesting properties, such as the natural approximation of the shoreline. The inconvenient of the Particle methods is the lack of robustness for all the possible flow regimes.
+An extension of the shallow water equations to wave propagation on intermediate and deep water is presented in chapter \ref{eulerian_bsq}. These equations are known as the Boussinesq equations. The strategies developed in the previous chapter are applied to the Boussinesq equations, however, additional requirements must be fulfilled in order to ensure stability and accuracy. This chapter is of crucial importance in order to analyze impulse waves in the context of water-related hazards.
 
-\textcolor{red}{Chapter about mesh adaptivity?}
+Chapter \ref{coupling} is devoted to the coupling strategies between the shallow water approximations --specially the Boussinesq equations-- and the fully resolved methods. An example of coupling for landslide long wave generation is provided.
 
-Chapter \ref{coupling} is devoted to the coupling strategies between the shallow water approximations and the fully resolved methods. An example of coupling for landslide long wave generation is provided.
-
-Finally, two appendices are included to show another applications related to the shallow water equations, the particle methods and the large scale simulations.
-
+Finally, the thesis is closed with some conclusions and possible further research lines in chapter \ref{conclusions}.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -80,15 +82,22 @@ Finally, two appendices are included to show another applications related to the
 
 Some of the developments if this thesis have been published in the format of articles in peer reviewed journals. Since the research has advanced gradually, the articles are related to a chapter, but there are some differences, which can be big.
 The chapters are more extensive than the articles and some parts of the articles are omitted to avoid repetitions.
-There is also not the same sequence between between the publication date and the chapter order.
+There is also not the same sequence between the publication date and the chapter order.
 On the other hand, since the notation is introduced gradually, it has been unified in the thesis and may be slightly different from the articles and this document.
 
 \paragraph{Chapter \ref{eulerian_sw}} \fullcite{maso2022}
-\paragraph{Chapter \ref{lagrangian_sw}} \fullcite{puigferrat2021}
 \paragraph{Chapter \ref{coupling}} \fullcite{maso2022b}
+\paragraph{Appendix \ref{lagrangian_sw}} \fullcite{puigferrat2021}
+\\
 
+In addition, the content of the chapters has been also disseminated in the form of oral presentations in scientific conferences and congresses:
 
+\paragraph{Chapter \ref{coupling}} WCM
+\paragraph{Chapter \ref{coupling}} CMN
+\paragraph{Chapter \ref{coupling}} Franci
+\paragraph{Appendix \ref{lagrangian_sw}} Particles 2019
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \input{chapters/state_art.tex}
+
