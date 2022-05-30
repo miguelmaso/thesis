@@ -3,17 +3,19 @@
 \label{state_art}
 
 
-In this chapter a bibliographic revision of the methods employed to solve free surface flows problems is presented.
-The analysis of the numerical methods for the shallow water equations is more extensive than the review for the Navier-Stokes equations, since this thesis presents some advances in the numerical simulation of the shallow water equations.
+In this section a bibliographic revision of the methods employed to solve free surface flows problems is presented.
+The general motion of a fluid is described by the Navier-Stokes equations. When free-surface water flows are considered, there are two implications, the incompressibility and homogeneous continuum medium enclosed by the interface. After presenting the most common numerical methods used to approximate the incompressible Navier-Stokes equations for free surface flows, the bibliographic review will be focused on the shallow water equations.
+The shallow water equations are derived from the Navier-Stokes equations when some simplifications are assumed.
+Finally, the bibliographic revision is closed with the coupling strategies for both models.
 
 
 
 \subsection{Numerical methods for the Navier-Stokes model}
 
-% \subsubsection{Overview}
 
-% \subsubsection{Particle methods}
+Nowadays, the accurate approximation of the fluid flow equations is aimed to represent the flow up to the smallest scales. In that sense, the effort is focused either on obtaining higher precision numerical schemes or in refining the discretization. The first approach is cheaper in contrast to the refinement approach, but the refinement approach have been proven to be much versatile. Even more, it is usually restrained to simple domain geometries. In the case of complex geometries, higher order approximations are equivalent to the \emph{Finite Volume methods} (FV) or \emph{Finite Element Methods} (FEM).
 
+Nevertheless, when the Galerkin discretization is used within the frame of the FEM, an unstable behavior might appear. These instabilities are related to the non symmetric convection operator and to interpolation \cite{BrezziFortin,codina2008oseen}. The stabilized methods like the \emph{Streamline Upwind Petrov Galerkin} (SUPG) \cite{hughes1986iii,brooks1982} can be framed in the \emph{Variational Multi-Scale} (VMS) concept \cite{hughes1995}. Latter stabilizations appeared as variations of the previous ones, such as \emph{Finite-Increment Calculus} (FIC) \cite{onate1998} or \emph{Galerkin Least Squares} (GLS) \cite{hughes1989}.
 
 
 \subsection{Numerical methods for the shallow water models}
