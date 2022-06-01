@@ -82,7 +82,7 @@ In this test, we reproduce the laboratory experiment carried out at a large wave
 
 \begin{figure} [htb]
     \centering
-    % \includegraphics[width=\textwidth]{img/solitary_wave_channel.pdf}
+    \includegraphics[width=\textwidth]{img/coupling/solitary_wave_channel.pdf}
     \caption{Solitary wave example. Schematic side view of the experimental flume studied. Units in m. Approximate position of the different wave gauges are also depicted.}
     \label{solitary_wave_channel}
 \end{figure}
@@ -492,7 +492,7 @@ In any case, the presented partitioned approach would be really interesting for 
 % \clearpage
 \section{Concluding remarks}
 
-We presented a novel partitioned strategy for solving landslide-generated wave (LGW) problems. The coupled method makes interact a near-field solver (NFS) with a far-field one (FFS). The NFS reproduces the landslide runout and the impact zone by solving the Navier Stokes equations with the Lagrangian Particle Finite Element Method (PFEM). On the other hand, the FFS uses as input the NFS results stored at a certain interface to model the wave propagation with an Eulerian Finite Element Method (FEM) based on Boussinesq shallow water (SW) equations. To improve substantially the computational performance of the method and, thus, to allow for the simulation of large-scale problems, we adopt a one-way coupling scheme, meaning that the NFS solution is insensitive to the FFS one. This partitioned method also allows us to freely decouple the time and space discretizations of the two solvers, giving a further advantage in terms of accuracy and efficiency.
+%We presented a novel partitioned strategy for solving landslide-generated wave (LGW) problems. The coupled method makes interact a near-field solver (NFS) with a far-field one (FFS). The NFS reproduces the landslide runout and the impact zone by solving the Navier Stokes equations with the Lagrangian Particle Finite Element Method (PFEM). On the other hand, the FFS uses as input the NFS results stored at a certain interface to model the wave propagation with an Eulerian Finite Element Method (FEM) based on Boussinesq shallow water (SW) equations. To improve substantially the computational performance of the method and, thus, to allow for the simulation of large-scale problems, we adopt a one-way coupling scheme, meaning that the NFS solution is insensitive to the FFS one. This partitioned method also allows us to freely decouple the time and space discretizations of the two solvers, giving a further advantage in terms of accuracy and efficiency.
 
 In all the examples presented, the results obtained with the new partitioned method had shown a very good agreement with the reference solutions, both in 2D and 3D problems. Remarkably, we have been able to compare our numerical results with analytical solutions, fully-resolved numerical simulations of LGW events, other coupled methods presented in the literature, and experimental observations. 
 
