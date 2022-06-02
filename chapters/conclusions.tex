@@ -29,9 +29,8 @@ In chapter \ref{eulerian_bsq} the presented stabilization technique has been app
 
 Finally, chapter \ref{coupling} presented a novel partitioned strategy for solving landslide-generated wave (LGW) problems. The coupled method makes interact a near-field solver (NFS) with a far-field one (FFS). The NFS reproduces the landslide runout and the impact zone by solving the Navier Stokes equations with the Lagrangian Particle Finite Element Method (PFEM). On the other hand, the FFS uses as input the NFS results stored at a certain interface to model the wave propagation with an Eulerian Finite Element Method (FEM) based on Boussinesq equations. To improve substantially the computational performance of the method and, thus, to allow for the simulation of large-scale problems, we adopt a one-way coupling scheme, meaning that the NFS solution is insensitive to the FFS one. This partitioned method also allows us to freely decouple the time and space discretizations of the two solvers, giving a further advantage in terms of accuracy and efficiency.
 
-The coupling strategy has been analyzed in order to minimize the computational cost keeping the same accuracy resolution than a fully resolved model. Specifically, the influence of the position of the interface, the temporal domain of the coupling and the open boundary had been analyzed.
-
-LAST PARAGRAPH
+The coupling strategy has been analyzed in order to minimize the computational cost, keeping the same accuracy than a fully resolved model. Specifically, the influence of the position of the interface, the temporal domain of the coupling and the open boundary had been analyzed.
+The coupled strategy has proven to be accurate and promising results have been obtained. It has been compared against literature an has been applied to a LGW in a representative lake.
 
 
 
@@ -40,11 +39,14 @@ LAST PARAGRAPH
 \section{Further research}
 
 
-The development of the thesis brings several ideas that can be coped in the future. 
-\begin{enumerate}
-    \item ALE/embedded for SW (second order moving boundary)
-    \item PFEM absorbing boundaries
-    \item Coupling from SW to NS
-    \item Impact of two-way as an extended large-scale solver
-\end{enumerate}
+The development of the thesis brings several ideas that can be coped in the future.
+Regarding the reduced models for the large scale, some issues can be addressed. The appendix \ref{lagrangian_sw} show that the convergence at the shoreline can be improved. In fact, the stabilized eulerian framework has a first order of convergence, while the lagrangian framework converges at second order. Even though, the eulerian framework is more robust and faster, in global terms it is the preferred option. However, a selective strategy can be developed with the advantages of both frames, for example, an arbitrary lagrangian-eulerian scheme or a cutting technology for partially we elements. Cutting the elements at the shoreline will help to mitigate the Gibbs oscillations since the real free surface does not belong to the finite element space given its discontinuous basis.
+
+A second issue to overcome is the shock capturing for the supercritical regime before the shocks. The non-linear stabilization with the residual viscosity approach exhibits some upstream oscillations, which are nonphysical and related to the numerical model. Tho other non-linear stabilizations are more dissipative and avoid these oscillations, however, the global accuracy is lost due to the excessive diffusion.
+
+Regarding the coupled procedure, the main pending task is the second part of the coupling, from the shallow water equations to the Navier-Stokes equations. Some advances have been made in this regard, but are not fully mature to be included in this thesis as a chapter.
+
+The optimization of the coupling interface in chapter \ref{coupling} has shown that the open boundary is extended over a large domain, thus increasing considerably the computational cost. The development of an open boundary in a Lagrangian frame using the PFEM has been little studied by the scientific community. It will help to achieve higher computational savings up to more than $95\%$. Preliminary analyses suggest that the imposition of an inert paddle moving with the waves can be accurate. However, the generalization to the 3D case with arbitrary directions of propagation is not straightforward.
+
+Finally, a more scientific contribution of the coupled strategy is the extension of the shallow water model with a two way coupled solver. The aim of the two way coupled model is to extend the range of applicability of the reduced model to post breaking waves.
 
