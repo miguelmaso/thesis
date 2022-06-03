@@ -225,11 +225,11 @@ headsepline,            % Uncomment to get a line under the header
 % \addchaptertocentry{\abstractname}
 This thesis investigates numerical methods for the simulation of surface water flows, focusing on the large scale, to local scale and the coupling models for both scales.
 
-The general motion of a fluid mass is governed by the Navier-Stokes equations, which can accurately solve the local scale phenomena. However, the same level of accuracy is not required by the large scale solution to the water-related events. In contrast to the extensive use of the Finite Element Method for solving the Navier-Stokes equations, the shallow-water equations are usually solved with the Finite Volume Method. Thus, en effort have been done to solve both equations in an unified framework.
+The general motion of a fluid mass is governed by the Navier-Stokes equations, which can accurately solve the local scale phenomena. However, the same level of accuracy is not required by the large scale solution to the water-related events. In contrast to the extensive use of the Finite Element Method for solving the Navier-Stokes equations, the shallow-water equations are usually solved with the Finite Volume Method. Thus, an effort have been done to solve both equations in an unified framework.
 
-The first part of this thesis is devoted to study stabilized formulations of Finite Element Method for the different forms of the shallow water equations. The stabilized formulations are analyzed by its ability to deal with the possible instabilities. The first source of instability is the incompatibility of the equal interpolation of the variables. The second source of instability is the presence of shocks due to the change of regime or hydraulic jumps. Finally, Gibbs oscillations may appear on the moving shoreline and monotonic properties of the physical system are lost by the numerical approximation.
+The first part of this thesis is devoted to study stabilized formulations of Finite Element Method for the different forms of the shallow water equations. The stabilized formulations are analyzed to test its ability to deal with the different possible instabilities. The first source of instability is the incompatibility of the equal interpolation of the variables. The second source of instability is the presence of shocks due to the change of regime or hydraulic jumps. Finally, Gibbs oscillations may appear on the moving shoreline and monotonic properties of the physical system are lost by the numerical approximation.
 
-The second part of the thesis is committed to the coupling strategies of the numerical methods for the Navier-Stokes and the shallow water equations. The case of a coupling from the local scale to the large scale is analyzed. This type of coupling correspond to the generation of water-related hazards. The proposed strategy combines a Lagrangian Navier Stokes multi-fluid solver with an Eulerian method based on the Boussinesq equations, an extension of the shallow water equations.
+The second part of the thesis is committed to the coupling strategies of the numerical methods for the Navier-Stokes and the shallow water equations. The case of a coupling from the local scale to the large scale is analyzed. This type of coupling corresponds to the generation of water-related hazards. The proposed strategy combines a Lagrangian Navier Stokes multi-fluid solver with an Eulerian method based on the Boussinesq equations, an extension of the shallow water equations.
 
 The proposed technique is applied to the numerical simulation of landslide-generated impulse waves. Lagrangian solver uses the Particle Finite Element Method to model the landslide runout, its impact against the water body and the consequent wave generation. The results of this fully-resolved analysis are stored at selected interfaces and then used as input for the shallow water solver to model the far-field wave propagation.
 This one-way coupling scheme reduces drastically the computational cost of the analyses while maintaining high accuracy in reproducing the key phenomena of the cascading natural hazard.
@@ -269,13 +269,14 @@ BDF   & Backward Differentiation Formula \\
 CG    & Continuous Galerkin \\
 DG    & Discontinuous Galerkin \\
 DAB   & Double Absorbing Layer \\
-FCT   & Flux Corrected Transport \\
+FC    & Flux Correction \\
 FD    & Finite Difference method \\
 FEM   & Finite Element Method \\
 FFS   & Far-Field Solver \\
 FIC   & Finite-Increment Calculus \\
 FSI   & Fluid-Structure Interaction \\
 FV    & Finite Volume method \\
+GJV   & Gradient Jump viscosity \\
 LGW   & Landslide Generated Wave \\
 MPM   & Material Point Method \\
 NFS   & Near-Field Solver \\
@@ -283,6 +284,7 @@ NS    & Navier-Stokes \\
 PFEM  & Particle Finite Element Method \\
 PFEM2 & Particle Finite Element Method 2-nd generation \\
 PML   & Perfectly Matched Layer \\
+RV    & Residual Viscosity \\
 SPH   & Smooth Particle Hydrodynamics \\
 SUPG  & Stream-Upwind Petrov-Galerkin \\
 SW    & Shallow Water \\

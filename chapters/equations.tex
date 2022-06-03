@@ -25,7 +25,7 @@ Then, some simplifications for the free surface flows are made, yielding the sha
 \label{equations_ns}
 
 
-The motion of a fluid is described by the Navier-Stokes equations. The case of a free surface flow is described by that equations and the free surface is located where the densities or the fluid properties are discontinuous. In general, an air-water interface is assumed but some natural phenomena may include a more complex configuration, such as debris flow-air-water interfaces. All this continuous media can be considered isotermal and incompressible, and the standard formulation of the Navier-Stokes equations can be used.
+The motion of a fluid is described by the Navier-Stokes equations. The case of a free surface flow is described as well by those equations and the free surface is located where the densities or the fluid properties are discontinuous. In general, an air-water interface is assumed but some natural phenomena may include a more complex configuration, such as debris flow-air-water interfaces. All this continuous media can be considered isotermal and incompressible and thus, the standard formulation of the Navier-Stokes equations can be used.
 
 The problem consists in the incompressible Navier-Stokes equations in a time interval $(0, t_f)$ and in a spatial domain $\Omega \in \mathbb{R}^{n_d}$, being $n_d$ the number of space dimensions, $3$ unless otherwise stated. Let $t$ be a certain time instant in the temporal domain $(0, t_f)$ and $\mathbf{x}$ a given point in the spatial domain $\Omega$. The balance equations for the momentum and mass are written in the following form:
 \begin{subequations} \label{NS}
@@ -53,16 +53,16 @@ $\rho$ is the fluid density, $p$ is the pressure, $\mathbf{u}$ is the velocity, 
 \label{equations_sw}
 
 
-The flow of water in shallow layers occurs in a wide range of situations, such as coastal dynamics and hydraulics. In these free surface flows in relatively thin layers compared to the characteristic horizontal length, the horizontal velocities are of primary importance. Under that circumstances, the problem can be reasonably approximated the horizontal plane.
+The flow of water in shallow layers occurs in a wide range of situations, such as coastal dynamics and hydraulics. In such cases, free surface flows in relatively thin layers compared to the characteristic horizontal length and thus, the horizontal velocities are of primary importance. Under those circumstances, the problem can be reasonably approximated by the horizontal plane.
 
 The shallow water equations are the result of integrating vertically the Navier-Stokes equations, assuming incompressibility, small vertical velocity and negligible vertical acceleration \cite{abbott1979,zien3}. The assumptions over the vertical velocity and its acceleration are equivalent to hydrostatic pressure, in fact, the vertical component of the momentum equation (\ref{NS1}) is reduced to
 \begin{equation} \label{SW_hydrostatic_pressure}
     \frac{1}{\rho}\pder{p}{x_3} + g = 0
 \end{equation}
 
-After substitution of the hydrostatic pressure assumption \ref{SW_hydrostatic_pressure} into the mass conservation \ref{NS2}, the governing equations are integrated from the bottom $z$ to the free surface $\eta$. The problem is closed by adding two kinematic boundary conditions at the bottom and the free surface:
+After substitution of the hydrostatic pressure assumption \ref{SW_hydrostatic_pressure} into the mass conservation \ref{NS2}, the governing equations are integrated from the bottom $z$ to the free surface $\eta$. The problem is closed by adding two kinematic boundary conditions at the bottom and at the free surface:
 \begin{equation}
-    u_3(\eta) = \frac{D\eta}{Dt} \ , \quad u_3(z) = \frac{Dz}{Dt}
+    u_3(z) = \frac{Dz}{Dt} \ , \quad u_3(\eta) = \frac{D\eta}{Dt}
 \end{equation}
 
 
@@ -70,10 +70,10 @@ The governing equations are expressed in terms of a new set of primary variables
 \begin{equation} \label{SW_averaged_momentum}
     \mathbf{q} = \int_z^\eta \mathbf{u}\,dx_3
 \end{equation}
-To avoid introducing extra notation, in a shallow water context, $\mathbf{u}$ refers to the averaged horizontal velocities. In that case, the expression \ref{SW_averaged_momentum} can be reduced to a compact form as $\mathbf{q} = h\mathbf{u}$.
+In order to avoid introducing extra notation, in a shallow water context, $\mathbf{u}$ refers to the averaged horizontal velocities. In that case, the expression \ref{SW_averaged_momentum} can be reduced to a compact form as $\mathbf{q} = h\mathbf{u}$.
 
 
-Here we find that the resulting equations are written in the same form as the Euler conservation equations. In spite the equations present some similarities to the compressible flow, the shallow water equations are describing a purely incompressible fluid: the variable water depth is playing the role of the variable pressure in compressible fluids. The equations read
+Here we find that the resulting equations are written in the same form as the Euler conservation equations. In spite of the equations presenting some similarities to the compressible flow, the shallow water equations are describing a purely incompressible fluid: the variable water depth is playing the role of the variable pressure in compressible fluids. The equations read
 %The equations governing mass and momentum conservation can be written in conservative form with water depth $h$ and specific discharge $\mathbf{q}=(h\mathbf{u})$ as follows,
 \begin{equation} \label{general_sw}
 \pder{\bm{\phi}}{t} + \pder{\mathbf{F}_i}{x_i} + \pder{\mathbf{G}_i}{x_i} + \mathbf{Q} = \mathbf{0} \qquad \text{for} \enspace i=1,2
@@ -271,9 +271,9 @@ The presented, conservative, form of the shallow water equations --Saint-Venant 
 The most common simplification is to express those equations in terms of the reduced or primitive variables --velocity instead of flow rate--.
 Another alternative is to use relative variables, taking the free surface instead of the total water depth.
 
-The primitive variables simplification reduces the non-linearity of the equations, while its range of applicability is reduced. Particularly, the momentum would not be conserved in a change of regime, an hydraulic jump. This fact is related to the evaluation of the convective fluxes, which depend on the flow rate gradient.
-While the evaluation of the flow rate gradient using conservatives variables does not present any problem, this operation will be ill-conditioned when primitive variables are used.
-In other words, in a change of regime there is a discontinuity in both velocity and water depth, and the computation of the flow rate gradient involves the division of two gradient tending to $\pm\infty $.
+The primitive variables simplification reduces the non-linearity of the equations, but its range of applicability is reduced. Particularly, the momentum would not be conserved in a change of regime, like an hydraulic jump. This fact is related to the evaluation of the convective fluxes, which depend on the flow rate gradient.
+While the evaluation of the flow rate gradient using conservatives variables does not present any problem, this operation is ill-conditioned when primitive variables are used.
+In other words, in a change of regime there is a discontinuity in both velocity and water depth, and the computation of the flow rate gradient involves the division of two gradients tending to $\pm\infty $.
 
 In spite of this accuracy limitation near shocks, the non linearity reduction makes the primitive variables interesting from the numerical point of view, since less iteration will be needed to achieve convergence.
 Furthermore, good results are obtained for flows at low Froude numbers, such as estuaries, tidal currents or waves propagation.
@@ -288,7 +288,7 @@ Furthermore, good results are obtained for flows at low Froude numbers, such as 
 \subsection{Equations and linearization}
 
 
-The non linearity of the shallow water equations can be reduced if they are expressed in terms of the velocity. The primitive SWE can be obtained by replacing the mass balance equation into the momentum balance and expanding the derivatives:
+The non linearity of the shallow water equations can be reduced if they are expressed in terms of the velocity. The primitive SW equations can be obtained by replacing the mass balance equation into the momentum balance and expanding the derivatives:
 \begin{subequations} \label{sw_primitive_balance}
 \begin{equation}
     \pder{\bm{\psi}}{t} + \pder{\mathbf{F}_i}{x_i} + \mathbf{Q} = \mathbf{0}
