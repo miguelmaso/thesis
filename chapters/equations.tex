@@ -30,13 +30,13 @@ The motion of a fluid is described by the Navier-Stokes equations. The case of a
 The problem consists in the incompressible Navier-Stokes equations in a time interval $(0, t_f)$ and in a spatial domain $\Omega \in \mathbb{R}^{n_d}$, being $n_d$ the number of space dimensions, $3$ unless otherwise stated. Let $t$ be a certain time instant in the temporal domain $(0, t_f)$ and $\mathbf{x}$ a given point in the spatial domain $\Omega$. The balance equations for the momentum and mass are written in the following form:
 \begin{subequations} \label{NS}
     \begin{align} \label{NS1}
-        \pder{u_i}{t} + u_j \pder{u_i}{x_i} + \frac{1}{\rho} \pder{p}{x_i} +
-            \frac{1}{\rho} \pder{}{x_i} \tau_{ij} &= f_i \\ \label{NS2}
-        \pder{u_i}{x_i} &= 0
+        \pder{\mathbf{u}}{t} + \mathbf{u} \cdot \nabla \mathbf{u} + \frac{1}{\rho} \nabla{p} +
+            \frac{1}{\rho} \nabla \cdot \bm{\tau} &= \mathbf{f} \\ \label{NS2}
+        \nabla \cdot \mathbf{u} &= 0
     \end{align}
 \end{subequations}
 With the appropriate initial and boundary conditions. Let $\Gamma$ be the boundary of the domain $\Omega$ and $\mathbf{n}$ the unit outward normal on $\Gamma$. Dirichlet and Neumann boundary conditions are considered, $\Gamma_D$ and $\Gamma_N$ respectively, such that $\Gamma_D \cup \Gamma_N = \Gamma$.
-The usual summation convention is used if there is index repetition.
+%The usual summation convention is used if there is index repetition.
 $\rho$ is the fluid density, $p$ is the pressure, $\mathbf{u}$ is the velocity, $\bm{\tau}$ is the viscous stresses tensor and $\mathbf{f}$ is the body forces vector.
 
 
@@ -195,6 +195,7 @@ if the outflow is supercritical, no conditions have to be imposed.
 
 
 \subsection{Linearization}
+\label{equations_sw_lin}
 
 Usually, in the numerical study of the conservation equations, them are expressed in a quasi-linear form. The balance equation (\ref{general_sw}) can be linearized as follows
 
@@ -288,7 +289,7 @@ Furthermore, good results are obtained for flows at low Froude numbers, such as 
 \subsection{Equations and linearization}
 
 
-The non linearity of the shallow water equations can be reduced if they are expressed in terms of the velocity. The primitive SW equations can be obtained by replacing the mass balance equation into the momentum balance and expanding the derivatives:
+The non linearity of the SW equations can be reduced if they are expressed in terms of the velocity. The primitive SW equations can be obtained by replacing the mass balance equation into the momentum balance and expanding the derivatives:
 \begin{subequations} \label{sw_primitive_balance}
 \begin{equation}
     \pder{\bm{\psi}}{t} + \pder{\mathbf{F}_i}{x_i} + \mathbf{Q} = \mathbf{0}
@@ -343,17 +344,16 @@ The same boundary conditions (\ref{equations_sw_bc}) are applied to the shallow 
 \label{equations_bsq}
 
 
-The presented SWE are suited to solve convective flows as well as free surface waves. Both phenomena are present in the hyperbolic equations. As the water depth increases, the oscillatory phenomenon or amplitude dispersion increases its relative importance.
-However, a new mechanism not included in the SWE is present in a wave propagation problem, the frequency dispersion \cite{ursell1953}. A need to quantify the relative importance of the new mechanism arises.
+The presented SW equations are suited to solve convective flows as well as free surface waves. Both phenomena are present in the hyperbolic equations. However, as long as the water depth increases, the oscillatory phenomenon or amplitude dispersion increases its relative importance.
+A new mechanism not included in the SW equations appears in a wave dominated problem, the frequency dispersion \cite{ursell1953}. It is thereby necessary to quantify the effect of the new mechanism.
 
-According to the classification of Peregrine \cite{peregrine1967}, the dimensionless numbers of non-linearity and dispersion relate the wave amplitude $\eta$, the water depth $H$ and the characteristic wavelength $\lambda$:
-
+According to the classification of Peregrine \cite{peregrine1967}, the dimensionless numbers of non-linearity and dispersion relate the wave amplitude $\eta$, the water depth $H$ and the characteristic wavelength $\lambda$ as:
 \begin{equation}
     \epsilon = \frac{\eta}{H} \ ,\quad \mu = \frac{H}{\lambda}
     \label{nonlin_disp_ratios}
 \end{equation}
 
-Both parameters allow to relate the concepts of amplitude and frequency dispersion. These concepts define how the wave propagates. Is well known that a wave propagates at speed $c=\sqrt{gH}$, but due to the convective term, this speed also depends on the wave amplitude, then introducing a non-linearity. Thus, considering the non-linearity, the wave speed increases as $c=\sqrt{g(H+\eta)}$. This phenomenon is known as amplitude dispersion and a first consequence is that every wave will end breaking, since the wave crest propagates faster than the wave bosom. The importance of the amplitude dispersion is related to the non-linearity ratio $\epsilon$.
+Both parameters allow to link the concepts of amplitude and frequency dispersion. These concepts define how the wave propagates. Is well known that a wave propagates at speed $c=\sqrt{gH}$, but due to the convective term, this speed also depends on the wave amplitude, then introducing a non-linearity. Thus, considering the non-linearity, the wave speed increases as $c=\sqrt{g(H+\eta)}$. This phenomenon is known as amplitude dispersion and a first consequence is that every wave will end breaking, since the wave crest propagates faster than the wave bosom. The importance of the amplitude dispersion is related to the non-linearity ratio $\epsilon$.
 
 
 \begin{figure} [ht]
@@ -364,7 +364,7 @@ Both parameters allow to relate the concepts of amplitude and frequency dispersi
 \end{figure}
 
 
-In practice, this phenomenon does not happen. From linear wave theory we know that the celerity depends not only on the water depth, but also on the wavenumber $k=2\pi/\lambda$. This is known as frequency dispersion and this mechanism is missing on the Saint-Venant equations. The introduction of some extra terms leads to the Boussinesq equations, which model the frequency dispersion. Once the frequency dispersion is included, classical soliton waves can be obtained. In a soliton wave, breaking never occurs during the propagation, since the non linear terms are in equilibrium with dispersive terms.
+In practice, this phenomenon does not happen. From linear wave theory we know that the celerity depends not only on the water depth, but also on the wavenumber $k=2\pi/\lambda$. This mechanism is known as frequency dispersion, which is missing on the Saint-Venant equations. Figure \ref{boussinesq_dispersion} shows the two possible types of wave propagation, with apmplitude dispersion or frequency dispersion. The introduction of some extra terms leads to the Boussinesq equations, which model the frequency dispersion. Once the frequency dispersion is included, classical soliton waves can be obtained. In a soliton wave, breaking never occurs during the propagation, since the non linear terms are in equilibrium with the dispersive terms.
 
 
 
@@ -375,15 +375,16 @@ In practice, this phenomenon does not happen. From linear wave theory we know th
 
 \subsection{Derivation of the modified Boussinesq equations}
 
-There are different ways to derive the Boussinesq equations with slightly different results. Nwogu presented a general framework in \cite{nwogu1993}. A three dimensional wave field with free surface elevation $\eta(x_1, x_2, t)$ and water depth at rest $H(x_1, x_2)$ is considered. The fluid is governed by the Navier-Stokes equations but the shallow water assumptions are modified. The fluid is assumed to be incompressible and the flow is assumed to be irrotational. As in the shallow water equations, the vertical velocity is considered to be small, but the vertical acceleration is not negligible. The nonlinearity and dispersion ratios (\ref{nonlin_disp_ratios}) are assumed to be small. The last difference between the shallow water equations and the Boussinesq consist in considering the horizontal velocity at a specified water depth instead of the mean value.
+There are different ways to derive the Boussinesq equations with slightly different results. Nwogu presented a general framework in \cite{nwogu1993}. A three dimensional wave field with free surface elevation $\eta(x_1, x_2, t)$ and water depth at rest $H(x_1, x_2)$ is considered. The fluid is governed by the Navier-Stokes equations and the shallow water assumptions are modified. The fluid is assumed to be incompressible and the flow is assumed to be irrotational. As in the shallow water equations, the vertical velocity is considered to be small, but the vertical acceleration is not negligible. The nonlinearity and dispersion ratios (\ref{nonlin_disp_ratios}) are assumed to be small. The last difference between the shallow water equations and the Boussinesq consist in considering the horizontal velocity at a specified water depth instead of the mean value (see Fig. \ref{velocity_beta}).
 
 \begin{figure}
     \centering
     \includegraphics[width=.9\textwidth]{img/eq/velocity_beta.pdf}
     \caption{The modified Boussinesq equations consider the velocity at an arbitrary depth $\beta H$ instead of the mean velocity}
+    \label{velocity_beta}
 \end{figure}
 
-Finally, the fluid at the free surface has to satisfy a dynamic and kinematic boundary conditions. At the bottom, the fluid has to satisfy a kinematic boundary condition.
+Finally, the fluid at the free surface has to satisfy a dynamic and kinematic boundary conditions and a kinematic boundary condition at the bottom.
 
 \begin{equation}\label{dyn_kyn_bc}
 \begin{aligned}
@@ -393,7 +394,7 @@ u_3 &= -u_1 \pder{H}{x_1} -u_2 \pder{H}{x_2} \ , \quad &&\text{at } x_3=-H
 \end{aligned}
 \end{equation}
 
-Then, the continuity and momentum equations are integrated from the bottom to the free surface and applying the boundary conditions (\ref{dyn_kyn_bc}). Since the average horizontal velocity has been substituted by the velocity at a certain depth, the vertical profile of the velocities must be known. The key of the Boussinesq equations consist in finding an assumption which preserves the the effect of the frequency dispersion. The horizontal velocities $\mathbb{u}=(u_1, u_2)$ are expanded in Taylor series from the seabed ($x_3=-H$),
+Then, the continuity and momentum equations are integrated from the bottom to the free surface and applying the boundary conditions (\ref{dyn_kyn_bc}). Since the average horizontal velocity has been substituted by the velocity at a certain depth, the vertical profile of the velocities must be known. The key of the Boussinesq equations consist in finding an assumption which preserves the the effect of the frequency dispersion. The horizontal velocities $\mathbf{u}=(u_1, u_2)$ are expanded in Taylor series from the seabed ($x_3=-H$),
 \begin{multline} \label{seabed_taylor_expansion}
     \mathbf{u}(x_1,x_2,x_3,t) = \mathbf{u}(x_1,x_2,-H,t) + (z+H)\mathbf{u}_3(x_1,x_2,-H,t) \\ + \sfrac{1}{2}(z+H)^2\mathbf{u}_{3,3}(x_1,x_2,-H,t) + \dots
 \end{multline}
@@ -411,12 +412,12 @@ Finally, the equations are evaluated at an arbitrary depth $x_3=\beta H$ and the
 where the auxiliary fields $\mathbf{J}_\eta$ and $\mathbf{J}_u$ introduce the dispersive mechanism and are defined according to the following expressions
 \begin{subequations} \label{bsq_eq_auxiliary_J}
 \begin{equation}
-    {J}_\eta =
+    \mathbf{J}_\eta =
         C_1 H^3 \nabla \nabla \cdot \mathbf{u}_\beta +
         C_3 H^2 \nabla \nabla \cdot (H \mathbf{u}_\beta) 
 \end{equation}
 \begin{equation}
-    {J}_u =
+    \mathbf{J}_u =
         C_2 H^2 \nabla \nabla \cdot \pder{\mathbf{u}_\beta}{t} +
         C_4 H   \nabla \nabla \cdot \pder{(H \mathbf{u}_\beta)}{t} 
 \end{equation}
@@ -438,13 +439,13 @@ and the $C_i$ constants depend on the choice of $\beta$
 
 \subsection{Dispersion properties and range of applicability}
 
-This equations present as a free parameter $\beta$ the relative elevation at which the velocity is evaluated. Its value goes from $-1$ at the seabed, to $0$ at the free surface. Since the equations are an approximation of the fully dispersive and nonlinear problem, the parameter $\beta$ is chosen to minimize the errors introduced by the approximation.
-In fact, the original Boussinesq equations does no present any dispersive term in the mass balance equation (\ref{bsq_eq_mass}) and correspond to a specific choice of $\beta$.
+These equations present as a free parameter $\beta$ the relative elevation at which the velocity is evaluated. Its value ranges from $-1$ at the seabed, to $0$ at the free surface. Since the equations are an approximation of the fully dispersive and nonlinear problem, the parameter $\beta$ is chosen to minimize the errors introduced by the approximation.
+In fact, the original Boussinesq equations do not present any dispersive term in the mass balance equation (\ref{bsq_eq_mass}) and correspond to a specific choice of $\beta$.
 
-The parameter $\beta$ is fixed to $-0.531$ in \cite{nwogu1993}. This value has been obtained reducing the equations (\ref{bsq_eq}) to one dimension and flat bottom. Then, a trial function of small amplitude periodic wave of the type
-\begin{equation*}
+The parameter $\beta$ is fixed to $-0.531$ in \cite{nwogu1993}. This value has been obtained by reducing the equations (\ref{bsq_eq}) to one dimension and flat bottom. Then, a trial function of small amplitude periodic wave with wavenumber $k$ and frequency $\omega$ of the type
+\begin{equation}
     \eta = a_0 \exp(i(kx-\omega t)) \ , \quad u_\beta = u_0 \exp(i(kx-\omega t))
-\end{equation*}
+\end{equation}
 is substituted into (\ref{bsq_eq_mass}) and (\ref{bsq_eq_mom}). After some algebraic manipulation the following expression for the phase speed is obtained:
 \begin{equation}
 c^2 = \frac{\omega^2}{k^2} = gh
@@ -455,12 +456,12 @@ c^2 = \frac{\omega^2}{k^2} = gh
     }\right)
 \end{equation}
 The relation between the frequency and the wavelength is also known as \emph{dispersion relation}.
-By the other hand, the dispersion relation given by the Linear wave theory or Airy theory is given by
+On the other hand, the dispersion relation given by the Linear wave theory or Airy theory is given by
 \begin{equation}
 c^2 = gh \frac{\tanh kh}{kh}
 \end{equation}
 
-Finally, the value of $\beta$ has been chosen to minimize the error at the range of applicability. Some other classical values of beta were obtained in \cite{madsen1991,murray1989}. Figure \ref{phase_speed_beta} shows the sensitivity of the phase speed depending on the parameter $\beta$. The shallow water equations, which drop the dispersive terms of equations (\ref{bsq_eq}) are only valid for the shallow water regime ($kh<0.3$). Fixing the free parameter $\beta=-0.531$ extend the range of applicability of the Boussinesq equations to intermediate depths ($kh<3$).
+Finally, the value of $\beta$ has been chosen to minimize the error at the range of applicability. Some other classical values of beta were obtained in \cite{madsen1991,murray1989} and are shown in Figure \ref{phase_speed_beta}. Figure \ref{phase_speed_beta} shows the sensitivity of the phase speed $c$ depending on the parameter $\beta$ with respect to the phase speed obtained with Linear theory $c_{\text{Airy}}$. The shallow water equations, which drop the dispersive terms of equations (\ref{bsq_eq}) are only valid for the shallow water regime ($kh<0.3$). Fixing the free parameter $\beta=-0.531$ extends the range of applicability of the Boussinesq equations to intermediate depths ($kh<3$).
 
 \begin{figure}
     \centering
