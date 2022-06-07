@@ -7,9 +7,9 @@ In this chapter, a FEM approximation for the Boussinesq modified equations is pr
 
 Several numerical models appeared in the bibliography to solve the Boussinesq equations, under the possible variations for considering the dispersive terms. Abbot pioneered the FD schemes in \cite{abbott1978,abbott1979} applied to the original Boussinesq model. Later, Wei and Kirby solved the modified equations presented by Nwogu \cite{nwogu1993} using a FD scheme in \cite{wei1995}. The main advantage of the FD is the ease of treatment higher differences, even though the main difficulty consists on representing complex domains. Smallman was a pioneer applying the FD to harbours \cite{smallman1989}.
 
-A decade later, some FEM were developed to solve Boussinesq equations. In that case, some special treatment needs to be applied to the high order derivatives. Langtangen \cite{langtangen1998} used quadratic triangles while most of the authors use aan intermediate variable. Li and Liu \cite{li1999} used bilinear quadrilaterals and used a projection to approximate the gradient. Walkley \cite{walkley2002} and Woo \cite{woo2004a,woo2004b} used a projection to interpolate the second order derivatives filed. Surprisingly, the authors reported high frequency oscillations and proposed ad-hoc solutions, but until Codina \cite{codina2008,codina2008b} none of them associated the oscillations to the incompatibility of interpolation.
+A decade later, some FEM were developed to solve Boussinesq equations. In that case, some special treatment needs to be applied to the high order derivatives. Langtangen \cite{langtangen1998} used quadratic triangles while most of the authors use an intermediate variable. Li and Liu \cite{li1999} used bilinear quadrilaterals and used a projection to approximate the gradient. Walkley \cite{walkley2002} and Woo \cite{woo2004a,woo2004b} used a projection to interpolate the second order derivatives filed. Surprisingly, the authors reported high frequency oscillations and proposed ad-hoc solutions, but until Codina \cite{codina2008,codina2008b} none of them associated the oscillations to the incompatibility of interpolation.
 
-The method has been solved using DG \cite{eskilsson2002} and FV \cite{bradford2002,stansby2003}. As reported by Stansby \cite{stansby2003}, since the FV is non-oscillatory, needs special techniques to accurately approximate the oscillatory behavior of the Boussinesq equations.
+The method has been solved using DG \cite{eskilsson2002} and FV \cite{bradford2002,stansby2003}. As reported by Stansby \cite{stansby2003}, since the FV is non-oscillatory, it needs special techniques to accurately approximate the oscillatory behavior of the Boussinesq equations.
 
 This chapter includes the developments presented in chapter \ref{eulerian_sw} and presents the new techniques associated to the oscillatory and dispersive problem. 
 Som examples are included in order to test the accuracy and to show the capabilities of the presented algorithms.
@@ -41,7 +41,7 @@ On another note, a section regarding the numerical treatment of absorbing bounda
 
 The Boussinesq equations are solved using the FEM. The background of chapter \ref{eulerian_sw} allows to interpolate the space domain with a Galerkin discretization of linear triangles or bilinear quadrilaterals. A finite difference scheme with constant time step is used to integrate the equations in time.
 
-The variational form of the Boussinesq modified equations (\ref{bsq_eq}) presented in section \ref{equations_bsq} read
+The variational form of the Boussinesq modified equations (\ref{bsq_eq}) presented in section \ref{equations_bsq} reads
 \begin{subequations} \label{bsq_eq_variational}
     \begin{equation}
         \int_\Omega\left(
@@ -305,9 +305,9 @@ Both triangular and quadrilateral discretizations of $l^e=0.3m$ are considered. 
     \label{bsq_solitary_wave_gauges}
 \end{figure}
 
-The propagation of the smaller solitary wave is recorded at Figure \ref{bsq_solitary_wave_gauges}. Three time series are shown, near the generation of the solitary wave ($20m$), after a short period of propagation ($50m$) and after a long distance ($150m$). For tat wave specifications, $\epsilon=0.1$ and $\mu=0.04$ there is no appreciable variation in the wave amplitude nor in the phase speed from theory.
+The propagation of the smallest solitary wave is recorded at Figure \ref{bsq_solitary_wave_gauges}. Three time series are shown, near the generation of the solitary wave ($20m$), after a short period of propagation ($50m$) and after a long distance ($150m$). For that wave specifications, $\epsilon=0.1$ and $\mu=0.04$ there is no appreciable variation in the wave amplitude nor in the phase speed from theory.
 
-The amplitude variations of the three solitary waves is analyzed in detail in Figure \ref{bsq_solitary_wave_shapes}. For each wave, two time series are compared against the analytical solution. The shapes of the solitary waves are compared centered at the phased and using dimensionless coordinates. The important characteristic of the numerical method is that the wave travels a long distance without being affected by numerical dissipation. The main difference is at the predicted phase speed is somewhat small. This difference is bigger as long as the wave amplitude increases. It would be interesting to compare the analytical solution against experimental results.
+The amplitude variations of the three solitary waves is analyzed in detail in Figure \ref{bsq_solitary_wave_shapes}. For each wave, two time series are compared against the analytical solution. The shapes of the solitary waves are compared centered at the phased and using dimensionless coordinates. The important characteristic of the numerical method is that the wave travels a long distance without being affected by numerical dissipation. The main difference with respect to the analytical solution is that the predicted phase speed is somewhat small. This difference is bigger as the wave amplitude increases. It would be interesting to compare the analytical solution against experimental results.
 
 \begin{figure}[htb!]
     \centering
