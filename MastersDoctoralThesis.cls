@@ -426,7 +426,7 @@ KOMA-script documentation for details.}]{fancyhdr}
 \providecaptionname{german,ngerman,austrian,naustrian}{\acknowledgementname}{Danksagung} % Acknowledgement text for Germanic countries
 
 \ifbool{consistentlayout}{
-	\DeclareDocumentEnvironment{acknowledgements}{}{%
+	\DeclareDocumentEnvironment{acknowledgements}{ O{\null\vfill} }{%
 		\tttypeout{\acknowledgementname}
 		\addchap*{\acknowledgementname}
 	}
@@ -436,10 +436,11 @@ KOMA-script documentation for details.}]{fancyhdr}
 		\checktoopen
 		\tttypeout{\acknowledgementname}
 		\thispagestyle{plain}
+		\vspace*{8em}
 		\begin{center}{\huge\textit{\acknowledgementname}\par}\end{center}
 	}
 	{
-		\vfil\vfil\null
+		\vfill\null
 	}
 }
 

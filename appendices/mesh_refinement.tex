@@ -3,12 +3,13 @@
 \label{mesh_refinement}
 
 
+Keeping the time step under a certain value relative to the element size in transitory problems is of key importance to achieve good results. Otherwise, an excessively large time step could resort on an over-diffusive solution.
+Furthermore, the element size is governed by the physics, it has to be small enough to capture the modes of interest. It is a usual practice to refine the mesh near the region of interest or where the solution is changing rapidly. consequently, the local reduction of the mesh size is imposing a global reduction of the time step.
 
-Es conocido que, en problemas transitorios, mantener un paso de tiempo moderado es necesario para obtener una buena solución, mientras que un paso de tiempo excesivo conlleva soluciones muy difusivas. Por otro lado, en dominios grandes suele ser necesario refinar la malla cerca del área de inerés. Este refinado de malla, impone una reducción del paso de tiempo con tal de mantener un número de Courant adecuado. Como resultado, un pequeña región del dominio de cálculo estará imponiendo el paso de tiempo, muy inferior a lo requerido en la mayor parte de éste. Lo que se busca en esta sección es avanzar con un paso de tiempo local en cada subdominio.
+This section seeks for a strategy with local tie step. The main idea consists on the division on subdomains characterized by its mesh size. Thus, a hierarchic mesh refinement is defined with a characteristic mesh size and the corresponding time step. The hierarchical refinement allows to use both non-conforming discretization at space and at time level. The only requirement is having a natural number of divisions in order to perform a communication at the coarse level. Figure \ref{multigrid_refinement} shows a hierarchical spatial refinement.
 
-La estrategia consiste en un remallado jerárquico, donde cada nivel tiene un tamaño de malla y un paso de tiempo característico. De este modo, cada subdominio avanza con su paso de tiempo propio y se sincroniza con el dominio superior una vez que alcanza el paso de tiempo superior. Al final de este proceso, se toma la solución procedente de la malla más fina.
+This framework eases the refinement and coarsening procedures. Specially simple is the coarsening process, since it consists just on removing elements from a lower level without having to rebuild the connectivities. On the other hand, a procedure must be defined for the hanging nodes at the boundary and the hanging time steps.
 
-Este modo de trabajar con un remallado jerárquico facilita mucho la tarea de des-refinado, pues simplemente hay que eliminar elementos del nivel inferior, sin tener que reconstruir conectividades. El principal inconveniente del remallado jerárquico es el tratamiento de los nodos colgantes que aparecen en la frontera de los subdominios. De modo análogo a la discretización espacial, en la discretización temporal también aparecen pasos colgados, que se tienen que interpolar entre dos pasos de tiempo superiores.
 
 
 \begin{figure}
@@ -26,9 +27,20 @@ Este modo de trabajar con un remallado jerárquico facilita mucho la tarea de de
     \vspace{1em}
 \end{subfigure}
 \caption{Different refinement zones for a domain.}
+\label{multigrid_refinement}
 \end{figure}
 
+
+
 \section{Algorithm}
+
+
+\begin{figure}
+    \centering
+    \includegraphics[width=.8\textwidth]{img/multigrid/multigrid_steps.png}
+    \caption{Steps for solving a coarse time step with hierarchical refinement.}
+    \label{multigrid_steps}
+\end{figure}
 
 
 \section{Data structure}
