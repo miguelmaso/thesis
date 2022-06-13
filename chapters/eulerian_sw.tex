@@ -896,15 +896,16 @@ The last one is devoted to test all the capabilities of the formulation in a pra
 
 
 \subsection{Oscillation in a parabolic basin}
+\label{sec:examples:parabola}
 
 This is a classical benchmark oriented to test the accuracy of the location of the moving boundary. The topography follows a parabolic profile and the water body oscillates on it. The initial configuration corresponds to zero velocity but the free surface is in a non horizontal plane. Given the parabolic profile of the topography, exists an analytical solution for the oscillatory problem and the free surface elevation remains planar. Details about the derivation of the analytical solution can be found in the compilation made by Delestre et al. in \cite{delestre2013}.
 
 The spatial domain $\Omega$ is defined in the interval $[0,L]\times[0,1]m$ where $L=10m$ and all the boundaries are reflective ($\mathbf{u}\cdot\mathbf{n} = 0$). The topography is given by the following expression
-\begin{equation}
+\begin{equation} \label{eq:parabola:topography}
 z(x,y) = h_0 \left(\frac{1}{a^2}\left(x - \frac{L}{2}\right)^2 - 1\right)
 \end{equation}
 The primitive variables are defined by
-\begin{subequations}
+\begin{subequations} \label{eq:parabola:variables}
 \begin{align}
 h(x,y) &=
 \begin{cases}
@@ -1044,6 +1045,7 @@ Regarding the different non linear stabilizations, it is clear that none of the 
 
 
 \subsection{Short channel with smooth transition and shock}
+\label{sec:examples:shock}
 
 
 The second example consists on a benchmark based on the Mac Donald's type solutions \cite{macdonald1997}. The analytical solution can be found in the compilation which was referenced in the previous example \cite{delestre2013}. This test presents a channel with a steady state solution. There is a subcritical inlet and a transcritical flow is produced. The outlet is also subcritical and then a shock is generated at $\sfrac{2}{3}$ of the channel. The aim of this example is to evaluate the shock capturing technique presented and the correct location of the hydraulic jump, which depends on the bottom friction law.
@@ -1141,6 +1143,8 @@ Results from different meshes are compared in Figures \ref{mac_donald_shock_grap
 
 
 \subsection{Experimental dam break flow against an isolated building}
+\label{sec:examples:experiment}
+
 
 The last example consists on the reproduction of the experiment carried out by Soares \cite{soares2007}.
 A dam break flow with a building downstream is simulated. The problem definition is depicted in Figure \ref{experiment_sketch}. The channel is $3.4m$ wide and the end of the dam is located at $x=0$.
@@ -1251,15 +1255,23 @@ Regarding the performance of the FIC-FEM formulation, it captures the main aspec
 \section{Concluding remarks}
 
 
+In this chapter the Finite Element approximation for the shallow water equations has been presented. The interpolation of the solution to the shallow water equations using Finite Elements induces some difficulties which have been addressed.
 
+The first problem is the instabilities related to the \emph{inf-sup} condition when the same interpolation is used for all the unknowns. The FIC-FEM formulation has been extended to the SW equations to overcome these instabilities. The main contribution is the projection of the characteristic length onto the linearization matrices $\mathbf{A}_i$. This procedure present an algorithmic constant and has been fixed to $\beta=0.01$.
 
-\textcolor{gray}{
-Importance of stabilizing the high order solution. Otherwise, phenomena such as terracing or excessive diffusivity ,ay appear.
-Difficulty in the definition of the convergence criterion. Even if the incremental displacements of the iterative solution procedure, the desired convergence is not achieved. Probably, this stagnant point of the solution is related to smalls oscillations of the corrections.
-The computational cost is high. Though the algorithm has to solve a system with the same number of degrees of freedom than a linear stabilized problem (\ref{sec:fic_fem_stabilization}), the introduction of the corrections is non linear. The required number of iterations is higher than those required for a RV-based shock capturing. A practical option is to limit the iterations up to a fixed number. However, this approach will lack an accurate control of the obtained precision for transient problems. For example, the flow in front an obstacle is highly dynamic and it may require more iterations than a prefixed number.
+The second and third issues are closely related. One is the rise of local instabilities around hydraulic jumps and the last is the Gibbs oscillations at the shoreline. Both phenomena are solved introducing enough diffusion near the problematic regions, this procedure is known as non-linear stabilization. Some traditional methods aiming to provide local stability have been extended to the SW equations.
+
+The \emph{Residual Viscosity} (RV) method is firstly presented. It is the most consistent method among the three non-linear stabilizations presented in this chapter. Since the added viscosity depends on the residual, it introduces a non linearity and the order of convergence is lost in the regions where the non-linear stabilization is acting. Nevertheless, the global order of convergence is kept and good solutions are obtained. An algorithmic constant controls the amount of artificial viscosity introduced and it has been fixed to $\alpha=1.0$.
+
+The second non-linear stabilization presented in this chapter is the \emph{Flux Corrected} (FC) algorithm, which combines two solutions. It could be used without linear stabilization, however, it is helpful to use a stabilized high order solution. Otherwise, phenomena such as terracing or excessive diffusivity, may appear.
+There are some difficulties with the definition of the convergence criterion. Even if the incremental displacements of the iterative solution are used as a measure of the convergence, the desired convergence is slowly achieved. The required number of iterations is higher than those required for a RV shock capturing. A practical option is to limit the iterations up to a fixed number. However, this approach will lack an accurate control of the obtained precision for transient problems. For example, the flow in front an obstacle is highly dynamic and it might require more iterations than the prefixed number.
+
+Furthermore, the extension of the FC principles to the SW equations is not monotonicity preserving. Apart from the linear stabilization, the main responsible of the lack of monotonicity is the flux limiter. The flux limiters were initially designed for pure convection problems and when those are extended to the SW equations some limitations arise. Mainly, there is no a unique decomposition in pure convection problems. Then, the naive option has been chosen in this chapter: to choose the water depth a indicator. This option lose the monotonicity but the solution is reasonably good without increasing the computational cost.
+
+The computational cost of FC is high. Though the algorithm has to solve a system with the same number of degrees of freedom than a linear stabilized problem (\ref{sec:fic_fem_stabilization}), the introduction of the corrections is non linear. 
 Regarding the global solution and its robustness, good results are obtained. However, a better order of convergence is expected.
-}
 
+Finally, the \emph{Gradient Jump Viscosity} (GJV) belongs to the same family than RV, since it it based on the introduction of viscosity. Though the extension of this method to more than one dimension is not monotonic, that is the less oscillatory method presented in this chapter. Its main drawbacks are the amount of additional viscosity and its lack of consistency with the source terms. Over-diffusive results have been observed in the last example, the dam break against an isolated building \ref{sec:examples:experiment}. Especially, the added diffusion inhibits the formation of shedding vortices behind the building. The lack of consistency is observed on the way the viscosity is added. Since the viscosity is not based on the residual but on the gradient jump, the presence of a high gradient on the topography will be translated on a region of additional diffusivity, even if the solution does not present a discontinuity.
 
-
+To summarize, all the three methods have presented good results. There are slightly differences depending on the problem, if it is transient or stationary, if it presents a moving shoreline, if there are high topography gradients, etc. The preferred option is the RV method since it is consistent with the equations and it is derived from the linear stabilization. This method will be used in the following chapters.
 

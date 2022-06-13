@@ -218,10 +218,6 @@ Both methods present restrictions, but the nature of that difficulties are diffe
 
 
 
-\subsection{Examples}
-
-
-
 
 
 \section{Fixed mesh methods}
@@ -395,13 +391,37 @@ The last step of the PFEM2 algorithm is to add the contribution of the solution 
 
 
 
-\subsection{Examples}
+\section{Examples}
 
 
-\subsection{Conclusions}
+In this section an example is presented as a proof of concept of the Lagrangian methods. Its advantages and drawbacks compared to the Eulerian framework are discussed. Here, the example presented in section \ref{sec:examples:parabola} is taken up again, since the oscillation benchmark is a good option to test the accuracy of the shoreline tracking.
+
+As a reminder, this benchmark has been extracted from \cite{delestre2013} and has an analytical solution. The problem consists on a 1D parabolic basin containing a mass of water. The initial condition is zero velocity and the free surface describing an inclined plane. After the initial time $t=0$, the mass of water begins to slice over the parabolic basin and describes an oscillatory movement. The topography is described in equation (\ref{eq:parabola:topography}) and the analytical solution follows equation (\ref{eq:parabola:variables}). The same parameters than the ones in section \ref{sec:examples:parabola} are used in this example:
+\begin{equation*}
+    h_0 = 1 \quad,\quad a = 1
+\end{equation*}
+
+The spatial domain is $\Omega=[0,10]\times[0,1]m^2$, where the parabola is aligned with the larges dimension. 
+Figure \ref{fig:pfem_parabola_view} shows the discretization of the problem using the PFEM algorithm. For visualization purpose, the meshes are deformed vertically with the topography and the free surface respectively.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=.8\textwidth]{img/lagrangian/parabola_view.png}
+    \caption{Detail of the discretizations used to solve the oscillation in a parabolic basin with the mesh moving algorithm (PFEM).}
+    \label{fig:pfem_parabola_view}
+\end{figure}
 
 
 
+\begin{figure}
+    \centering
+    \includegraphics[width=.7\textwidth]{img/lagrangian/convergence}
+    \caption{Comparison of the convergence for the presented methods.}
+    \label{fig:lagrangian_parabola_convergence}
+\end{figure}
+
+
+A convergence analysis has been carried out with the proposed method and the results are summarized in Figure \ref{fig:lagrangian_parabola_convergence}. As expected, the order of convergence of the PFEM method is not affected by the moving shoreline, keeping the second order of the FE formulation.
 
 
 
