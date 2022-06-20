@@ -6,9 +6,9 @@
 Keeping the time step under a certain value relative to the element size in transitory problems is of key importance to achieve good results. Otherwise, an excessively large time step could resort on an over-diffusive solution.
 Furthermore, the element size is governed by the physics, it has to be small enough to capture the modes of interest. It is a usual practice to refine the mesh near the region of interest or where the solution is changing rapidly. consequently, the local reduction of the mesh size is imposing a global reduction of the time step.
 
-This section seeks for a strategy with emph{Local Time Step} (LTS). The main idea consists on the division on subdomains characterized by its mesh size. Thus, a hierarchic mesh refinement is defined with a characteristic mesh size and its corresponding time step. The hierarchical refinement allows to use both non-conforming discretization at space and at time level. The only requirement is having a natural number of divisions in order to perform a communication at the coarse level. Figure \ref{multilevel_refinement} shows a hierarchical spatial refinement.
+This section seeks for a strategy with \emph{Local Time Step} (LTS). The main idea consists on adding subdomains characterized by smaller mesh sizes. Thus, a hierarchic mesh refinement is defined with a characteristic mesh size and its corresponding time step. The hierarchical refinement allows to use both non-conforming discretization at space and time level. The only requirement is having a natural number of divisions in order to perform a communication at the coarse level. Figure \ref{multilevel_refinement} shows a hierarchical spatial refinement.
 
-This framework eases the refinement and coarsening procedures. Specially simple is the coarsening process, since it consists just on removing elements from a lower level without having to rebuild the connectivities. On the other hand, a procedure must be defined for the hanging nodes at the boundary and the hanging time steps.
+This framework eases the refinement and coarsening procedures. The coarsening process is specially simple, since it consists just on removing elements from the lowest level without having to rebuild the connectivities. On the other hand, a procedure must be defined for the hanging nodes at the boundary and the hanging time steps.
 
 
 
@@ -18,30 +18,14 @@ This framework eases the refinement and coarsening procedures. Specially simple 
     \caption{Two refinement levels. Each refinement has two levels of sub divisions.}
     \label{multilevel_refinement}
 \end{figure}
-% \begin{figure}
-% \centering
-% \begin{subfigure}{.8\textwidth}
-%     \includegraphics[width=\textwidth]{img/multigrid/grid1.pdf}
-%     \vspace{1em}
-% \end{subfigure}
-% \begin{subfigure}{.8\textwidth}
-%     \includegraphics[width=\textwidth]{img/multigrid/grid2.pdf}
-%     \vspace{1em}
-% \end{subfigure}
-% \begin{subfigure}{.8\textwidth}
-%     \includegraphics[width=\textwidth]{img/multigrid/grid3.pdf}
-%     \vspace{1em}
-% \end{subfigure}
-% \caption{Different refinement zones for a domain.}
-% \label{multigrid_refinement}
-% \end{figure}
 
 
-There have been previous advances in LTS. An early proposal can be found in \cite{chevalier1997}, where a LTS was proposed for waves propagation using the Maxwell's equations. The main interest of the LTS is the reduction of computational resources and to avoid the numerical diffusion caused by small time steps on coarse regions of the mesh. The cost of introducing a LTS with local mesh refinement i an instability at the coarse-fine interface. Collino analyzed the LTS for the hyperbolic 1D equations in \cite{collino2003a,collino2003b} and overcame this instability analyzing the conservation of discrete energy through refinement levels. Usually the LTS has been linked to explicit time steps.
+
+There have been previous advances in LTS. An early proposal can be found in \cite{chevalier1997}, where a LTS was proposed for waves propagation using the Maxwell's equations. The main interest of the LTS is the reduction of computational resources and to avoid the numerical diffusion caused by small time steps on coarse regions of the mesh. The cost of introducing a LTS with local mesh refinement is an instability at the coarse-fine interface. Collino analyzed the LTS for the hyperbolic 1D equations in \cite{collino2003a,collino2003b} and overcame this instability analyzing the conservation of the discrete energy through refinement levels. Usually the LTS has been linked to explicit time steps.
 
 DG have been successfully applied to overcome the stability constraint of explicit LTS. For example, in \cite{diaz2009} the non-conforming properties of DG are exploited to ensure stability. In that case, the continuity is enforced by the so-called numerical fluxes arising from the non conforming discretization of DG. On the other hand, CG is still a good solution, in \cite{almquist2016} stability is ensured by the classical technique of overlapping one coarse element with the fine mesh. A similar example can be found in \cite{grote2021}.
 
-Finally, the most recent studies move towards massively parallel implementation. In \cite{baiges2016} a new library is presented. In this appendix, the implementation is designed in parallel processing, but without memory parallelization. On the other hand, attention is devoted to the algorithm, which is fully decoupled from the time integration, allowing for implicit or explicit schemes. In the future, this procedure can be easily extended to shared memory parallelization.
+Finally, the most recent studies move towards massively parallel implementation. In \cite{baiges2016} a new library is presented. In this appendix, the implementation is designed in parallel processing, but without memory parallelization. On the other hand, attention is devoted to the algorithm, which is fully decoupled from the time integration, allowing for implicit or explicit schemes. In the future, this procedure could be easily extended to shared memory parallelization.
 
 
 \section{Algorithm}
@@ -61,7 +45,7 @@ Hence, the stability relies on the boundary conditions applied to the fine level
 
 Once defined the spatial refinement, the hanging nodes are included in the algebraic system using \emph{Multi-Point Constraints} (MPC). The values of a hanging node are computed by an average from the father nodes. This operation is performed recursively at all the divisions within the same hierarchic level.
 
-Finally, after the prediction step of a coarse level, its sub-level is advanced with a smaller sub-step. Then, the interface is updated with the values from the prediction and is preceded to compute the solution of the sub-level. This procedure can be executed recursively. Once all the sub-steps have reached the step, the coarse predicted solution is updated with the values from the fine level. These steps are resumed in Figure \ref{multilevel_steps}.
+Finally, after the prediction step of a coarse level, its sub-level is advanced with a smaller sub-step. Then, the interface is updated with the values from the prediction and is proceed to compute the solution of the sub-level. This procedure can be executed recursively. Once all the sub-steps have reached the end of the main step, the coarse prediction is updated with the values from the fine level. These steps are resumed in Figure \ref{multilevel_steps}.
 
 \begin{figure} [htpb]
     \centering
@@ -70,7 +54,7 @@ Finally, after the prediction step of a coarse level, its sub-level is advanced 
     \label{multilevel_steps}
 \end{figure}
 
-It is important to remark that this procedure does not impose any restriction on having a discontinuity of refinement level higher than one. Regardless the jump of refinement level, the presented procedure is applied as well.
+It is important to remark that this procedure does not impose any restriction on having a discontinuity of refinement level higher than one. Regardless of the jump of refinement level, the presented procedure is applied as well.
 
 
 
@@ -78,9 +62,9 @@ It is important to remark that this procedure does not impose any restriction on
 
 The hierarchical refinement has been designed in order to be compatible with structured and unstructured meshes. Hence, the data structure is based on a finite element mesh, where nodes are defined by its coordinates and elements are defined by its connectivities.
 
-The refinement begins when some elements are selected to refine according to a criterion which is to be defined. Then, those elements are copied to another mesh container identified by a consecutive refinement level. The nodes are also copied. It is important to remark that the copied nodes are only an auxiliary tool to define the connectivities. The mesh container identified with the refined level might contain elements already refined (Figure \ref{multilevel_meshing_steps}{\color{wrmBlue}a}). During the copying process, the destination nodes save a pointer to the origin node and vice-versa.
+The refinement begins when some elements are selected to refine according to a criterion which is to be defined. Then, those elements are copied to another mesh container, identified by the consecutive refinement level. The nodes are also copied. It is important to remark that the copied elements are only an auxiliary tool to define the connectivities. The mesh container identified with the refined level might contain elements already refined (Figure \ref{multilevel_meshing_steps}{\color{wrmBlue}a}). During the copying process, the destination nodes save a pointer to the origin node and vice-versa.
 
-Once the coarse connectivities are transferred to the refined mesh, an iterative process begins to refine the elements and conditions until the desired refinement is achieved (Figure \ref{multilevel_meshing_steps}{\color{wrmBlue}b}). Every entity is split by inserting by dividing the edges into two. In the case of quadrilaterals, a node is added in the middle of the face, in the case of hexahedra, an extra node is added in the center of the volume. This operation requires some extra attention, because the edges and faces are shared by two elements. For this purpose, an auxiliary variable is defined in order to register the created entities. This variable is a map where the keys are the connectivities of the edge and the mapped value is the middle node. Each element has another variable storing the number of divisions performed, after executing a division, this value is incremented by one. This process is repeated until a specified number of divisions are reached.
+Once the coarse connectivities are transferred to the refined mesh, an iterative process begins to refine the elements and conditions until the desired refinement is achieved (Figure \ref{multilevel_meshing_steps}{\color{wrmBlue}b}). Every entity is split by dividing the edges into two. In the case of quadrilaterals, a node is added in the middle of the face, in the case of hexahedra, an extra node is added in the center of the volume. This operation requires some especial attention, because the edges and faces are shared by two elements. For this purpose, an auxiliary variable is defined in order to register the created entities. This variable is a map where the keys are the connectivities of the main edge and the mapped value is the middle node. The iterative process is controlled by the number of divisions executed at every element, each element has a variable storing the number of divisions performed. After executing a division, this value is incremented by one. This process is repeated until the specified number of divisions are reached.
 
 \begin{figure}
     \centering
@@ -108,13 +92,13 @@ To sum up, the following variables are used by the refinement procedure:
 \end{description}
 
 
-This can be easily implemented in parallel with the standard reduction techniques, except the NODES\_MAP. Adding new items to a map in parallel requires some extra architecture to ensure the thread safety. An alternative would be to split this map and reduce its scope to the nodes. It has some extra operations to write, read and remove values, but is worth for its scalability.
+This can be easily implemented in parallel with the standard reduction techniques, except the NODES\_MAP. Adding new items to a map in parallel requires some extra architecture to ensure the thread safety. An alternative would be to split this map and reduce its scope to the nodes. This definition has some extra operations to write, read and remove values, but is worth for its scalability.
 
 
 
 \section{Refinement criterion}
 
-Finally, the refinement criterion has to be defined. There are two main criteria, the dynamic and the static one. The dynamic depends on the solution after the prediction step. In this case, the residual of the equations is evaluated -it is just the local right hand side before assembling the system when a residual-based system is used- and compared against a fixed value. When the local residual is too high, the element must be refined if there it has not been already refined. Whenever the local residual is sufficiently small, the element must be coarsened when it has a nested refinement.
+Finally, the refinement criterion has to be defined. There are two main criteria, the dynamic and the static one. The dynamic depends on the solution after the prediction step. In that case, the residual of the equations is evaluated --it is just the local right hand side when a residual-based system is used-- and compared against a fixed value. When the local residual is too high, the element must be refined if there it has not been already refined. Whenever the local residual is sufficiently small, the element must be coarsened when it has a nested refinement.
 
 The static criterion does not depend on the solution and the mesh is not modified during the analysis. This criterion serves to enhance the quality of the solution in a region. It is important to note that, by its hierarchical definition,  this refinement cannot be used to have a better definition of the boundaries. This algorithm is specially suited for the dynamic criterion.
 
@@ -200,7 +184,7 @@ Two snapshots of the solution at time $t=10$ and $20s$ are shown in Figure \ref{
 \section{Conclusions}
 
 
-The basic structure of a hierarchical refinement with local time step has been presented in this appendix. The design of the local refinement with local time step is decoupled from the time integration scheme, this is achieved with an overlap of the fine domain with the coarse one. This fact allows to use arbitrarily an explicit or implicit time step without compromising the stability of the method near the fine interface.
+The basic structure of a hierarchical refinement with LTS has been presented in this appendix. The design of the local refinement with LTS is decoupled from the time integration scheme, this is achieved with an overlap of the fine domain with the coarse one. This fact allows to use arbitrarily an explicit or implicit time step without compromising the stability of the method near the fine interface.
 
 Despite duplicating the coarse degrees of freedom at the refined sub-domain, the computational requirements are not increased. The computation of the duplicated degrees of freedom represents $1/64$ over the cost of the fine solution, when two divisions are made. The duplicated degrees of freedom are part of a prediction step which is used to specify the boundary conditions at the interface during the sub stepping of the lower level. Moreover, this design extremely simplifies the refinement and coarsening procedures.
 
