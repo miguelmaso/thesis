@@ -122,4 +122,88 @@ The static criterion does not depend on the solution and the mesh is not modifie
 \section{Examples}
 
 
+This section includes two basic examples. In the first example is shown how the mesh refinement can help to obtain better solutions. The second example is devoted to test its capabilities in a more complex test with a dynamic meshing.
+
+
+\subsection{Static refinement}
+
+
+In this example the propagation os a pulse is analyzed. Let $\Omega=[0,10]\times[0,1]m^2$ be the spatial domain. The initial water depth is $1m$ over all the domain, except near the right boundary, where there is an increment of $1m$.
+The initial velocity is null and for $t>0s$ a wave is generated and propagated. Reflective conditions are considered over all the boundary, $\mathbf{u} \cdot \mathbf{n} = 0\ \text{on}\ \Gamma$.
+
+The domain is meshed with a structured triangular mesh of size $0.1m$. In this test a one-level refinement with two division is considered for $y>0.5$. This criterion is static and kept constant during all the simulation. An overview of the mesh and a detail of the refinement is shown in Figure \ref{multilevel_static_mesh}.
+
+\begin{figure} [htb]
+    \centering
+    \includegraphics[width=.92\textwidth]{img/multigrid/static/mesh}
+    \hfill
+    \includegraphics[width=.05\textwidth]{img/multigrid/static/mesh_detail_2}
+    \caption{Mesh used for the static refinement test and closeup of the refinement interface.}
+    \label{multilevel_static_mesh}
+\end{figure}
+
+
+In Figure \ref{multilevel_static_decoupled} can be appreciated how the solutions obtained at the different regions are very different. In order to magnify this difference, the coarse and the fine domains are decoupled. Firstly, the boundary condition is not updated at the interface from the coarse prediction. Secondly, the coarse solution is not updated with the fine results.
+
+
+\begin{figure} [htb]
+    \centering
+    \includegraphics[width=\textwidth]{img/multigrid/static/decoupled-0}\\
+    \vspace{5pt}
+    \includegraphics[width=\textwidth]{img/multigrid/static/decoupled-1}\\
+    \vspace{5pt}
+    \includegraphics[width=\textwidth]{img/multigrid/static/decoupled-2}
+    \caption{Propagation of a pulse with static refinement. Results at time $t=0,1,2s$, The different resolution levels are uncoupled.}
+    \label{multilevel_static_decoupled}
+\end{figure}
+
+
+When the two domains are coupled, the information is transferred between the two domains and the solution is modified. In Figure \ref{multilevel_static_coupled} it is possible to appreciate how the wave front is is modified at each sub-domain and how the solution on one sub-domain is modified by the other. For simplicity, the legend is not shown and the contour plot represents only the relative values.
+
+In this test two basic features of the hierarchic refinement are shown. First of all, an accurate discretization is required to obtain an accurate solution without dissipative effects (Figure \ref{multilevel_static_decoupled}). Secondly, the robustness of the data exchange at the interface (Figure \ref{multilevel_static_coupled}).
+
+
+\begin{figure} [htb]
+    \centering
+    \includegraphics[width=\textwidth]{img/multigrid/static/coupled-0}\\
+    \vspace{5pt}
+    \includegraphics[width=\textwidth]{img/multigrid/static/coupled-1}\\
+    \vspace{5pt}
+    \includegraphics[width=\textwidth]{img/multigrid/static/coupled-2}
+    \caption{Propagation of a pulse with static refinement. Results at time $t=0,1,2s$. The different resolution levels are coupled.}
+    \label{multilevel_static_coupled}
+\end{figure}
+
+
+\subsection{Dynamic refinement}
+
+
+The second examples combines the hierarchical refinement with a residual-based criterion. Hence, the resolution level depends on the solution, this fact allows to test the refinement and coarsening processes.
+
+A rectangular domain $\Omega=[0,20]\times[0,10]m^2$ is considered. The mean water depth is $0.1m$ and the solution is initialized with an increment of $0.1m$ at the coordinate $\mathbf{x}_0=(4,3)m$. Reflective conditions are considered over all the boundary, $\mathbf{u} \cdot \mathbf{n} = 0\ \text{on}\ \Gamma$.
+After $t=0$ a circular wave is generated, generating reflections at the boundaries which interact with each other.
+
+The domain is initially discretized with an unstructured mesh of triangles of size $0.05m$. A refinement level is added when the local residual is greater than a threshold. When the wave front arrives to a material point, the refinement level is increased and after the wave front has passed, the refinement level is decreased.
+Two snapshots of the solution at time $t=10$ and $20s$ are shown in Figure \ref{multilevel_dynamic}.
+
+
+\begin{figure} [htb]
+    \centering
+    \includegraphics[width=\textwidth]{img/multigrid/dynamic/dynamic-10}\\
+    \vspace{5pt}
+    \includegraphics[width=\textwidth]{img/multigrid/dynamic/dynamic-20}
+    \caption{Propagation of a wave with a dynamic refinement. Results at time $t=10$ and $20s$. The different resolution levels are coupled.}
+    \label{multilevel_dynamic}
+\end{figure}
+
+
+\section{Conclusions}
+
+
+The basic structure of a hierarchical refinement with local time step has been presented in this appendix. The design of the local refinement with local time step is decoupled from the time integration scheme, this is achieved with an overlap of the fine domain with the coarse one. This fact allows to use arbitrarily an explicit or implicit time step without compromising the stability of the method near the fine interface.
+
+Despite duplicating the coarse degrees of freedom at the refined sub-domain, the computational requirements are not increased. The computation of the duplicated degrees of freedom represents $1/64$ over the cost of the fine solution, when two divisions are made. The duplicated degrees of freedom are part of a prediction step which is used to specify the boundary conditions at the interface during the sub stepping of the lower level. Moreover, this design extremely simplifies the refinement and coarsening procedures.
+
+This type of refinement is specially interesting when obtaining an accurate solution is linked to a fine discretization in a small part of the domain. The hierarchical mesh refinement can be applied recursively in order to obtain several levels of accuracy depending on the quality of the solution.
+
 
