@@ -32,7 +32,15 @@ Finally, chapter \ref{coupling} presented a novel partitioned strategy for solvi
 The coupling strategy has been designed in order to minimize the computational cost, keeping the same accuracy than a fully resolved model. Specifically, the influence of the position of the interface, the temporal domain of the coupling and the open boundary had been analyzed.
 The coupled strategy has proven to be accurate and promising results have been obtained. It has been compared against literature results and has been applied to a LGW in a representative lake.
 
-All the presented formulations had been implemented in KratosMultiphysics \cite{dadvand2010, dadvand2013}, an open source framework of numerical methods written in C++.
+All the presented formulations had been implemented in KratosMultiphysics \cite{dadvand2010, dadvand2013}, an open source framework of numerical methods written in C++. The main contributions of this work can be summarized in the following list:
+
+\begin{itemize}
+    \item Derivation of a stable FIC-FEM formulation for the SW equations.
+    \item Comparison of three non-linear stabilizations for the mitigation of oscillations around shocks and the moving shoreline.
+    \item Extension of the FIC-FEM formulation from the SW equations to the Boussinesq equations.
+    \item Design of a partitioned strategy to couple the solution obtained from the NS equations to the SW or Boussinesq equations.
+    \item Application of the partitioned strategy to LGW events.
+\end{itemize}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
