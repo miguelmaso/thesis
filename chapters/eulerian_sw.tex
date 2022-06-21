@@ -16,7 +16,7 @@ Since the FEM can exhibit spurious oscillations, different strategies such as st
 
 %This research is focused in classical stabilized finite elements with an equal order interpolation for all the variables. We will explore the capabilities of the finite increment calculus (FIC) technique to develop stable formulations for the SW equations.
 
-In this chapter, the general procedure for FEM is presented. Then, some stabilization techniques are explored: the FIC-based stabilization, the flux corrected technique and the gradient jump viscosity method. Several examples are provided to show the capabilities and limitations of each method.
+In this chapter, the general procedure for FEM is presented. Then, some stabilization techniques are explored: the \emph{Finite Increment Calculus} (FIC) stabilization, the \emph{Flux Correction} (FC) technique and the \emph{Gradient jump viscosity} (GJV) methods. Several examples are provided to show the capabilities and limitations of each method.
 
 
 
@@ -73,7 +73,7 @@ Several families of stabilization methods can be found in the literature, usuall
 ASGS\cite{codina1998}, GLS \cite{hughes1989} and FIC\cite{onate1996,onate1998}.
 Due to the hyperbolic character of the SW equations, a particular stabilization method for compressible flow or the Euler equations need to be developed.
 The FIC approach is based on the incremental solution of a modified system of non-local governing equations accounting for higher order terms obtained by applying the balance laws in domains of finite size.
-The FIC-based stabilization has been applied in conjunction with the FEM to convection-diffusion and incompressible flows, among other applications \cite{onate1998,onate2001}.
+The FIC-based stabilization has been applied in conjunction with the FEM to convection-diffusion and incompressible flows, and solid mechanics \cite{onate1998,onate2001,onate2016}.
 In those cases, where the convective term has an important role, a first order FIC term is enough to provide stability to the system.
 However, the SW equations are governed by the convective term and the wave equation in a mixed formulation \cite{codina2008}. In consequence, the common derivation of the FIC-based stabilization is not enough to provide stability in all the range of applicability of the SW equations. 
 A generalization of this method is proposed in order to provide a global stability for the SW equations.
@@ -597,7 +597,7 @@ Figures \ref{stab_parameters_time1} and \ref{stab_parameters_time2} show that th
 
 
 As seen in Section \ref{sec:fic_fem_stabilization}, the numerical approximation of hyperbolic systems -convection dominant- exhibit instabilities. Those instabilities are inherent to schemes of order greater than 1 (Godunov barrier theorem \cite{godunov1959}). With the aim of suppressing the spurious oscillations and to extend to stable schemes to higher orders, the flux corrected (FC) algorithms were proposed.
-This new family of methods seeks for non oscillatory solutions and also for monotonicity of the numerical solution. At first, the FC algorithms were proposed for structured meshes and explicit time integration schemes \cite{boris1973, book1975}. Generally, they were based for FD algorithms, but rapidly were extended also to Galerkin discretizations and implicit schemes \cite{kuzmin2001, lohner2008ch9}. Even though, the FC transport has not been extended to many applications in the FEM community.
+This new family of methods seeks for non oscillatory solutions and also for monotonicity of the numerical solution. At first, the FC algorithms were proposed for structured meshes and explicit time integration schemes \cite{boris1973, book1975}. Generally, they were based for FD algorithms, but rapidly were extended also to Galerkin discretizations and implicit schemes \cite{moller2004, lohner2008ch9}. Even though, the FC transport has not been extended to many applications in the FEM community.
 
 
 In this section the concept of FC is extended to the SW equations. The linearized equations presented in Chapter \ref{equations} can be understood as a generalization of the scalar transport equations, where the convection operator is extended with a matrix and the scalar unknown is replaced by a vector. This extension is proposed as an alternative to Lagrangian methods (Appendix \ref{lagrangian_sw}), where the shoreline discontinuity is naturally captured. At the same time, it seeks for a better accuracy than the stabilized Eulerian methods (Section \ref{sec:fic_fem_stabilization}):

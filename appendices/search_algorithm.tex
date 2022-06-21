@@ -26,7 +26,7 @@ Firstly, the main domain is partitioned using a dynamic bins structure, a detail
     \label{bins_search}
 \end{figure}
 
-Building the search structure has an initial cost, but is recovered during the search, specially when the mesh becomes larger. The definition of the cells is straightforward, while the main cost of the search structure building is the definition of the intersected elements against each cell. The element-cell intersections have been computed using the method described by Möller \cite{moller2004}, described below.
+Building the search structure has an initial cost, but is recovered during the search, specially when the mesh becomes larger. The definition of the cells is straightforward, while the main cost of the search structure building is the definition of the intersected elements against each cell. The element-cell intersections have been computed using the method described by Möller \cite{mollerakenine2004}, described below.
 
 Once the bins structure is finalized, the search process is quite simple. Besides the fast process of locating a node, the location of multiple nodes can be executed in parallel. Both properties make this algorithm very efficient.
 
@@ -37,7 +37,7 @@ Hereafter, the most representative algorithms are described. Other direct inters
 
 \section{Triangle vs aligned box intersection}
 
-The full explanation of the algorithm can be found in \cite{moller2004}. Since this procedure is a generic tool for numerical methods, it has been applied for the shallow water, convection diffusion and Navier-Stokes equations. The generic 3D version is explained here, as well a the 2D particularization.
+The full explanation of the algorithm can be found in \cite{mollerakenine2004}. Since this procedure is a generic tool for numerical methods, it has been applied for the shallow water, convection diffusion and Navier-Stokes equations. The generic 3D version is explained here, as well a the 2D particularization.
 
 The derivation of this algorithm is based on the \emph{Separating Axis Theorem} \cite{gottschalk1996}. This theorem consists on looking fo a separating axis between the two objects. 
 The algorithm looks for a separating axis along different directions. If a separating axis is found, the algorithm stops since there is not intersection. If all the tests pass, there is an intersection.
