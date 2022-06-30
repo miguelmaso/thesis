@@ -51,7 +51,7 @@ headsepline,            % Uncomment to get a line under the header
 \usepackage{float}            % placing figures
 \usepackage{multirow}         % join cells at different rows of a table
 \usepackage{makecell}         % makecell command, allow line break inside a cell of a table
-\usepackage[backend=bibtex8,style=numeric-comp,giveninits=true,natbib=true,maxbibnames=9,maxcitenames=5]{biblatex}
+\usepackage[backend=bibtex8,style=numeric-comp,giveninits=true,natbib=true,maxbibnames=9,maxcitenames=7]{biblatex}
 
 \addbibresource{../bibliography/sw.bib}
 
@@ -96,6 +96,7 @@ headsepline,            % Uncomment to get a line under the header
 %	THESIS INFORMATION
 %----------------------------------------------------------------------------------------
 
+\date{June 28, 2022}
 \thesistitle{Coupling shallow water models with three-dimensional models for the study of fluid-structure interaction problems using the particle finite element method} % print it with \ttitle
 \supervisor{Dr. Eugenio \textsc{Oñate}} % print it with \supname
 \cosupervisor{Dr. Ignasi \textsc{de-Pouplana}} % print it with \cosupname
@@ -228,18 +229,35 @@ headsepline,            % Uncomment to get a line under the header
 %----------------------------------------------------------------------------------------
 
 \begin{abstract}
-% \addchaptertocentry{\abstractname}
-This thesis investigates numerical methods for the simulation of surface water flows, focusing on the large scale, to local scale and the coupling models for both scales.
+This thesis investigates numerical methods for the simulation of surface water flows, focusing on the interaction between the large scale and the local scale and its application to natural hazards. Several families of numerical methods for the approximation of large scale phenomena and the coupling with the local scale have been analyzed.
 
-The general motion of a fluid mass is governed by the Navier-Stokes equations, which can accurately solve the local scale phenomena. However, the same level of accuracy is not required by the large scale solution to the water-related events. In contrast to the extensive use of the Finite Element Method for solving the Navier-Stokes equations, the shallow-water equations are usually solved with the Finite Volume Method. Thus, an effort have been done to solve both equations in an unified framework.
+The general motion of a fluid mass is governed by the Navier-Stokes equations, which can accurately solve the local scale phenomena. However, the same level of accuracy is not required by the large scale solution to the water-related events. In this context, the shallow water equations are defined. In contrast to the extensive use of the Finite Element Method for solving the Navier-Stokes equations, the shallow-water equations are usually solved with the Finite Volume Method. Thus, an effort have been done to solve both equations in an unified framework.
 
-The first part of this thesis is devoted to study stabilized formulations of Finite Element Method for the different forms of the shallow water equations. The stabilized formulations are analyzed to test its ability to deal with the different possible instabilities. The first source of instability is the incompatibility of the equal interpolation of the variables. The second source of instability is the presence of shocks due to the change of regime or hydraulic jumps. Finally, Gibbs oscillations may appear on the moving shoreline and monotonic properties of the physical system are lost by the numerical approximation.
+The first part of this thesis is devoted to study stabilized formulations of Finite Element Method for the different forms of the shallow water equations. Stabilized formulations arise from the need to mitigate the various instabilities inherent in numerical approximations. The first source of instability is the incompatibility of the equal interpolation of the variables. The second source of instability is the presence of shocks due to the change of regime or hydraulic jumps. Finally, Gibbs oscillations may appear on the moving shoreline and monotonic properties of the physical system are lost by the numerical approximation.
 
-The second part of the thesis is committed to the coupling strategies of the numerical methods for the Navier-Stokes and the shallow water equations. The case of a coupling from the local scale to the large scale is analyzed. This type of coupling corresponds to the generation of water-related hazards. The proposed strategy combines a Lagrangian Navier Stokes multi-fluid solver with an Eulerian method based on the Boussinesq equations, an extension of the shallow water equations.
+The second part of the thesis is committed to the coupling strategies of the numerical methods for the Navier-Stokes and the shallow water equations. The case of a coupling from the local scale to the large scale is analyzed. This type of coupling corresponds to the generation of cascading natural hazard. The proposed strategy combines a Lagrangian Navier Stokes multi-fluid solver with an Eulerian method based on the Boussinesq equations, an extension of the shallow water equations.
 
-The proposed technique is applied to the numerical simulation of landslide-generated impulse waves. Lagrangian solver uses the Particle Finite Element Method to model the landslide runout, its impact against the water body and the consequent wave generation. The results of this fully-resolved analysis are stored at selected interfaces and then used as input for the shallow water solver to model the far-field wave propagation.
-This one-way coupling scheme reduces drastically the computational cost of the analyses while maintaining high accuracy in reproducing the key phenomena of the cascading natural hazard.
+Finally, the proposed technique is applied to the numerical simulation of landslide-generated impulse waves. The Particle Finite Element Method has been used to model the landslide runout, its impact against the water body and the consequent wave generation. The results of this fully-resolved analysis are stored at selected interfaces and then used as input for the modelling of waves propagation on the far-field.
+This one-way coupling scheme drastically reduces the computational cost of the analyses while maintaining high accuracy in reproducing the key phenomena of the cascading natural hazard.
 \end{abstract}
+
+
+%----------------------------------------------------------------------------------------
+%	ABSTRACT PAGE
+%----------------------------------------------------------------------------------------
+
+\begin{resumen}
+En esta tesis se investigan métodos numéricos para la simulación de flujos de aguas superficiales, haciendo énfasis en la interacción entre las distintas escalas y su aplicación a desastres naturales. Se han analizado diversas familias de métodos numéricos para aproximar los fenómenos a gran escala y su acoplamiento con la escala local.
+
+El movimiento general de una masa de fluido se rige por las ecuaciones de Navier-Stokes, que pueden resolver con precisión los fenómenos a escala local. Sin embargo, la solución numérica a gran escala de dichos fenómenos, no requiere el mismo nivel de precisión. En este ámbito, se definen las acuaciones de agua poco profundas. En contraste con el amplio uso del Método de los Elementos Finitos para aproximar las ecuaciones de Navier-Stokes, las ecuaciones de aguas poco profundas se suelen resolver con el Método de los Volúmenes Finitos. Por ello, se ha realizado un esfuerzo para resolver ambas ecuaciones en un marco unificado.
+
+La primera parte de esta tesis está dedicada a estudiar formulaciones estabilizadas para el Método de los Elementos Finitos aplicado a las diferentes formas de las ecuaciones de aguas someras. Las formulaciones estabilizadas surgen de la necesidad de mitigar las diferentes inestabilidades inherentes a las aproximaciones numéricas. La primera fuente de inestabilidad es la incompatibilidad debida a la interpolación de las variables. La segunda fuente de inestabilidad es la presencia de discontinuidades debidos al cambio de régimen o a los saltos hidráulicos. Por último, pueden aparecer oscilaciones de Gibbs en la línea de costa en movimiento, dado que las propiedades monótonas del sistema físico se pierden por la aproximación numérica.
+
+La segunda parte de la tesis está dedicada a las estrategias de acoplamiento de los métodos numéricos para las ecuaciones de Navier-Stokes y de aguas poco profundas. Se ha analizado el caso de acoplamiento desde la escala local a la escala global. Este tipo de acoplamiento corresponde a la generación de desastres naturales en cascada. La estrategia propuesta combina un solver Lagrangiano de Navier Stokes para multi-fluidos con un método Euleriano basado en las ecuaciones de Boussinesq, una extensión de las ecuaciones de aguas someras.
+
+Finalmente, la técnica propuesta se ha aplicado a la simulación numérica de olas generadas por deslizamientos. El deslizamiento de ladera, su impacto contra la masa de agua y la consiguiente generación de olas se ha modelado con el Método de Elementos Finitios de Partículas. Los resultados de este análisis detallado se almacenan en las interfaces seleccionadas que, luego, se utilizan como punto de entrada para modelar la propagación de olas en el campo lejano.
+Este esquema de acoplamiento unidireccional reduce drásticamente el coste computacional, a la vez que se mantiene una alta precisión en la simulación de los fenómenos clave de desastres naturales.
+\end{resumen}
 
 
 %----------------------------------------------------------------------------------------
@@ -247,7 +265,6 @@ This one-way coupling scheme reduces drastically the computational cost of the a
 %----------------------------------------------------------------------------------------
 
 \begin{acknowledgements}
-% \addchaptertocentry{\acknowledgementname}
 Over the years developing this thesis there have been many people around me who have helped me to achieve this goal. 
 I am indebted to all of them and it would be impossible to mention all of them.
 
